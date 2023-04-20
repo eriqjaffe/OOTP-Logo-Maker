@@ -1,0 +1,233 @@
+<!--index.html-->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>OOTP Logo Maker</title>
+        <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+        <script type="text/javascript" src="./scripts/jquery-1.11.3.min.js"></script>
+        <script type="text/javascript" src="./scripts/fabric.min.js"></script>
+        <script type="text/javascript" src="./scripts/jquery.magnific-popup.min.js"></script>
+        <script type="text/javascript" src="./scripts/spectrum.js"></script>
+        <script type="text/javascript" src="./scripts/opentype.js"></script>
+        <script type="text/javascript" src="./scripts/skeletabs.js"></script>
+        <link href='./scripts/logomaker.css' rel='stylesheet' type='text/css'>
+        <link href='./scripts/spectrum.css' rel='stylesheet' type='text/css'>
+        <link href='./scripts/skeletabs.css' rel='stylesheet' type='text/css'>
+        <link href='./scripts/magnific-popup.css' rel='stylesheet' type='text/css'>
+    </head>
+    <body>
+        <div class="title">
+            <span class="header">Welcome To The OOTP Logo Maker!</span>
+        </div>
+        <div id="page">
+            <div style="width: 1100px; margin:0 auto;">
+                <div class="section group" style="position:relative;">
+                    <div class="col span_1_of_2" style="float:left;">
+                        <div id="canvasContainer" style="width:500px; height:575px;">
+                            <div id="editorContainer">
+						        <canvas id="logoEditor" width="500" height="500" style="position:absolute; top:50; float:left; z-index:1;"></canvas>
+					        </div>
+                            <div id="creatorContainer">
+						        <canvas id="logoCreator" width="500" height="500" style="position:absolute; top:50; float:left; z-index:0;"></canvas>
+					        </div>
+                        </div>
+                        <div id="tipContainer" style="height:60px; padding-top:5px; font-weight:bold;"></div>
+                        <div id="donateContainer" style="width:512px; height: 50px; text-align:right; padding-top:10px">
+                            <a href="https://www.paypal.com/donate?business=UTTZRPAMBFCWA&no_recurring=1&currency_code=USD" target="_blank">
+                                <img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col span_1_of_2" style="float:right; max-height:500px;">
+                        <div id="text">
+                            <table style="width:100%;">
+                                <tr>
+                                    <td>
+                                        Team Name: <input type="text" id="teamName">
+                                    </td>
+                                    <td>
+                                        Uniform Type: <input type="text" id="uniformType" list="types" value="Home">
+                                        <datalist id="types">
+                                            <option>Home</option>
+                                            <option>Away</option>
+                                            <option>Alternate</option>
+                                            <option>Throwback</option>
+                                            <option>Fauxback</option>
+                                            <option>Home Alternate</option>
+                                            <option>Away Alternate</option>
+                                            <option>City Connect</option>
+                                            <option>Sunday Special</option>
+                                            <option>Turn Ahead The Clock</option>
+                                        </datalist>
+                                    </td>
+                                    <td><label for="startYear">Start:</label>
+                                        <input type="number" class="year" id="startYear" name="startYear" onkeypress="return isNumberKey(event)" style="width:35px;">
+                                    </td>
+                                    <td><label for="endYear">End:</label>
+                                        <input type="number" class="year" id="endYear" name="endYear" onkeypress="return isNumberKey(event)" style="width:35px;">
+                                    </td>
+                                </tr>
+                            <table>
+                            <div class="accordion">
+                            <table style="width:100%; height:760px;">
+						    <tr><td>
+                                <div id="tabContainer" class="skltbs-theme-light" data-skeletabs='{ "panelHeight": "auto", "keyboard": false, "startIndex": 0, "slidingAccordion": false }' style="position:absolute; top:60px;">
+                                    <ul class="skltbs-tab-group">
+                                        <li class="skltbs-tab-item">
+                                            <button class="skltbs-tab">Logo Editor</button>
+                                        </li>
+                                        <li class="skltbs-tab-item">
+                                            <button class="skltbs-tab">Logo Creator</button>
+                                        </li>    
+                                    </ul>
+                                    <div class="skltbs-panel-group">
+                                        <div class="skltbs-panel" id="editorPanel">
+                                            Editor Panel
+                                        </div>
+                                        <div class="skltbs-panel" id="creatorPanel">
+                                            Creator Panel
+                                        </div>
+                                    </div>
+                                </div>
+                            </td></tr>
+                            </table>
+                            <div style="text-align:center; margin-top:5px;">
+                                <input type="button" class="button" id="straightenObject" value="Reset Object Rotation" style="display:none;">
+                                <!--<input type="button" class="button" id="saveCap" value="Save Ballcap">-->
+                                <input type="button" class="button" id="save" value="Save Ballcap">
+                                <input type="button" class="button" id="loadCap" value="Load Ballcap">
+                                <!--<input type="button" class="button" id="imgur" value="Upload To Imgur" style="display:none;">-->
+                                <input type="button" class="button" id="toggleGuides" value="Hide Guides">
+                                <input type="button" class="button" id="clearTexture" value="Clear Custom Texture" style="display:none;">
+                                <input type="button" class="button" id="aboutCapmaker" value="About Cap Maker">
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="frmBelow" name="below" value="">
+                    <input type="hidden" id="frmTexture" name="texture" value="">
+                    <input type="hidden" id="frmAbove" name="above" value="">
+                </div>	
+            </div>
+            <div id="FAQ" class="cm-white-popup mfp-hide">
+                <div style="width:100%; text-align:center;">	
+                    <span class="header" style="color:#C6011F!important;">About The OOTP Cap Maker</span>
+                </div>
+                <div id="faqContainer" style="width:100%; height:90%; overflow:auto;">
+                    <div class="question" style="margin-top:10px!important;">So what is this thing?</div><br>
+                    <div class="answer">This is a utility designed to make it easy to create custom caps for Out Of The Park Baseball.  If you don't have OOTP, then this is really of little use to you.</div><br>
+                    <div class="question">What is Out Of The Park Baseball?</div><br>
+                    <div class="answer">Out Of The Park Baseball is an award winning baseball management simulation published by OOTP Developments.  For more information about OOTP, as well as the other games they make, <a href="http://www.ootpdevelopments.com" target="_blank">visit their site</a>.</div><br>
+                    <div class="question">Why doesn't &#60;insert feature here&#62; work?</div><br>
+                    <div class="answer">The Cap Maker <b>should</b> function in any browser that can take advantage of the HTML5 Canvas element, which should function on pretty much any modern browser (see <a href="http://caniuse.com/#feat=canvas" target="_blank">here</a> for a list of compatible browsers).  Beyond that, just make sure Javascript is enabled and you should be off and running!</div><br>
+                    <div class="question">Who is responsible for this thing?</div><br>
+                    <div class="answer">That would be me.  My name is Eriq Jaffe, and I've been playing OOTP Baseball since 2004.  Feel free to <a href="mailto:eriqjaffe@ootputilities.com">shoot me an email</a> with any questions or comments about this site.<br><br>The textures and shapes are based on a Photoshop template that I've been using for a number of years which was built on the work of a number of members of the OOTP forums - notably Gern44, Deft, NoPepper, Silvam, Reds1, davwms and probably several others (my record keeping isn't all that great, and I'm not 100% sure where every piece came from - if I'm using one of your components and I forgot to give you credit, thanks!).<br><br>I'd also like to give an additional shout out to <a href="https://fontsbyconrad.wordpress.com/" target="_blank">Conrad Burry</a>, who created some of the fonts that can be used on the caps.</div><br>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>
+    $(document).ready(function() {
+        //$("#tabContainer").skeletabs() 
+    })
+
+    fabric.Object.prototype.set({
+    	borderColor: 'red',
+		cornerColor: 'yellow',
+		cornerSize: 12,
+		transparentCorners: true
+	});
+
+	fabric.Object.prototype.getZIndex = function() {
+    	return this.canvas.getObjects().indexOf(this);
+	}
+
+    var logoEditor = new fabric.StaticCanvas('logoEditor',{
+		enableRetinaScaling: false,
+		preserveObjectStacking: true
+	});
+
+    var logoCreator = new fabric.StaticCanvas('logoCreator',{
+		enableRetinaScaling: false,
+		preserveObjectStacking: true
+	});
+
+    initializeCreator()
+
+    function initializeCreator() {
+
+        outerStroke = new fabric.Circle({
+            top: 250,
+            left: 250,
+			radius: 150,
+			fill: 'white',
+			originX: "center",
+            originY: "center",
+			id: 'outerStroke',
+			visible: true,
+			selectable: false
+		})
+
+        innerStroke = new fabric.Circle({
+            top: 250,
+            left: 250,
+			radius: 147,
+			fill: 'red',
+			originX: 'center',
+			originY: 'center',
+			id: 'innerStroke',
+			visible: true,
+			selectable: false
+		})
+
+        outerCircle = new fabric.Circle({
+            top: 250,
+            left: 250,
+			radius: 144,
+			fill: 'blue',
+			originX: 'center',
+			originY: 'center',
+			id: 'outerCircle',
+			visible: true,
+			selectable: false
+		})
+
+        centerStroke = new fabric.Circle({
+            top: 250,
+            left: 250,
+			radius: 98,
+			fill: 'green',
+			originX: 'center',
+			originY: 'center',
+			id: 'innerStroke',
+			visible: true,
+			selectable: false
+		})
+
+        innerCircle = new fabric.Circle({
+            top: 250,
+            left: 250,
+			radius: 95,
+			fill: 'white',
+			originX: 'center',
+			originY: 'center',
+			id: 'innerCircle',
+			visible: true,
+			selectable: false
+		})
+
+        var circle = new fabric.Group ([outerStroke, innerStroke, outerCircle, centerStroke, innerCircle])
+
+		circle.set({
+			selectable:false,
+			id:'circle'
+		});
+
+        logoCreator.add(circle)
+        //logoCreator.centerObject(circle);
+
+        logoCreator.renderAll()
+    }
+    </script>
+</html>
