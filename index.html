@@ -27,7 +27,7 @@
                     <div class="col span_1_of_2" style="float:left;">
                         <div id="canvasContainer" style="width:500px; height:575px;">
                             <div id="editorContainer">
-						        <canvas id="logoEditor" width="500" height="500" style="position:absolute; top:50; float:left; z-index:1;"></canvas>
+						        <canvas id="logoEditor" width="500" height="500" style="position:absolute; top:50; float:left; z-index:-1;"></canvas>
 					        </div>
                             <div id="creatorContainer">
 						        <canvas id="logoCreator" width="500" height="500" style="position:absolute; top:50; float:left; z-index:0;"></canvas>
@@ -143,7 +143,20 @@
     	return this.canvas.getObjects().indexOf(this);
 	}
 
-/*     var logoEditor = new fabric.StaticCanvas('logoEditor',{
+    fabric.Object.NUM_FRACTION_DIGITS = 17;
+
+	fabric.Object.prototype.controls.mtr = new fabric.Control({
+		x: 0,
+		y: -0.5,
+		offsetY: -40,
+		cursorStyle: 'grab',
+		actionHandler: fabric.controlsUtils.rotationWithSnapping,
+		actionName: 'rotate',
+		cornerSize: 28,
+		withConnection: true
+	});
+
+    var logoEditor = new fabric.StaticCanvas('logoEditor',{
 		enableRetinaScaling: false,
 		preserveObjectStacking: true
 	});
@@ -151,9 +164,9 @@
     logoEditor.setBackgroundColor(
         {source: './images/bg.png', repeat: 'repeat'}, 
         logoEditor.renderAll.bind(logoEditor),
-    ); */
+    );
 
-    var logoCreator = new fabric.StaticCanvas('logoCreator',{
+    var logoCreator = new fabric.Canvas('logoCreator',{
 		enableRetinaScaling: false,
 		preserveObjectStacking: true,
 	});
@@ -238,9 +251,39 @@
 			textAlign: 'center',
 			id: 'textTop',
 			fill: 'white',
-			stroke: 'black',
+			stroke: 'transparent',
             paintFirst: "stroke",
-			strokeWidth: 4,
+			strokeWidth: 40,
+            path: new fabric.Path("M 253.61914,155.27734 A 94.793647,94.793647 0 0 1 341.56445,225.4668 94.793647,94.793647 0 0 1 274.5332,341.56445 94.793647,94.793647 0 0 1 158.43555,274.5332 94.793647,94.793647 0 0 1 225.4668,158.43555 a 94.793647,94.793647 0 0 1 28.15234,-3.15821 z ", {
+				visible: false,
+				selectable:false,
+				evented: false,
+			}),
+            pathAlign: 'descender',
+			borderColor: 'red',
+			cornerColor: 'yellow',
+			cornerSize: 12,
+			transparentCorners: false,
+			lockScalingFlip: true,
+			lockScalingX: true,
+			lockScalingY: true,
+			lockMovementX: true,
+			lockMovementY: true,
+			snapAngle: 5,
+            angle: 180
+		})
+
+        textTopStroke = new fabric.Text('CHICAGO',{
+			visible: true,
+			fontFamily: "Arial",
+			fontSize: 45,
+			originX: 'center',
+			originY: 'center',
+			textAlign: 'center',
+			id: 'textTop',
+			fill: 'black',
+			stroke: 'black',
+            strokeWidth: 4,
             path: new fabric.Path("M 253.61914,155.27734 A 94.793647,94.793647 0 0 1 341.56445,225.4668 94.793647,94.793647 0 0 1 274.5332,341.56445 94.793647,94.793647 0 0 1 158.43555,274.5332 94.793647,94.793647 0 0 1 225.4668,158.43555 a 94.793647,94.793647 0 0 1 28.15234,-3.15821 z ", {
 				visible: false,
 				selectable:false,
@@ -269,9 +312,9 @@
 			textAlign: 'center',
 			id: 'textBottom',
 			fill: 'white',
-			stroke: 'black',
+			stroke: 'transparent',
             paintFirst: "stroke",
-			strokeWidth: 4,
+			strokeWidth: 90,
 			path: new fabric.Path("M 253.89258 148.13867 A 101.93658 101.93658 0 0 0 223.61719 151.53711 A 101.93658 101.93658 0 0 0 151.53711 276.38281 A 101.93658 101.93658 0 0 0 276.38281 348.46289 A 101.93658 101.93658 0 0 0 348.46289 223.61719 A 101.93658 101.93658 0 0 0 253.89258 148.13867 z", {
 				visible: false,
 				selectable:false,
@@ -290,6 +333,47 @@
 			snapAngle: 5,
 		})
 
+        textBottomStroke = new fabric.Text('BULLDOGS',{
+			visible: true,
+			fontFamily: "Arial",
+			fontSize: 45,
+			originX: 'center',
+			originY: 'center',
+			textAlign: 'center',
+			id: 'textBottomStroke',
+			fill: 'black',
+			stroke: 'black',
+            strokeWidth: 4,
+			path: new fabric.Path("M 253.89258 148.13867 A 101.93658 101.93658 0 0 0 223.61719 151.53711 A 101.93658 101.93658 0 0 0 151.53711 276.38281 A 101.93658 101.93658 0 0 0 276.38281 348.46289 A 101.93658 101.93658 0 0 0 348.46289 223.61719 A 101.93658 101.93658 0 0 0 253.89258 148.13867 z", {
+				visible: false,
+				selectable:false,
+				evented: false,
+			}),
+            pathAlign: 'ascender',
+			borderColor: 'red',
+			cornerColor: 'yellow',
+			cornerSize: 12,
+			transparentCorners: false,
+			lockScalingFlip: true,
+			lockScalingX: true,
+			lockScalingY: true,
+			lockMovementX: true,
+			lockMovementY: true,
+			snapAngle: 5,
+		})
+
+        textBottom.setControlsVisibility({
+			mt: false,
+			mb: false,
+			ml: false,
+			mr: false,
+			tr: false,
+			tl: false,
+			br: false,
+			bl: false,
+			mtr: true
+		})
+
         //var circleText = new fabric.Group ([textTop, textBottom])
 
 		circle.set({
@@ -303,12 +387,53 @@
         }) */
 
         logoCreator.add(circle)
+        logoCreator.add(textTopStroke)
         logoCreator.add(textTop)
+        logoCreator.add(textBottomStroke)
         logoCreator.add(textBottom)
+        
         logoCreator.centerObject(textTop)
+        logoCreator.centerObject(textTopStroke)
         logoCreator.centerObject(textBottom)
+        logoCreator.centerObject(textBottomStroke)
 
         logoCreator.renderAll()
     }
+
+    logoCreator.on('selection:created', function(e) {
+		var obj = e.selected[0];
+		if (obj.id == "textBottom") {
+        }
+		/* if (obj.id == 'wordmark') {
+			$("#tipContainer").html("If you're trying to select an image instead of the text, you have to hide the text first.");
+		}
+		if (obj.type == 'image') {
+			$("#fileName").html(obj.get('name'));
+			if ($("#trimImageDiv").css("display") == "none") {
+				$("#trimImageDiv").css("display","block");
+				$("#uploadImageDiv").css("display","none");
+				$("#selectedImageDiv").css("display","block");
+			}
+			$("#tipContainer").html("Use Arrow keys to move image 1 pixel.<br>Use Shift + Arrow keys to move image 10 pixels.<br>Use Delete key to remove image.");
+		} */
+	})
+
+    logoCreator.on('object:rotating', function(e) {
+		if (e.target.id == "textBottom") {
+			logoCreator.getObjects('text').forEach(function(o) {
+				switch (o.id) {
+					case "textTop":
+						o.set("angle", (e.target.angle + 180) % 360)
+						break;
+					case "textTopStroke":
+						o.set("angle", (e.target.angle + 180) % 360)
+						break;
+					case "textBottomStroke":
+						o.set("angle", e.target.angle)
+						break;
+				}
+			})
+		}
+	})
     </script>
 </html>
