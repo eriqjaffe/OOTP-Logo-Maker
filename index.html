@@ -143,15 +143,25 @@
     	return this.canvas.getObjects().indexOf(this);
 	}
 
-    var logoEditor = new fabric.StaticCanvas('logoEditor',{
+/*     var logoEditor = new fabric.StaticCanvas('logoEditor',{
 		enableRetinaScaling: false,
 		preserveObjectStacking: true
 	});
 
+    logoEditor.setBackgroundColor(
+        {source: './images/bg.png', repeat: 'repeat'}, 
+        logoEditor.renderAll.bind(logoEditor),
+    ); */
+
     var logoCreator = new fabric.StaticCanvas('logoCreator',{
 		enableRetinaScaling: false,
-		preserveObjectStacking: true
+		preserveObjectStacking: true,
 	});
+
+    logoCreator.setBackgroundColor(
+        {source: './images/bg.png', repeat: 'repeat'}, 
+        logoCreator.renderAll.bind(logoCreator),
+    );
 
     initializeCreator()
 
@@ -219,13 +229,84 @@
 
         var circle = new fabric.Group ([outerStroke, innerStroke, outerCircle, centerStroke, innerCircle])
 
+        textTop = new fabric.Text('CHICAGO',{
+			visible: true,
+			fontFamily: "Arial",
+			fontSize: 45,
+			originX: 'center',
+			originY: 'center',
+			textAlign: 'center',
+			id: 'textTop',
+			fill: 'white',
+			stroke: 'black',
+            paintFirst: "stroke",
+			strokeWidth: 4,
+            path: new fabric.Path("M 253.61914,155.27734 A 94.793647,94.793647 0 0 1 341.56445,225.4668 94.793647,94.793647 0 0 1 274.5332,341.56445 94.793647,94.793647 0 0 1 158.43555,274.5332 94.793647,94.793647 0 0 1 225.4668,158.43555 a 94.793647,94.793647 0 0 1 28.15234,-3.15821 z ", {
+				visible: false,
+				selectable:false,
+				evented: false,
+			}),
+            pathAlign: 'descender',
+			borderColor: 'red',
+			cornerColor: 'yellow',
+			cornerSize: 12,
+			transparentCorners: false,
+			lockScalingFlip: true,
+			lockScalingX: true,
+			lockScalingY: true,
+			lockMovementX: true,
+			lockMovementY: true,
+			snapAngle: 5,
+            angle: 180
+		})
+        
+        textBottom = new fabric.Text('BULLDOGS',{
+			visible: true,
+			fontFamily: "Arial",
+			fontSize: 45,
+			originX: 'center',
+			originY: 'center',
+			textAlign: 'center',
+			id: 'textBottom',
+			fill: 'white',
+			stroke: 'black',
+            paintFirst: "stroke",
+			strokeWidth: 4,
+			path: new fabric.Path("M 253.89258 148.13867 A 101.93658 101.93658 0 0 0 223.61719 151.53711 A 101.93658 101.93658 0 0 0 151.53711 276.38281 A 101.93658 101.93658 0 0 0 276.38281 348.46289 A 101.93658 101.93658 0 0 0 348.46289 223.61719 A 101.93658 101.93658 0 0 0 253.89258 148.13867 z", {
+				visible: false,
+				selectable:false,
+				evented: false,
+			}),
+            pathAlign: 'ascender',
+			borderColor: 'red',
+			cornerColor: 'yellow',
+			cornerSize: 12,
+			transparentCorners: false,
+			lockScalingFlip: true,
+			lockScalingX: true,
+			lockScalingY: true,
+			lockMovementX: true,
+			lockMovementY: true,
+			snapAngle: 5,
+		})
+
+        //var circleText = new fabric.Group ([textTop, textBottom])
+
 		circle.set({
 			selectable:false,
 			id:'circle'
 		});
 
+/*         circleText.set({
+            selectable:true,
+            id:'circleText'
+        }) */
+
         logoCreator.add(circle)
-        //logoCreator.centerObject(circle);
+        logoCreator.add(textTop)
+        logoCreator.add(textBottom)
+        logoCreator.centerObject(textTop)
+        logoCreator.centerObject(textBottom)
 
         logoCreator.renderAll()
     }
