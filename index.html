@@ -12,10 +12,12 @@
         <script type="text/javascript" src="./scripts/spectrum.js"></script>
         <script type="text/javascript" src="./scripts/opentype.js"></script>
         <script type="text/javascript" src="./scripts/skeletabs.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.js"></script>
         <link href='./scripts/logomaker.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/spectrum.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/skeletabs.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/magnific-popup.css' rel='stylesheet' type='text/css'>
+		<link href='https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.css' rel="stylesheet" type="text/css">
     </head>
     <body>
         <div class="title">
@@ -87,7 +89,7 @@
                                             Editor Panel
                                         </div>
                                         <div class="skltbs-panel" id="creatorPanel">
-                                            Creator Panel
+                                            <div id="slider"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -129,8 +131,59 @@
     </body>
     <script>
     $(document).ready(function() {
-        //$("#tabContainer").skeletabs() 
+        $("#tabContainer").skeletabs('goTo', 1)
     })
+
+	$("#slider").roundSlider({
+		sliderType: "min-range",
+		handleShape: "round",
+		width: 4,
+		radius: 20,
+		value: 0,
+		handleSize: "+4",
+		max: "360",
+		startAngle: 90,
+		drag: function (args) {
+			var angle = $("#slider").roundSlider("getValue")
+			logoCreator.getObjects('text').forEach(function(o) {
+				switch (o.id) {
+					case "textTop":
+						o.set("angle", (angle + 180) % 360)
+						break;
+					case "textTopStroke":
+						o.set("angle", (angle + 180) % 360)
+						break;
+					case "textBottom":
+						o.set("angle", angle)
+						break;
+					case "textBottomStroke":
+						o.set("angle", angle)
+						break;
+				}
+			})
+			logoCreator.renderAll()
+		},
+		change: function (args) {
+			var angle = $("#slider").roundSlider("getValue")
+			logoCreator.getObjects('text').forEach(function(o) {
+				switch (o.id) {
+					case "textTop":
+						o.set("angle", (angle + 180) % 360)
+						break;
+					case "textTopStroke":
+						o.set("angle", (angle + 180) % 360)
+						break;
+					case "textBottom":
+						o.set("angle", angle)
+						break;
+					case "textBottomStroke":
+						o.set("angle", angle)
+						break;
+				}
+			})
+			logoCreator.renderAll()
+		}
+	});
 
     fabric.Object.prototype.set({
     	borderColor: 'red',
@@ -427,6 +480,9 @@
 						break;
 					case "textTopStroke":
 						o.set("angle", (e.target.angle + 180) % 360)
+						break;
+					case "textBottom":
+						o.set("angle", e.target.angle)
 						break;
 					case "textBottomStroke":
 						o.set("angle", e.target.angle)
