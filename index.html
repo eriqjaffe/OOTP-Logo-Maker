@@ -144,46 +144,32 @@
 		max: "360",
 		startAngle: 90,
 		drag: function (args) {
-			var angle = $("#slider").roundSlider("getValue")
-			logoCreator.getObjects('text').forEach(function(o) {
-				switch (o.id) {
-					case "textTop":
-						o.set("angle", (angle + 180) % 360)
-						break;
-					case "textTopStroke":
-						o.set("angle", (angle + 180) % 360)
-						break;
-					case "textBottom":
-						o.set("angle", angle)
-						break;
-					case "textBottomStroke":
-						o.set("angle", angle)
-						break;
-				}
-			})
-			logoCreator.renderAll()
+			rotateCircleText($("#slider").roundSlider("getValue"))
 		},
 		change: function (args) {
-			var angle = $("#slider").roundSlider("getValue")
-			logoCreator.getObjects('text').forEach(function(o) {
-				switch (o.id) {
-					case "textTop":
-						o.set("angle", (angle + 180) % 360)
-						break;
-					case "textTopStroke":
-						o.set("angle", (angle + 180) % 360)
-						break;
-					case "textBottom":
-						o.set("angle", angle)
-						break;
-					case "textBottomStroke":
-						o.set("angle", angle)
-						break;
-				}
-			})
-			logoCreator.renderAll()
+			rotateCircleText($("#slider").roundSlider("getValue"))
 		}
 	});
+
+    function rotateCircleText(angle) {
+        logoCreator.getObjects('text').forEach(function(o) {
+            switch (o.id) {
+                case "textTop":
+                    o.set("angle", (angle + 180) % 360)
+                    break;
+                case "textTopStroke":
+                    o.set("angle", (angle + 180) % 360)
+                    break;
+                case "textBottom":
+                    o.set("angle", angle)
+                    break;
+                case "textBottomStroke":
+                    o.set("angle", angle)
+                    break;
+            }
+        })
+        logoCreator.renderAll()
+    }
 
     fabric.Object.prototype.set({
     	borderColor: 'red',
@@ -233,67 +219,67 @@
 
     function initializeCreator() {
 
-        outerStroke = new fabric.Circle({
+        roundelOuterStroke = new fabric.Circle({
             top: 250,
             left: 250,
 			radius: 150,
 			fill: 'white',
 			originX: "center",
             originY: "center",
-			id: 'outerStroke',
+			id: 'roundelOuterStroke',
 			visible: true,
 			selectable: false
 		})
 
-        innerStroke = new fabric.Circle({
+        roundelInnerStroke = new fabric.Circle({
             top: 250,
             left: 250,
 			radius: 147,
 			fill: 'red',
 			originX: 'center',
 			originY: 'center',
-			id: 'innerStroke',
+			id: 'roundelInnerStroke',
 			visible: true,
 			selectable: false
 		})
 
-        outerCircle = new fabric.Circle({
+        roundelOuterCircle = new fabric.Circle({
             top: 250,
             left: 250,
 			radius: 144,
 			fill: 'blue',
 			originX: 'center',
 			originY: 'center',
-			id: 'outerCircle',
+			id: 'roundelOuterCircle',
 			visible: true,
 			selectable: false
 		})
 
-        centerStroke = new fabric.Circle({
+        roundelCenterStroke = new fabric.Circle({
             top: 250,
             left: 250,
 			radius: 98,
 			fill: 'green',
 			originX: 'center',
 			originY: 'center',
-			id: 'innerStroke',
+			id: 'roundelCenterStroke',
 			visible: true,
 			selectable: false
 		})
 
-        innerCircle = new fabric.Circle({
+        roundelInnerCircle = new fabric.Circle({
             top: 250,
             left: 250,
 			radius: 95,
 			fill: 'white',
 			originX: 'center',
 			originY: 'center',
-			id: 'innerCircle',
+			id: 'roundelInnerCircle',
 			visible: true,
 			selectable: false
 		})
 
-        var circle = new fabric.Group ([outerStroke, innerStroke, outerCircle, centerStroke, innerCircle])
+        var roundel = new fabric.Group ([roundelOuterStroke, roundelInnerStroke, roundelOuterCircle, roundelCenterStroke, roundelInnerCircle])
 
         textTop = new fabric.Text('CHICAGO',{
 			visible: true,
@@ -323,7 +309,8 @@
 			lockMovementX: true,
 			lockMovementY: true,
 			snapAngle: 5,
-            angle: 180
+            angle: 180,
+			selectable: false
 		})
 
         textTopStroke = new fabric.Text('CHICAGO',{
@@ -353,7 +340,8 @@
 			lockMovementX: true,
 			lockMovementY: true,
 			snapAngle: 5,
-            angle: 180
+            angle: 180,
+			selectable: false
 		})
         
         textBottom = new fabric.Text('BULLDOGS',{
@@ -384,6 +372,7 @@
 			lockMovementX: true,
 			lockMovementY: true,
 			snapAngle: 5,
+			selectable: false
 		})
 
         textBottomStroke = new fabric.Text('BULLDOGS',{
@@ -413,33 +402,175 @@
 			lockMovementX: true,
 			lockMovementY: true,
 			snapAngle: 5,
+			selectable: false
 		})
 
-        textBottom.setControlsVisibility({
-			mt: false,
-			mb: false,
-			ml: false,
-			mr: false,
-			tr: false,
-			tl: false,
-			br: false,
-			bl: false,
-			mtr: true
-		})
-
-        //var circleText = new fabric.Group ([textTop, textBottom])
-
-		circle.set({
+		roundel.set({
 			selectable:false,
-			id:'circle'
+			id:'roundel'
 		});
 
-/*         circleText.set({
-            selectable:true,
-            id:'circleText'
-        }) */
+        circleOuterStroke = new fabric.Circle({
+            
+        })
 
-        logoCreator.add(circle)
+        homePlateOuterStroke = new fabric.Path("m 99.99981,100.00034 v 150 l 150,150 150,-150 v -150 h -150 z m 3,3 h 147 147 V 248.7562 l -147,147 -147,-147 z",{
+            id: 'homePlateOuterStroke',
+            fill: 'green',
+            visible: true,
+            selectable: false,
+            evented: false
+        })
+
+        homePlateCenterStroke = new fabric.Path("m 100.00018,99.99967 v 150 l 150,150 150,-150 v -150 h -150 z m 6.04883,6.04883 H 250.00018 393.9494 V 247.49186 L 250.00018,391.44303 106.04901,247.49186 Z",{
+            id: 'homePlateCenterStroke',
+            fill: 'red',
+            visible: true,
+            selectable: false,
+            evented: false
+        })
+
+        homePlateInnerStroke = new fabric.Path("m 99.99981,100.00034 v 150 l 150,150 150,-150 v -150 h -150 z m 9,9 h 141 141 v 137.27149 l -141,141 -141,-141 z",{
+            id: 'homePlateInnerStroke',
+            fill: 'blue',
+            visible: true,
+            selectable: false,
+            evented: false
+        })
+
+        homePlateFill = new fabric.Path("m 100.00017,99.99967 v 150 l 150.00002,150 149.99999,-150 v -150 H 250.00019 Z",{
+            id: 'homePlateFill',
+            fill: 'yellow',
+            visible: true,
+            selectable: false,
+            evented: false
+        })
+
+        var homePlate = new fabric.Group ([homePlateFill, homePlateInnerStroke, homePlateCenterStroke, homePlateOuterStroke])
+
+		homePlate.set({
+			selectable:false,
+			id:'homePlate',
+            visible: false
+		});
+
+        squareOuterStroke = new fabric.Rect({
+            id: 'squareOuterStroke',
+            fill: 'blue',
+            height: 300,
+            width: 300,
+            originX: 'center',
+            originY: 'center',
+            top: 250,
+            left: 250
+        })
+
+        squareCenterStroke = new fabric.Rect({
+            id: 'squareCenterStroke',
+            fill: 'red',
+            height: 294,
+            width: 294,
+            originX: 'center',
+            originY: 'center',
+            top: 250,
+            left: 250
+        })
+
+        squareInnerStroke = new fabric.Rect({
+            id: 'squareInnerStroke',
+            fill: 'green',
+            height: 288,
+            width: 288,
+            originX: 'center',
+            originY: 'center',
+            top: 250,
+            left: 250
+        })
+
+        squareFill = new fabric.Rect({
+            id: 'squareFill',
+            fill: 'yellow',
+            height: 282,
+            width: 282,
+            originX: 'center',
+            originY: 'center',
+            top: 250,
+            left: 250
+        })
+
+        var square = new fabric.Group([squareOuterStroke, squareCenterStroke, squareInnerStroke, squareFill])
+
+        square.set({
+			selectable:false,
+			id:'square',
+            visible: false
+		});
+
+        roundedSquareOuterStroke = new fabric.Rect({
+            id: 'roundedSquareOuterStroke',
+            fill: 'blue',
+            height: 300,
+            width: 300,
+            originX: 'center',
+            originY: 'center',
+            top: 250,
+            left: 250,
+			rx: 10,
+			ry: 10
+        })
+
+        roundedSquareCenterStroke = new fabric.Rect({
+            id: 'roundedSquareCenterStroke',
+            fill: 'red',
+            height: 294,
+            width: 294,
+            originX: 'center',
+            originY: 'center',
+            top: 250,
+            left: 250,
+			rx: 10,
+			ry: 10
+        })
+
+        roundedSquareInnerStroke = new fabric.Rect({
+            id: 'roundedSquareInnerStroke',
+            fill: 'green',
+            height: 288,
+            width: 288,
+            originX: 'center',
+            originY: 'center',
+            top: 250,
+            left: 250,
+			rx: 10,
+			ry: 10
+        })
+
+        roundedSquareFill = new fabric.Rect({
+            id: 'roundedSquareFill',
+            fill: 'yellow',
+            height: 282,
+            width: 282,
+            originX: 'center',
+            originY: 'center',
+            top: 250,
+            left: 250,
+			rx: 10,
+			ry: 10
+        })
+
+        var roundedSquare = new fabric.Group([roundedSquareOuterStroke, roundedSquareCenterStroke, roundedSquareInnerStroke, roundedSquareFill])
+
+        roundedSquare.set({
+			selectable:false,
+			id:'roundedSquare',
+            visible: false
+		});
+
+        logoCreator.add(roundel)
+        logoCreator.add(homePlate)
+        logoCreator.add(square)
+        logoCreator.add(roundedSquare)
+
         logoCreator.add(textTopStroke)
         logoCreator.add(textTop)
         logoCreator.add(textBottomStroke)
@@ -449,6 +580,9 @@
         logoCreator.centerObject(textTopStroke)
         logoCreator.centerObject(textBottom)
         logoCreator.centerObject(textBottomStroke)
+        logoCreator.centerObject(homePlate)
+
+        
 
         logoCreator.renderAll()
     }
