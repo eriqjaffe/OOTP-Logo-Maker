@@ -180,16 +180,16 @@
     function rotateCircleText(angle) {
         logoCreator.getObjects('text').forEach(function(o) {
             switch (o.id) {
-                case "textTop":
+                case "roundelTextTop":
                     o.set("angle", (angle + 180) % 360)
                     break;
-                case "textTopStroke":
+                case "roundelTextTopStroke":
                     o.set("angle", (angle + 180) % 360)
                     break;
-                case "textBottom":
+                case "roundelTextBottom":
                     o.set("angle", angle)
                     break;
-                case "textBottomStroke":
+                case "roundelTextBottomStroke":
                     o.set("angle", angle)
                     break;
             }
@@ -307,87 +307,24 @@
 
         var roundel = new fabric.Group ([roundelOuterStroke, roundelInnerStroke, roundelOuterCircle, roundelCenterStroke, roundelInnerCircle])
 
-        textTop = new fabric.Text('CHICAGO',{
+		roundelTextTop = new fabric.Text('CHICAGO',{
 			visible: true,
 			fontFamily: "Arial",
-			fontSize: 45,
+			fontSize: 40,
 			originX: 'center',
 			originY: 'center',
 			textAlign: 'center',
-			id: 'textTop',
-			fill: 'white',
-			stroke: 'transparent',
-            paintFirst: "stroke",
-			strokeWidth: 40,
-            path: new fabric.Path("M 253.61914,155.27734 A 94.793647,94.793647 0 0 1 341.56445,225.4668 94.793647,94.793647 0 0 1 274.5332,341.56445 94.793647,94.793647 0 0 1 158.43555,274.5332 94.793647,94.793647 0 0 1 225.4668,158.43555 a 94.793647,94.793647 0 0 1 28.15234,-3.15821 z ", {
-				visible: false,
-				selectable:false,
-				evented: false,
-			}),
-            pathAlign: 'descender',
-			borderColor: 'red',
-			cornerColor: 'yellow',
-			cornerSize: 12,
-			transparentCorners: false,
-			lockScalingFlip: true,
-			lockScalingX: true,
-			lockScalingY: true,
-			lockMovementX: true,
-			lockMovementY: true,
-			snapAngle: 5,
-            angle: 180,
-			selectable: false
-		})
-
-        textTopStroke = new fabric.Text('CHICAGO',{
-			visible: true,
-			fontFamily: "Arial",
-			fontSize: 45,
-			originX: 'center',
-			originY: 'center',
-			textAlign: 'center',
-			id: 'textTop',
-			fill: 'black',
-			stroke: 'black',
-            strokeWidth: 4,
-            path: new fabric.Path("M 253.61914,155.27734 A 94.793647,94.793647 0 0 1 341.56445,225.4668 94.793647,94.793647 0 0 1 274.5332,341.56445 94.793647,94.793647 0 0 1 158.43555,274.5332 94.793647,94.793647 0 0 1 225.4668,158.43555 a 94.793647,94.793647 0 0 1 28.15234,-3.15821 z ", {
-				visible: false,
-				selectable:false,
-				evented: false,
-			}),
-            pathAlign: 'descender',
-			borderColor: 'red',
-			cornerColor: 'yellow',
-			cornerSize: 12,
-			transparentCorners: false,
-			lockScalingFlip: true,
-			lockScalingX: true,
-			lockScalingY: true,
-			lockMovementX: true,
-			lockMovementY: true,
-			snapAngle: 5,
-            angle: 180,
-			selectable: false
-		})
-        
-        textBottom = new fabric.Text('BULLDOGS',{
-			visible: true,
-			fontFamily: "Arial",
-			fontSize: 45,
-			originX: 'center',
-			originY: 'center',
-			textAlign: 'center',
-			id: 'textBottom',
+			id: 'roundelTextTop',
 			fill: 'white',
 			stroke: 'transparent',
             paintFirst: "stroke",
 			strokeWidth: 90,
-			path: new fabric.Path("M 253.89258 148.13867 A 101.93658 101.93658 0 0 0 223.61719 151.53711 A 101.93658 101.93658 0 0 0 151.53711 276.38281 A 101.93658 101.93658 0 0 0 276.38281 348.46289 A 101.93658 101.93658 0 0 0 348.46289 223.61719 A 101.93658 101.93658 0 0 0 253.89258 148.13867 z", {
+			path: new fabric.Path("M 250,155.26758 A 94.733186,94.733186 0 0 1 344.73242,250 94.733186,94.733186 0 0 1 250,344.73242 94.733186,94.733186 0 0 1 155.26758,250 94.733186,94.733186 0 0 1 250,155.26758 Z", {
 				visible: false,
 				selectable:false,
 				evented: false,
 			}),
-            pathAlign: 'ascender',
+            pathAlign: 'descender',
 			borderColor: 'red',
 			cornerColor: 'yellow',
 			cornerSize: 12,
@@ -398,21 +335,54 @@
 			lockMovementX: true,
 			lockMovementY: true,
 			snapAngle: 5,
-			selectable: false
+			selectable: false,
+			angle: 180
 		})
 
-        textBottomStroke = new fabric.Text('BULLDOGS',{
+        roundelTextTopStroke = new fabric.Text('CHICAGO',{
 			visible: true,
 			fontFamily: "Arial",
-			fontSize: 45,
+			fontSize: 40,
 			originX: 'center',
 			originY: 'center',
 			textAlign: 'center',
-			id: 'textBottomStroke',
+			id: 'roundelTextTopStroke',
 			fill: 'black',
 			stroke: 'black',
             strokeWidth: 4,
-			path: new fabric.Path("M 253.89258 148.13867 A 101.93658 101.93658 0 0 0 223.61719 151.53711 A 101.93658 101.93658 0 0 0 151.53711 276.38281 A 101.93658 101.93658 0 0 0 276.38281 348.46289 A 101.93658 101.93658 0 0 0 348.46289 223.61719 A 101.93658 101.93658 0 0 0 253.89258 148.13867 z", {
+			path: new fabric.Path("M 250,155.26758 A 94.733186,94.733186 0 0 1 344.73242,250 94.733186,94.733186 0 0 1 250,344.73242 94.733186,94.733186 0 0 1 155.26758,250 94.733186,94.733186 0 0 1 250,155.26758 Z", {
+				visible: false,
+				selectable:false,
+				evented: false,
+			}),
+            pathAlign: 'descender',
+			borderColor: 'red',
+			cornerColor: 'yellow',
+			cornerSize: 12,
+			transparentCorners: false,
+			lockScalingFlip: true,
+			lockScalingX: true,
+			lockScalingY: true,
+			lockMovementX: true,
+			lockMovementY: true,
+			snapAngle: 5,
+			selectable: false,
+			angle: 180
+		})
+
+		roundelTextBottom = new fabric.Text('BULLDOGS',{
+			visible: true,
+			fontFamily: "Arial",
+			fontSize: 40,
+			originX: 'center',
+			originY: 'center',
+			textAlign: 'center',
+			id: 'roundelTextBottom',
+			fill: 'white',
+			stroke: 'transparent',
+            paintFirst: "stroke",
+			strokeWidth: 40,
+            path: new fabric.Path("M 250 148.60352 A 101.39774 101.39774 0 0 0 148.60352 250 A 101.39774 101.39774 0 0 0 250 351.39648 A 101.39774 101.39774 0 0 0 351.39648 250 A 101.39774 101.39774 0 0 0 250 148.60352 z ", {
 				visible: false,
 				selectable:false,
 				evented: false,
@@ -428,9 +398,41 @@
 			lockMovementX: true,
 			lockMovementY: true,
 			snapAngle: 5,
+            angle: 0,
 			selectable: false
 		})
 
+        roundelTextBottomStroke = new fabric.Text('BULLDOGS',{
+			visible: true,
+			fontFamily: "Arial",
+			fontSize: 40,
+			originX: 'center',
+			originY: 'center',
+			textAlign: 'center',
+			id: 'roundelTextBottomStroke',
+			fill: 'black',
+			stroke: 'black',
+            strokeWidth: 4,
+            path: new fabric.Path("M 250 148.60352 A 101.39774 101.39774 0 0 0 148.60352 250 A 101.39774 101.39774 0 0 0 250 351.39648 A 101.39774 101.39774 0 0 0 351.39648 250 A 101.39774 101.39774 0 0 0 250 148.60352 z", {
+				visible: false,
+				selectable:false,
+				evented: false,
+			}),
+            pathAlign: 'ascender',
+			borderColor: 'red',
+			cornerColor: 'yellow',
+			cornerSize: 12,
+			transparentCorners: false,
+			lockScalingFlip: true,
+			lockScalingX: true,
+			lockScalingY: true,
+			lockMovementX: true,
+			lockMovementY: true,
+			snapAngle: 5,
+            angle: 0,
+			selectable: false
+		})
+        
 		roundel.set({
 			selectable:false,
 			id:'roundel'
@@ -638,15 +640,15 @@
         logoCreator.add(square)
         logoCreator.add(roundedSquare)
 
-        logoCreator.add(textTopStroke)
-        logoCreator.add(textTop)
-        logoCreator.add(textBottomStroke)
-        logoCreator.add(textBottom)
+        logoCreator.add(roundelTextTopStroke)
+        logoCreator.add(roundelTextTop)
+        logoCreator.add(roundelTextBottomStroke)
+        logoCreator.add(roundelTextBottom)
         
-        logoCreator.centerObject(textTop)
-        logoCreator.centerObject(textTopStroke)
-        logoCreator.centerObject(textBottom)
-        logoCreator.centerObject(textBottomStroke)
+        logoCreator.centerObject(roundelTextTop)
+        logoCreator.centerObject(roundelTextTopStroke)
+        logoCreator.centerObject(roundelTextBottom)
+        logoCreator.centerObject(roundelTextBottomStroke)
         logoCreator.centerObject(homePlate)
 
         logoCreator.renderAll()
