@@ -47,22 +47,10 @@
                             <table style="width:100%;">
                                 <tr>
                                     <td>
-                                        Team Name: <input type="text" id="teamName">
+                                        City Name: <input type="text" id="cityName">
                                     </td>
                                     <td>
-                                        Uniform Type: <input type="text" id="uniformType" list="types" value="Home">
-                                        <datalist id="types">
-                                            <option>Home</option>
-                                            <option>Away</option>
-                                            <option>Alternate</option>
-                                            <option>Throwback</option>
-                                            <option>Fauxback</option>
-                                            <option>Home Alternate</option>
-                                            <option>Away Alternate</option>
-                                            <option>City Connect</option>
-                                            <option>Sunday Special</option>
-                                            <option>Turn Ahead The Clock</option>
-                                        </datalist>
+                                        Nickname: <input type="text" id="nickName">
                                     </td>
                                     <td><label for="startYear">Start:</label>
                                         <input type="number" class="year" id="startYear" name="startYear" onkeypress="return isNumberKey(event)" style="width:35px;">
@@ -73,7 +61,7 @@
                                 </tr>
                             <table>
                             <div class="accordion">
-                            <table style="width:100%; height:760px;">
+                            <table style="width:100%; height:500px;">
 						    <tr><td>
                                 <div id="tabContainer" class="skltbs-theme-light" data-skeletabs='{ "panelHeight": "auto", "keyboard": false, "startIndex": 0, "slidingAccordion": false }' style="position:absolute; top:60px;">
                                     <ul class="skltbs-tab-group">
@@ -90,7 +78,7 @@
                                         </div>
                                         <div class="skltbs-panel" id="creatorPanel">
                                             <div id="slider"></div>
-											<table style="width:492px;">
+											<table style="width:468px;">
 												<!--<tr class="color_tr">
 													<td>&nbsp;</td>
 													<td colspan="2">
@@ -190,6 +178,18 @@
                     o.set("angle", angle)
                     break;
                 case "roundelTextBottomStroke":
+                    o.set("angle", angle)
+                    break;
+				case "circleTextTop":
+                    o.set("angle", (angle + 180) % 360)
+                    break;
+                case "circleTextTopStroke":
+                    o.set("angle", (angle + 180) % 360)
+                    break;
+                case "circleTextBottom":
+                    o.set("angle", angle)
+                    break;
+                case "circleTextBottomStroke":
                     o.set("angle", angle)
                     break;
             }
@@ -476,6 +476,136 @@
 
 		var circle = new fabric.Group ([circleOuterStroke, circleCenterStroke, circleInnerStroke, circleFill])
 
+		circleTextTop = new fabric.Text('CHICAGO',{
+			visible: false,
+			fontFamily: "Arial",
+			fontSize: 30,
+			charSpacing: 250,
+			originX: 'center',
+			originY: 'center',
+			textAlign: 'center',
+			id: 'circleTextTop',
+			fill: 'white',
+			stroke: 'transparent',
+            paintFirst: "stroke",
+			strokeWidth: 90,
+			path: new fabric.Path("M 250,128.13672 A 121.86793,121.86793 0 0 1 371.86328,250 121.86793,121.86793 0 0 1 250,371.86328 121.86793,121.86793 0 0 1 128.13672,250 121.86793,121.86793 0 0 1 250,128.13672 Z", {
+				visible: false,
+				selectable:false,
+				evented: false,
+			}),
+            pathAlign: 'ascender',
+			borderColor: 'red',
+			cornerColor: 'yellow',
+			cornerSize: 12,
+			transparentCorners: false,
+			lockScalingFlip: true,
+			lockScalingX: true,
+			lockScalingY: true,
+			lockMovementX: true,
+			lockMovementY: true,
+			snapAngle: 5,
+			selectable: false,
+			angle: 180
+		})
+
+        circleTextTopStroke = new fabric.Text('CHICAGO',{
+			visible: false,
+			fontFamily: "Arial",
+			fontSize: 30,
+			charSpacing: 250,
+			originX: 'center',
+			originY: 'center',
+			textAlign: 'center',
+			id: 'circleTextTopStroke',
+			fill: 'black',
+			stroke: 'black',
+            strokeWidth: 4,
+			path: new fabric.Path("M 250,128.13672 A 121.86793,121.86793 0 0 1 371.86328,250 121.86793,121.86793 0 0 1 250,371.86328 121.86793,121.86793 0 0 1 128.13672,250 121.86793,121.86793 0 0 1 250,128.13672 Z", {
+				visible: false,
+				selectable:false,
+				evented: false,
+			}),
+            pathAlign: 'ascender',
+			borderColor: 'red',
+			cornerColor: 'yellow',
+			cornerSize: 12,
+			transparentCorners: false,
+			lockScalingFlip: true,
+			lockScalingX: true,
+			lockScalingY: true,
+			lockMovementX: true,
+			lockMovementY: true,
+			snapAngle: 5,
+			selectable: false,
+			angle: 180
+		})
+
+		circleTextBottom = new fabric.Text('BULLDOGS',{
+			visible: false,
+			fontFamily: "Arial",
+			fontSize: 30,
+			charSpacing: 250,
+			originX: 'center',
+			originY: 'center',
+			textAlign: 'center',
+			id: 'circleTextBottom',
+			fill: 'white',
+			stroke: 'transparent',
+            paintFirst: "stroke",
+			strokeWidth: 40,
+            path: new fabric.Path("M 250 123.37891 A 126.62352 126.62352 0 0 0 123.37891 250 A 126.62352 126.62352 0 0 0 250 376.62109 A 126.62352 126.62352 0 0 0 376.62109 250 A 126.62352 126.62352 0 0 0 250 123.37891 z ", {
+				visible: false,
+				selectable:false,
+				evented: false,
+			}),
+            pathAlign: 'descender',
+			borderColor: 'red',
+			cornerColor: 'yellow',
+			cornerSize: 12,
+			transparentCorners: false,
+			lockScalingFlip: true,
+			lockScalingX: true,
+			lockScalingY: true,
+			lockMovementX: true,
+			lockMovementY: true,
+			snapAngle: 5,
+            angle: 0,
+			selectable: false
+		})
+
+        circleTextBottomStroke = new fabric.Text('BULLDOGS',{
+			visible: false,
+			fontFamily: "Arial",
+			fontSize: 30,
+			charSpacing: 250,
+			originX: 'center',
+			originY: 'center',
+			textAlign: 'center',
+			id: 'circleTextBottomStroke',
+			fill: 'black',
+			stroke: 'black',
+            strokeWidth: 4,
+            path: new fabric.Path("M 250 123.37891 A 126.62352 126.62352 0 0 0 123.37891 250 A 126.62352 126.62352 0 0 0 250 376.62109 A 126.62352 126.62352 0 0 0 376.62109 250 A 126.62352 126.62352 0 0 0 250 123.37891 z ", {
+				visible: false,
+				selectable:false,
+				evented: false,
+			}),
+            pathAlign: 'descender',
+			borderColor: 'red',
+			cornerColor: 'yellow',
+			cornerSize: 12,
+			transparentCorners: false,
+			lockScalingFlip: true,
+			lockScalingX: true,
+			lockScalingY: true,
+			lockMovementX: true,
+			lockMovementY: true,
+			snapAngle: 5,
+            angle: 0,
+			selectable: false
+		})
+        
 		circle.set({
 			visible: false,
 			selectable:false,
@@ -649,6 +779,17 @@
         logoCreator.centerObject(roundelTextTopStroke)
         logoCreator.centerObject(roundelTextBottom)
         logoCreator.centerObject(roundelTextBottomStroke)
+
+		logoCreator.add(circleTextTopStroke)
+        logoCreator.add(circleTextTop)
+        logoCreator.add(circleTextBottomStroke)
+        logoCreator.add(circleTextBottom)
+        
+        logoCreator.centerObject(circleTextTop)
+        logoCreator.centerObject(circleTextTopStroke)
+        logoCreator.centerObject(circleTextBottom)
+        logoCreator.centerObject(circleTextBottomStroke)
+
         logoCreator.centerObject(homePlate)
 
         logoCreator.renderAll()
@@ -663,46 +804,38 @@
 				o.set("visible", false)
 			}
 		})
+		logoCreator.getObjects('text').forEach(function(o) {
+			if (o.id.startsWith(selected)) {
+				o.set("visible", true)
+			} else {
+				o.set("visible", false)
+			}	
+		})
+		logoCreator.renderAll()
+	})
+
+	$("#cityName").on("keyup change", function(e) {
+		const text = $(this).val()
+		logoCreator.getObjects('text').forEach(function(o) {
+			if (o.id.includes("Top")) {
+				o.set("text", text)
+			}	
+		})
+		logoCreator.renderAll()
+	})
+
+	$("#nickName").on("keyup change", function(e) {
+		const text = $(this).val()
+		logoCreator.getObjects('text').forEach(function(o) {
+			if (o.id.includes("Bottom")) {
+				o.set("text", text)
+			}	
+		})
 		logoCreator.renderAll()
 	})
 
     logoCreator.on('selection:created', function(e) {
 		var obj = e.selected[0];
-		if (obj.id == "textBottom") {
-        }
-		/* if (obj.id == 'wordmark') {
-			$("#tipContainer").html("If you're trying to select an image instead of the text, you have to hide the text first.");
-		}
-		if (obj.type == 'image') {
-			$("#fileName").html(obj.get('name'));
-			if ($("#trimImageDiv").css("display") == "none") {
-				$("#trimImageDiv").css("display","block");
-				$("#uploadImageDiv").css("display","none");
-				$("#selectedImageDiv").css("display","block");
-			}
-			$("#tipContainer").html("Use Arrow keys to move image 1 pixel.<br>Use Shift + Arrow keys to move image 10 pixels.<br>Use Delete key to remove image.");
-		} */
-	})
-
-    logoCreator.on('object:rotating', function(e) {
-		if (e.target.id == "textBottom") {
-			logoCreator.getObjects('text').forEach(function(o) {
-				switch (o.id) {
-					case "textTop":
-						o.set("angle", (e.target.angle + 180) % 360)
-						break;
-					case "textTopStroke":
-						o.set("angle", (e.target.angle + 180) % 360)
-						break;
-					case "textBottom":
-						o.set("angle", e.target.angle)
-						break;
-					case "textBottomStroke":
-						o.set("angle", e.target.angle)
-						break;
-				}
-			})
-		}
 	})
     </script>
 </html>
