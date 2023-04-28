@@ -25,17 +25,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.49497475"
-     inkscape:cx="518.95873"
-     inkscape:cy="538.53426"
+     inkscape:zoom="1.979899"
+     inkscape:cx="19.888922"
+     inkscape:cy="281.3914"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1585"
-     inkscape:window-height="734"
-     inkscape:window-x="234"
-     inkscape:window-y="234"
-     inkscape:window-maximized="0"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
      units="px" />
   <metadata
      id="metadata5">
@@ -45,7 +45,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -54,36 +54,25 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-164.70831)">
-    <circle
+    <path
        style="opacity:0.99900004;fill:#00ff00;stroke-width:1.48961592;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
-       id="path4515"
-       cx="66.145836"
-       cy="230.85414"
-       r="39.6875" />
-    <circle
-       r="38.893749"
-       cy="230.85414"
-       cx="66.145836"
-       id="circle4543"
-       style="opacity:0.99900004;fill:#ff0000;stroke-width:1.45982361;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill" />
-    <circle
-       style="opacity:0.99900004;fill:#000080;stroke-width:1.4300313;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
-       id="circle4545"
-       cx="66.145836"
-       cy="230.85414"
-       r="38.099998" />
-    <circle
-       style="opacity:0.99900004;fill:#ff8080;stroke-width:0.97329527;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
-       id="circle4549"
-       cx="-240.10779"
-       cy="4.1425214"
-       r="25.931284"
-       transform="rotate(-105)" />
-    <circle
-       r="25.137426"
-       cy="230.85414"
-       cx="66.145836"
-       id="circle4547"
-       style="opacity:0.99900004;fill:#00ffff;stroke-width:0.94349891;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill" />
+       d="m 105.83334,230.85414 a 39.6875,39.6875 0 0 1 -39.687504,39.6875 39.6875,39.6875 0 0 1 -39.6875,-39.6875 39.6875,39.6875 0 0 1 39.6875,-39.6875 39.6875,39.6875 0 0 1 39.687504,39.6875 z"
+       id="path4515" />
+    <path
+       style="opacity:0.99900004;fill:#ffff00;fill-opacity:1;stroke-width:1.4300313;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
+       d="m 104.24583,230.85414 a 38.099998,38.099998 0 0 1 -38.099994,38.1 38.099998,38.099998 0 0 1 -38.099999,-38.1 38.099998,38.099998 0 0 1 38.099999,-38.1 38.099998,38.099998 0 0 1 38.099994,38.1 z"
+       id="circle20" />
+    <path
+       style="opacity:0.99900004;fill:#ff0000;fill-opacity:1;stroke-width:1.37044668;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
+       d="m 102.65834,230.85414 a 36.512501,36.512501 0 0 1 -36.512504,36.5125 36.512501,36.512501 0 0 1 -36.512501,-36.5125 36.512501,36.512501 0 0 1 36.512501,-36.5125 36.512501,36.512501 0 0 1 36.512504,36.5125 z"
+       id="circle827" />
+    <path
+       style="opacity:0.99900004;fill:#0000ff;fill-opacity:1;stroke-width:0.9980427;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
+       d="M 92.736462,230.85414 A 26.590626,26.590626 0 0 1 66.145836,257.44477 26.590626,26.590626 0 0 1 39.55521,230.85414 26.590626,26.590626 0 0 1 66.145836,204.26352 26.590626,26.590626 0 0 1 92.736462,230.85414 Z"
+       id="circle842" />
+    <path
+       style="opacity:0.99900004;fill:#00ffff;fill-opacity:1;stroke-width:0.93845809;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
+       d="M 91.145603,230.8575 A 25.003124,25.003124 0 0 1 66.142479,255.86062 25.003124,25.003124 0 0 1 41.139355,230.8575 25.003124,25.003124 0 0 1 66.142479,205.85437 25.003124,25.003124 0 0 1 91.145603,230.8575 Z"
+       id="circle829" />
   </g>
 </svg>

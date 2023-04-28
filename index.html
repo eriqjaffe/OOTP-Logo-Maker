@@ -90,6 +90,32 @@
                                         </div>
                                         <div class="skltbs-panel" id="creatorPanel">
                                             <div id="slider"></div>
+											<table style="width:492px;">
+												<!--<tr class="color_tr">
+													<td>&nbsp;</td>
+													<td colspan="2">
+														Team Display Colors:&nbsp;&nbsp;
+														<input type="text" id="exampleText" value="TEAM NAME" readonly>
+														<div style="float:right;">	
+															<input class="teamSelector selector" type="text" id="teamBGColor">
+															<input class="teamSelector selector" type="text" id="teamTextColor">
+														</div>
+													</td>	
+												</tr>-->
+												<tr class="color_tr">
+													<td class="checkCell">&nbsp</td>
+													<td>
+														<label>Logo Shape:&nbsp;</label>
+														<select id="logoShapeSelect">
+															<option value="roundel" selected>Roundel</option>
+															<option value="circle">Circle</option>
+															<option value="homePlate">Home Plate</option>
+															<option value="square">Square</option>
+															<option value="roundedSquare">Rounded Square</option>
+														</select>
+													</td>
+												</tr>
+											</table>
                                         </div>
                                     </div>
                                 </div>
@@ -234,7 +260,7 @@
         roundelInnerStroke = new fabric.Circle({
             top: 250,
             left: 250,
-			radius: 147,
+			radius: 144,
 			fill: 'red',
 			originX: 'center',
 			originY: 'center',
@@ -246,7 +272,7 @@
         roundelOuterCircle = new fabric.Circle({
             top: 250,
             left: 250,
-			radius: 144,
+			radius: 138,
 			fill: 'blue',
 			originX: 'center',
 			originY: 'center',
@@ -270,7 +296,7 @@
         roundelInnerCircle = new fabric.Circle({
             top: 250,
             left: 250,
-			radius: 95,
+			radius: 92,
 			fill: 'white',
 			originX: 'center',
 			originY: 'center',
@@ -411,10 +437,50 @@
 		});
 
         circleOuterStroke = new fabric.Circle({
-            
+            radius: 144,
+			top: 250,
+			left: 250,
+			fill: 'red',
+			originX: 'center',
+            originY: 'center'
         })
 
-        homePlateOuterStroke = new fabric.Path("m 99.99981,100.00034 v 150 l 150,150 150,-150 v -150 h -150 z m 3,3 h 147 147 V 248.7562 l -147,147 -147,-147 z",{
+		circleCenterStroke = new fabric.Circle({
+            radius: 138,
+			top: 250,
+			left: 250,
+			fill: 'green',
+			originX: 'center',
+            originY: 'center'
+        })
+
+		circleInnerStroke = new fabric.Circle({
+            radius: 132,
+			top: 250,
+			left: 250,
+			fill: 'blue',
+			originX: 'center',
+            originY: 'center'
+        })
+
+		circleFill = new fabric.Circle({
+            radius: 126,
+			top: 250,
+			left: 250,
+			fill: 'yellow',
+			originX: 'center',
+            originY: 'center'
+        })
+
+		var circle = new fabric.Group ([circleOuterStroke, circleCenterStroke, circleInnerStroke, circleFill])
+
+		circle.set({
+			visible: false,
+			selectable:false,
+			id:'circle'
+		});
+
+        homePlateOuterStroke = new fabric.Path("M 100 100 L 100 250 L 250 400 L 400 250 L 400 100 L 250 100 L 100 100 z M 105.99609 106 L 250.00195 106 L 394 106 L 394 247.51758 L 249.99414 391.51562 L 105.99609 247.51758 L 105.99609 106 z",{
             id: 'homePlateOuterStroke',
             fill: 'green',
             visible: true,
@@ -422,7 +488,7 @@
             evented: false
         })
 
-        homePlateCenterStroke = new fabric.Path("m 100.00018,99.99967 v 150 l 150,150 150,-150 v -150 h -150 z m 6.04883,6.04883 H 250.00018 393.9494 V 247.49186 L 250.00018,391.44303 106.04901,247.49186 Z",{
+        homePlateCenterStroke = new fabric.Path("M 100 100 L 100 250 L 250 400 L 400 250 L 400 100 L 250 100 L 100 100 z M 111.99805 112 L 250.00195 112 L 388 112 L 388 245.0293 L 249.99414 383.02734 L 111.99805 245.0293 L 111.99805 112 z ",{
             id: 'homePlateCenterStroke',
             fill: 'red',
             visible: true,
@@ -430,7 +496,7 @@
             evented: false
         })
 
-        homePlateInnerStroke = new fabric.Path("m 99.99981,100.00034 v 150 l 150,150 150,-150 v -150 h -150 z m 9,9 h 141 141 v 137.27149 l -141,141 -141,-141 z",{
+        homePlateInnerStroke = new fabric.Path("M 100 100 L 100 250 L 250 400 L 400 250 L 400 100 L 250 100 L 100 100 z M 118 118.00195 L 250.00195 118.00195 L 381.99805 118.00195 L 381.99805 242.54102 L 249.99414 374.53711 L 118 242.54102 L 118 118.00195 z ",{
             id: 'homePlateInnerStroke',
             fill: 'blue',
             visible: true,
@@ -468,8 +534,8 @@
         squareCenterStroke = new fabric.Rect({
             id: 'squareCenterStroke',
             fill: 'red',
-            height: 294,
-            width: 294,
+            height: 288,
+            width: 288,
             originX: 'center',
             originY: 'center',
             top: 250,
@@ -479,8 +545,8 @@
         squareInnerStroke = new fabric.Rect({
             id: 'squareInnerStroke',
             fill: 'green',
-            height: 288,
-            width: 288,
+            height: 276,
+            width: 276,
             originX: 'center',
             originY: 'center',
             top: 250,
@@ -490,8 +556,8 @@
         squareFill = new fabric.Rect({
             id: 'squareFill',
             fill: 'yellow',
-            height: 282,
-            width: 282,
+            height: 264,
+            width: 264,
             originX: 'center',
             originY: 'center',
             top: 250,
@@ -522,8 +588,8 @@
         roundedSquareCenterStroke = new fabric.Rect({
             id: 'roundedSquareCenterStroke',
             fill: 'red',
-            height: 294,
-            width: 294,
+            height: 288,
+            width: 288,
             originX: 'center',
             originY: 'center',
             top: 250,
@@ -535,8 +601,8 @@
         roundedSquareInnerStroke = new fabric.Rect({
             id: 'roundedSquareInnerStroke',
             fill: 'green',
-            height: 288,
-            width: 288,
+            height: 276,
+            width: 276,
             originX: 'center',
             originY: 'center',
             top: 250,
@@ -548,8 +614,8 @@
         roundedSquareFill = new fabric.Rect({
             id: 'roundedSquareFill',
             fill: 'yellow',
-            height: 282,
-            width: 282,
+            height: 264,
+            width: 264,
             originX: 'center',
             originY: 'center',
             top: 250,
@@ -567,6 +633,7 @@
 		});
 
         logoCreator.add(roundel)
+		logoCreator.add(circle)
         logoCreator.add(homePlate)
         logoCreator.add(square)
         logoCreator.add(roundedSquare)
@@ -582,10 +649,20 @@
         logoCreator.centerObject(textBottomStroke)
         logoCreator.centerObject(homePlate)
 
-        
-
         logoCreator.renderAll()
     }
+
+	$("#logoShapeSelect").on("change",function(e){
+		const selected = $(this).val()
+		logoCreator.getObjects('group').forEach(function(o) {
+			if (o.id == selected) {
+				o.set("visible", true)
+			} else {
+				o.set("visible", false)
+			}
+		})
+		logoCreator.renderAll()
+	})
 
     logoCreator.on('selection:created', function(e) {
 		var obj = e.selected[0];
