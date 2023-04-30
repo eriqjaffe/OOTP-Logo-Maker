@@ -202,88 +202,6 @@
 		}
 	});
 
-    function rotateCircleText(angle) {
-        logoCreator.getObjects('text').forEach(function(o) {
-            switch (o.id) {
-                case "roundelTextTop":
-                    o.set("angle", (angle + 180) % 360)
-                    break;
-                case "roundelTextTopStroke":
-                    o.set("angle", (angle + 180) % 360)
-                    break;
-                case "roundelTextBottom":
-                    o.set("angle", angle)
-                    break;
-                case "roundelTextBottomStroke":
-                    o.set("angle", angle)
-                    break;
-				case "circleTextTop":
-                    o.set("angle", (angle + 180) % 360)
-                    break;
-                case "circleTextTopStroke":
-                    o.set("angle", (angle + 180) % 360)
-                    break;
-                case "circleTextBottom":
-                    o.set("angle", angle)
-                    break;
-                case "circleTextBottomStroke":
-                    o.set("angle", angle)
-                    break;
-            }
-        })
-        logoCreator.renderAll()
-    }
-
-    function rotateStitches(angle) {
-        const s = logoCreator.getObjects('group').find(o => o.id == "stitches")
-        const selected = $("#logoShapeSelect").val()
-        const visible = $("#stitchesCheck").is(":checked")        
-        switch (selected) {
-            case "roundel":
-                s.scaleToWidth(194)
-                s.set({
-                    angle: angle,
-                    visible: visible,
-                    clipPath: roundelClip,
-                })
-                break;
-            case "circle":
-                s.scaleToWidth(300)
-                s.set({
-                    angle: angle,
-                    visible: visible,
-                    clipPath: circleClip,
-                })
-                break;
-            case "homePlate":
-                s.scaleToWidth(400)
-                s.set({
-                    angle: angle,
-                    visible: visible,
-                    clipPath: homePlateClip,
-                })
-                break;
-            case "square":
-                s.scaleToWidth(400)
-                s.set({
-                    angle: angle,
-                    visible: visible,
-                    clipPath: squareClip,
-                })
-                break;
-            case "roundedSquare":
-                s.scaleToWidth(400)
-                s.set({
-                    angle: angle,
-                    visible: visible,
-                    clipPath: roundedSquareClip,
-                })
-                break;
-        }
-        s.addWithUpdate()
-        logoCreator.renderAll()
-    }
-
     fabric.Object.prototype.set({
     	borderColor: 'red',
 		cornerColor: 'yellow',
@@ -1020,6 +938,7 @@
         const visible = $("#stitchesCheck").is(":checked")
         switch (selected) {
             case "roundel":
+                s.scaleToWidth(300)
                 s.scaleToWidth(194)
                 s.set({
                     visible: visible,
@@ -1096,6 +1015,47 @@
 		})
 		logoCreator.renderAll()
 	})
+
+    function rotateCircleText(angle) {
+        logoCreator.getObjects('text').forEach(function(o) {
+            switch (o.id) {
+                case "roundelTextTop":
+                    o.set("angle", (angle + 180) % 360)
+                    break;
+                case "roundelTextTopStroke":
+                    o.set("angle", (angle + 180) % 360)
+                    break;
+                case "roundelTextBottom":
+                    o.set("angle", angle)
+                    break;
+                case "roundelTextBottomStroke":
+                    o.set("angle", angle)
+                    break;
+				case "circleTextTop":
+                    o.set("angle", (angle + 180) % 360)
+                    break;
+                case "circleTextTopStroke":
+                    o.set("angle", (angle + 180) % 360)
+                    break;
+                case "circleTextBottom":
+                    o.set("angle", angle)
+                    break;
+                case "circleTextBottomStroke":
+                    o.set("angle", angle)
+                    break;
+            }
+        })
+        logoCreator.renderAll()
+    }
+
+    function rotateStitches(angle) {
+        const s = logoCreator.getObjects('group').find(o => o.id == "stitches")
+        //const selected = $("#logoShapeSelect").val()
+        //const visible = $("#stitchesCheck").is(":checked")        
+        s.set("angle", angle)
+        s.addWithUpdate()
+        logoCreator.renderAll()
+    }
 
     logoCreator.on('selection:created', function(e) {
 		var obj = e.selected[0];
