@@ -18,6 +18,10 @@
         <link href='./scripts/skeletabs.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/magnific-popup.css' rel='stylesheet' type='text/css'>
 		<link href='https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.css' rel="stylesheet" type="text/css">
+
+        <script>
+            const initialColors = {topTextColor:"#ffffff", topTextStrokeColor:"#000000", bottomTextColor:"#ffffff", bottomTextStrokeColor:"#000000"}
+        </script>
     </head>
     <body>
         <div class="title">
@@ -90,26 +94,48 @@
 														</div>
 													</td>	
 												</tr>-->
+                                                <tr class="color_tr">
+                                                    <td class="checkCell">&nbsp;</td>
+                                                    <td>
+                                                        <label>Top Text:</label>
+                                                    </td>
+                                                    <td style="text-align:right;">
+                                                        <input class="textSelector selector" type="text" id="topTextColor">
+                                                        <input class="textSelector selector" type="text" id="topTextStrokeColor">
+                                                    </td>
+                                                </tr>
+                                                <tr class="color_tr">
+                                                    <td class="checkCell">&nbsp;</td>
+                                                    <td>
+                                                        <label>Bottom Text:</label>
+                                                    </td>
+                                                    <td style="text-align:right;">
+                                                        <input class="textSelector selector" type="text" id="bottomTextColor">
+                                                        <input class="textSelector selector" type="text" id="bottomTextStrokeColor">
+                                                    </td>
+                                                </tr>
 												<tr class="color_tr">
 													<td class="checkCell">&nbsp</td>
 													<td>
 														<label>Logo Shape:&nbsp;</label>
-														<select id="logoShapeSelect">
+													</td>
+                                                    <td style="text-align:right;">
+                                                        <select id="logoShapeSelect">
 															<option value="roundel" selected>Roundel</option>
 															<option value="circle">Circle</option>
 															<option value="homePlate">Home Plate</option>
 															<option value="square">Square</option>
 															<option value="roundedSquare">Rounded Square</option>
 														</select>
-													</td>
+                                                    </td>
 												</tr>
                                                 <tr class="color_tr">
 													<td class="checkCell">
                                                         <input type="checkbox" id="stitchesCheck" >
                                                     </td>
-													<td style="border: 1px solid blue;">
+													<td>
 														<label>Stitches:&nbsp;</label>
-														<select id="stitchesSelect">
+                                                        <select id="stitchesSelect">
 															<option value="stitches1" selected>Style 1</option>
 															<option value="stitches2">Style 2</option>
 															<option value="stitches3">Style 3</option>
@@ -118,9 +144,9 @@
                                                             <option value="stitches6">Style 6</option>
                                                             <option value="stitches7">Style 7</option>
 														</select>
-                                                        <div style="float:right;">
-                                                            <label>Stitch Rotation:&nbsp;</label><div id="stitchSlider" style="float:right; padding-left:5px;"></div>
-                                                        </div>
+                                                    </td>
+                                                    <td style="text-align:right;">
+														<label>Stitch Rotation:&nbsp;</label><div id="stitchSlider" style="float:right; padding-left:5px;"></div>
 													</td>
 												</tr>
 											</table>
@@ -167,6 +193,72 @@
     $(document).ready(function() {
         $("#tabContainer").skeletabs('goTo', 1)
     })
+
+    $(".textSelector").each(function() {
+        const el = $(this).attr('id')
+		var color = $(this).attr('id');
+		$(this).spectrum({
+			type: "color",
+			showAlpha: false,
+			showInput: true,
+			preferredFormat: 'hex',
+			showInitial: true,
+			showPalette: true,
+			showButtons: true,
+			//showSelectionPalette: true,
+			color: initialColors[$(this).attr('id')],
+			beforeShow: function(color) {
+				//$(this).spectrum("option", "palette", commonPalette)
+			},
+			show: function(color) {
+				var original_color = color;
+				$(this).data('changed', false);
+			},
+			move: function(color) {
+                changeColor(el,color)
+			},
+			change: function(color) {
+                changeColor(el,color)
+			},
+			hide: function(color) {
+                changeColor(el,color)
+			}
+		})
+	})
+
+    function changeColor(el,color) {
+        switch (el) {
+            case "topTextColor":
+                logoCreator.getObjects("text").forEach(function (o) {
+                    if (o.id == 'roundelTextTop' || o.id == 'circleTextTop') {
+                        o.set("fill",color.toHexString())
+                    }
+                })
+                break;
+            case "bottomTextColor":
+                logoCreator.getObjects("text").forEach(function (o) {
+                    if (o.id == 'roundelTextBottom' || o.id == 'circleTextBottom') {
+                        o.set("fill",color.toHexString())
+                    }
+                })
+                break;
+            case "topTextStrokeColor":
+                logoCreator.getObjects("text").forEach(function (o) {
+                    if (o.id == 'roundelTextTop' || o.id == 'circleTextTop') {
+                        o.set("stroke",color.toHexString())
+                    }
+                })
+                break;
+            case "bottomTextStrokeColor":
+                logoCreator.getObjects("text").forEach(function (o) {
+                    if (o.id == 'roundelTextBottom' || o.id == 'circleTextBottom') {
+                        o.set("stroke",color.toHexString())
+                    }
+                })
+                break;
+        }
+        logoCreator.renderAll()
+    }
 
 	$("#slider").roundSlider({
 		sliderType: "min-range",
