@@ -20,7 +20,7 @@
 		<link href='https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.css' rel="stylesheet" type="text/css">
 
         <script>
-            const initialColors = {topTextColor:"#ffffff", topTextStrokeColor:"#000000", bottomTextColor:"#ffffff", bottomTextStrokeColor:"#000000"}
+            const initialColors = {topTextColor:"#ffffff", topTextStrokeColor:"#000000", bottomTextColor:"#ffffff", bottomTextStrokeColor:"#000000", teamBGColor:"#0C2340", teamTextColor: "#ffffff"}
         </script>
     </head>
     <body>
@@ -81,19 +81,27 @@
                                             Editor Panel
                                         </div>
                                         <div class="skltbs-panel" id="creatorPanel">
-                                            <div id="slider"></div>
 											<table style="width:468px;">
-												<!--<tr class="color_tr">
+												<tr class="color_tr">
 													<td>&nbsp;</td>
 													<td colspan="2">
 														Team Display Colors:&nbsp;&nbsp;
-														<input type="text" id="exampleText" value="TEAM NAME" readonly>
+														<input type="text" id="exampleText" value="CHICAGO BULLDOGS" readonly>
 														<div style="float:right;">	
-															<input class="teamSelector selector" type="text" id="teamBGColor">
 															<input class="teamSelector selector" type="text" id="teamTextColor">
+															<input class="teamSelector selector" type="text" id="teamBGColor">
 														</div>
 													</td>	
-												</tr>-->
+												</tr>
+                                                <tr class="color_tr">
+                                                    <td class="checkcell">&nbsp;</td>
+                                                    <td>
+                                                        <label>Text Rotation:</label>
+                                                    </td>
+                                                    <td style="text-align:right;">
+                                                        <div id="slider" style="float:right;"></div>
+                                                    </td>
+                                                </tr>
                                                 <tr class="color_tr">
                                                     <td class="checkCell">&nbsp;</td>
                                                     <td>
@@ -193,6 +201,52 @@
     $(document).ready(function() {
         $("#tabContainer").skeletabs('goTo', 1)
     })
+
+    $("#teamBGColor").spectrum({
+		type: "color",
+		showAlpha: false,
+		showInput: true,
+		preferredFormat: "hex",
+		showInitial: true,
+		showPalette: true,
+		showButtons: true,
+		color: "#0C2340",
+		beforeShow: function(color) {
+			//$(this).spectrum("option", "palette", [capPalette, commonPalette])
+		},
+		move: function(color) {
+			$("#exampleText").css("background-color",color.toHexString())
+		},
+		change: function(color) {
+			$("#exampleText").css("background-color",color.toHexString())
+		},
+		hide: function(color) {
+			$("#exampleText").css("background-color",color.toHexString())
+		}
+	})
+
+	$("#teamTextColor").spectrum({
+		type: "color",
+		showAlpha: false,
+		showInput: true,
+		preferredFormat: "hex",
+		showInitial: true,
+		showPalette: true,
+		showButtons: true,
+		color: "#FFFFFF",
+		beforeShow: function(color) {
+			//$(this).spectrum("option", "palette", [capPalette, commonPalette])
+		},
+		move: function(color) {
+			$("#exampleText").css("color",color.toHexString())
+		},
+		change: function(color) {
+			$("#exampleText").css("color",color.toHexString())
+		},
+		hide: function(color) {
+			$("#exampleText").css("color",color.toHexString())
+		}
+	})
 
     $(".textSelector").each(function() {
         const el = $(this).attr('id')
