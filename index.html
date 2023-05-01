@@ -185,7 +185,7 @@
 		}
 	});
 
-    $("#stitchSlider").roundSlider({
+     $("#stitchSlider").roundSlider({
 		sliderType: "min-range",
 		handleShape: "round",
 		width: 4,
@@ -370,9 +370,9 @@
 			textAlign: 'center',
 			id: 'roundelTextTop',
 			fill: 'white',
-			stroke: 'transparent',
+			stroke: 'black',
             paintFirst: "stroke",
-			strokeWidth: 90,
+			strokeWidth: 4,
 			path: new fabric.Path("M 250,155.26758 A 94.733186,94.733186 0 0 1 344.73242,250 94.733186,94.733186 0 0 1 250,344.73242 94.733186,94.733186 0 0 1 155.26758,250 94.733186,94.733186 0 0 1 250,155.26758 Z", {
 				visible: false,
 				selectable:false,
@@ -393,7 +393,7 @@
 			angle: 180
 		})
 
-        roundelTextTopStroke = new fabric.Text('CHICAGO',{
+        /* roundelTextTopStroke = new fabric.Text('CHICAGO',{
 			visible: true,
 			fontFamily: "Arial",
 			fontSize: 40,
@@ -422,7 +422,7 @@
 			snapAngle: 5,
 			selectable: false,
 			angle: 180
-		})
+		}) */
 
 		roundelTextBottom = new fabric.Text('BULLDOGS',{
 			visible: true,
@@ -433,9 +433,9 @@
 			textAlign: 'center',
 			id: 'roundelTextBottom',
 			fill: 'white',
-			stroke: 'transparent',
+			stroke: 'black',
             paintFirst: "stroke",
-			strokeWidth: 40,
+			strokeWidth: 4,
             path: new fabric.Path("M 250 148.60352 A 101.39774 101.39774 0 0 0 148.60352 250 A 101.39774 101.39774 0 0 0 250 351.39648 A 101.39774 101.39774 0 0 0 351.39648 250 A 101.39774 101.39774 0 0 0 250 148.60352 z ", {
 				visible: false,
 				selectable:false,
@@ -456,7 +456,7 @@
 			selectable: false
 		})
 
-        roundelTextBottomStroke = new fabric.Text('BULLDOGS',{
+/*         roundelTextBottomStroke = new fabric.Text('BULLDOGS',{
 			visible: true,
 			fontFamily: "Arial",
 			fontSize: 40,
@@ -485,7 +485,7 @@
 			snapAngle: 5,
             angle: 0,
 			selectable: false
-		})
+		}) */
         
 		roundel.set({
 			selectable:false,
@@ -540,41 +540,9 @@
 			textAlign: 'center',
 			id: 'circleTextTop',
 			fill: 'white',
-			stroke: 'transparent',
-            paintFirst: "stroke",
-			strokeWidth: 90,
-			path: new fabric.Path("M 250,128.13672 A 121.86793,121.86793 0 0 1 371.86328,250 121.86793,121.86793 0 0 1 250,371.86328 121.86793,121.86793 0 0 1 128.13672,250 121.86793,121.86793 0 0 1 250,128.13672 Z", {
-				visible: false,
-				selectable:false,
-				evented: false,
-			}),
-            pathAlign: 'ascender',
-			borderColor: 'red',
-			cornerColor: 'yellow',
-			cornerSize: 12,
-			transparentCorners: false,
-			lockScalingFlip: true,
-			lockScalingX: true,
-			lockScalingY: true,
-			lockMovementX: true,
-			lockMovementY: true,
-			snapAngle: 5,
-			selectable: false,
-			angle: 180
-		})
-
-        circleTextTopStroke = new fabric.Text('CHICAGO',{
-			visible: false,
-			fontFamily: "Arial",
-			fontSize: 30,
-			charSpacing: 250,
-			originX: 'center',
-			originY: 'center',
-			textAlign: 'center',
-			id: 'circleTextTopStroke',
-			fill: 'black',
 			stroke: 'black',
-            strokeWidth: 4,
+            paintFirst: "stroke",
+			strokeWidth: 4,
 			path: new fabric.Path("M 250,128.13672 A 121.86793,121.86793 0 0 1 371.86328,250 121.86793,121.86793 0 0 1 250,371.86328 121.86793,121.86793 0 0 1 128.13672,250 121.86793,121.86793 0 0 1 250,128.13672 Z", {
 				visible: false,
 				selectable:false,
@@ -605,41 +573,9 @@
 			textAlign: 'center',
 			id: 'circleTextBottom',
 			fill: 'white',
-			stroke: 'transparent',
-            paintFirst: "stroke",
-			strokeWidth: 40,
-            path: new fabric.Path("M 250 123.37891 A 126.62352 126.62352 0 0 0 123.37891 250 A 126.62352 126.62352 0 0 0 250 376.62109 A 126.62352 126.62352 0 0 0 376.62109 250 A 126.62352 126.62352 0 0 0 250 123.37891 z ", {
-				visible: false,
-				selectable:false,
-				evented: false,
-			}),
-            pathAlign: 'descender',
-			borderColor: 'red',
-			cornerColor: 'yellow',
-			cornerSize: 12,
-			transparentCorners: false,
-			lockScalingFlip: true,
-			lockScalingX: true,
-			lockScalingY: true,
-			lockMovementX: true,
-			lockMovementY: true,
-			snapAngle: 5,
-            angle: 0,
-			selectable: false
-		})
-
-        circleTextBottomStroke = new fabric.Text('BULLDOGS',{
-			visible: false,
-			fontFamily: "Arial",
-			fontSize: 30,
-			charSpacing: 250,
-			originX: 'center',
-			originY: 'center',
-			textAlign: 'center',
-			id: 'circleTextBottomStroke',
-			fill: 'black',
 			stroke: 'black',
-            strokeWidth: 4,
+            paintFirst: "stroke",
+			strokeWidth: 4,
             path: new fabric.Path("M 250 123.37891 A 126.62352 126.62352 0 0 0 123.37891 250 A 126.62352 126.62352 0 0 0 250 376.62109 A 126.62352 126.62352 0 0 0 376.62109 250 A 126.62352 126.62352 0 0 0 250 123.37891 z ", {
 				visible: false,
 				selectable:false,
@@ -880,7 +816,8 @@
             originX: "center",
             originY: "center",
             clipPath: roundelClip,
-            visible: false
+            visible: false,
+			selectable: false
         })
 
         stitches.scaleToWidth(194)
@@ -891,30 +828,20 @@
         logoCreator.add(square)
         logoCreator.add(roundedSquare)
 
-        logoCreator.add(roundelTextTopStroke)
         logoCreator.add(roundelTextTop)
-        logoCreator.add(roundelTextBottomStroke)
-        logoCreator.add(roundelTextBottom)
-        
         logoCreator.centerObject(roundelTextTop)
-        logoCreator.centerObject(roundelTextTopStroke)
+		logoCreator.add(roundelTextBottom)
         logoCreator.centerObject(roundelTextBottom)
-        logoCreator.centerObject(roundelTextBottomStroke)
 
         logoCreator.centerObject(homePlate)
 
         logoCreator.add(stitches)
 
-        logoCreator.add(circleTextTopStroke)
         logoCreator.add(circleTextTop)
-        logoCreator.add(circleTextBottomStroke)
+		logoCreator.centerObject(circleTextTop)
         logoCreator.add(circleTextBottom)
-        
-        logoCreator.centerObject(circleTextTop)
-        logoCreator.centerObject(circleTextTopStroke)
         logoCreator.centerObject(circleTextBottom)
-        logoCreator.centerObject(circleTextBottomStroke)
-
+        
         logoCreator.renderAll()
     }
 
@@ -938,7 +865,6 @@
         const visible = $("#stitchesCheck").is(":checked")
         switch (selected) {
             case "roundel":
-                s.scaleToWidth(300)
                 s.scaleToWidth(194)
                 s.set({
                     visible: visible,
@@ -975,6 +901,7 @@
                 break;
         }
         s.addWithUpdate()
+		console.log(s)
 		logoCreator.renderAll()
 	})
 
@@ -984,6 +911,7 @@
         s.set("visible",checked)
         s.addWithUpdate()
         logoCreator.renderAll()
+		console.log(s)
     })
 
     $("#stitchesSelect").on("change",function(e) {
@@ -1053,7 +981,8 @@
         //const selected = $("#logoShapeSelect").val()
         //const visible = $("#stitchesCheck").is(":checked")        
         s.set("angle", angle)
-        s.addWithUpdate()
+        //s.addWithUpdate()
+		console.log(s)
         logoCreator.renderAll()
     }
 
