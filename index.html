@@ -133,14 +133,14 @@
 														</select>
 													</td>
                                                     <td style="text-align:right;">
-                                                        <span id="roundelSpan">
+                                                        <span id="roundelSpan" style="display: inline-block;">
                                                             <input class="roundelSelector selector" data-group="roundel" data-canvas="logoCreator" type="text" id="roundelOuterStroke">
                                                             <input class="roundelSelector selector" data-group="roundel" data-canvas="logoCreator" type="text" id="roundelInnerStroke">
                                                             <input class="roundelSelector selector" data-group="roundel" data-canvas="logoCreator" type="text" id="roundelOuterCircle"><br>
                                                             <input class="roundelSelector selector" data-group="roundel" data-canvas="logoCreator" type="text" id="roundelCenterStroke">
                                                             <input class="roundelSelector selector" data-group="roundel" data-canvas="logoCreator" type="text" id="roundelInnerCircle">
                                                         </span>
-                                                        <span id="otherSpan">
+                                                        <span id="otherSpan" style="display: none;">
                                                             <input class="objectSelector selector" data-canvas="logoCreator" type="text" id="OuterStroke">
                                                             <input class="objectSelector selector" data-canvas="logoCreator" type="text" id="CenterStroke">
                                                             <input class="objectSelector selector" data-canvas="logoCreator" type="text" id="InnerStroke">
@@ -387,48 +387,50 @@
 	})
 
     function changeStitchColor(color) {
+        const clr = (color == null) ? 'transparent' : color.toHexString()
         const s = logoCreator.getObjects('group').find(o => o.id == "stitches")
         const r = logoCreator.getObjects('group').find(o => o.id == "roundelStitches")
         const c = logoCreator.getObjects('group').find(o => o.id == "circleStitches")
         s.getObjects('path').forEach(function(o) {
-            o.set("fill",color.toHexString())
+            o.set("fill",clr)
         })
         r.getObjects('path').forEach(function(o) {
-            o.set("fill",color.toHexString())
+            o.set("fill",clr)
         })
         c.getObjects('path').forEach(function(o) {
-            o.set("fill",color.toHexString())
+            o.set("fill",clr)
         })
         logoCreator.renderAll()
     }
     
     function changeTextColor(el,color) {
+        const clr = (color == null) ? 'transparent' : color.toHexString()
         switch (el) {
             case "topTextColor":
                 logoCreator.getObjects("text").forEach(function (o) {
                     if (o.id == 'roundelTextTop' || o.id == 'circleTextTop') {
-                        o.set("fill",color.toHexString())
+                        o.set("fill",clr)
                     }
                 })
                 break;
             case "bottomTextColor":
                 logoCreator.getObjects("text").forEach(function (o) {
                     if (o.id == 'roundelTextBottom' || o.id == 'circleTextBottom') {
-                        o.set("fill",color.toHexString())
+                        o.set("fill",clr)
                     }
                 })
                 break;
             case "topTextStrokeColor":
                 logoCreator.getObjects("text").forEach(function (o) {
                     if (o.id == 'roundelTextTop' || o.id == 'circleTextTop') {
-                        o.set("stroke",color.toHexString())
+                        o.set("stroke",clr)
                     }
                 })
                 break;
             case "bottomTextStrokeColor":
                 logoCreator.getObjects("text").forEach(function (o) {
                     if (o.id == 'roundelTextBottom' || o.id == 'circleTextBottom') {
-                        o.set("stroke",color.toHexString())
+                        o.set("stroke",clr)
                     }
                 })
                 break;
@@ -437,29 +439,31 @@
     }
 
     function changeElementColor(canvas,element,group,color) {
+        const clr = (color == null) ? 'transparent' : color.toHexString()
         var g = logoCreator.getObjects("group").find(o => o.id == group)
         var o = g.getObjects().find(o => o.id == element)
-        o.set("fill",color.toHexString())
+        o.set("fill",clr)
         logoCreator.renderAll()
     }
 
     function changeShapeColor(canvas,element,group,color) {
+        const clr = (color == null) ? 'transparent' : color.toHexString()
         const c = logoCreator.getObjects("group").find(o => o.id == 'circle')
         const h = logoCreator.getObjects("group").find(o => o.id == 'homePlate')
         const s = logoCreator.getObjects("group").find(o => o.id == 'square')
         const r = logoCreator.getObjects("group").find(o => o.id == 'roundedSquare')
         
         const co = c.getObjects().find(o => o.id == 'circle'+element)
-        co.set('fill',color.toHexString())
+        co.set('fill',clr)
         
         const ho = h.getObjects().find(o => o.id == 'homePlate'+element)
-        ho.set('fill',color.toHexString())
-        
+        ho.set('fill',clr)
+
         const so = s.getObjects().find(o => o.id == 'square'+element)
-        so.set('fill',color.toHexString())
+        so.set('fill',clr)
         
         const ro = r.getObjects().find(o => o.id == 'roundedSquare'+element)
-        ro.set('fill',color.toHexString())
+        ro.set('fill',clr)
         logoCreator.renderAll()
     }
 
@@ -537,6 +541,8 @@
         {source: './images/bg.png', repeat: 'repeat'}, 
         logoCreator.renderAll.bind(logoCreator),
     );
+
+    //logoCreator.setOverlayImage('./images/smooth-glass.png',logoCreator.renderAll.bind(logoCreator));
 
     initializeCreator()
 
