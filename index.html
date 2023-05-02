@@ -18,7 +18,7 @@
         <link href='./scripts/magnific-popup.css' rel='stylesheet' type='text/css'>
 
         <script>
-            const initialColors = {topTextColor:"#ffffff", topTextStrokeColor:"#000000", bottomTextColor:"#ffffff", bottomTextStrokeColor:"#000000", teamBGColor:"#0C2340", teamTextColor: "#ffffff", stitches: "#e82a50"}
+            const initialColors = {topTextColor:"#ffffff", topTextStrokeColor:"#000000", bottomTextColor:"#ffffff", bottomTextStrokeColor:"#000000", teamBGColor:"#0C2340", teamTextColor: "#ffffff", stitches: "#e82a50", roundelOuterStroke: "#ffffff", roundelInnerStroke: "red", roundelOuterCircle: "blue", roundelCenterStroke: "green", roundelInnerCircle: "#ffffff", OuterStroke: 'red', CenterStroke: 'green', InnerStroke: 'blue', Fill: 'yellow'}
         </script>
     </head>
     <body>
@@ -124,8 +124,6 @@
 													<td class="checkCell">&nbsp</td>
 													<td>
 														<label>Logo Shape:&nbsp;</label>
-													</td>
-                                                    <td style="text-align:right;">
                                                         <select id="logoShapeSelect">
 															<option value="roundel" selected>Roundel</option>
 															<option value="circle">Circle</option>
@@ -133,6 +131,21 @@
 															<option value="square">Square</option>
 															<option value="roundedSquare">Rounded Square</option>
 														</select>
+													</td>
+                                                    <td style="text-align:right;">
+                                                        <span id="roundelSpan">
+                                                            <input class="roundelSelector selector" data-group="roundel" data-canvas="logoCreator" type="text" id="roundelOuterStroke">
+                                                            <input class="roundelSelector selector" data-group="roundel" data-canvas="logoCreator" type="text" id="roundelInnerStroke">
+                                                            <input class="roundelSelector selector" data-group="roundel" data-canvas="logoCreator" type="text" id="roundelOuterCircle"><br>
+                                                            <input class="roundelSelector selector" data-group="roundel" data-canvas="logoCreator" type="text" id="roundelCenterStroke">
+                                                            <input class="roundelSelector selector" data-group="roundel" data-canvas="logoCreator" type="text" id="roundelInnerCircle">
+                                                        </span>
+                                                        <span id="otherSpan">
+                                                            <input class="objectSelector selector" data-canvas="logoCreator" type="text" id="OuterStroke">
+                                                            <input class="objectSelector selector" data-canvas="logoCreator" type="text" id="CenterStroke">
+                                                            <input class="objectSelector selector" data-canvas="logoCreator" type="text" id="InnerStroke">
+                                                            <input class="objectSelector selector" data-canvas="logoCreator" type="text" id="Fill">
+                                                        </span>
                                                     </td>
 												</tr>
                                                 <tr class="color_tr">
@@ -293,13 +306,82 @@
 				$(this).data('changed', false);
 			},
 			move: function(color) {
-                changeColor(el,color)
+                changeTextColor(el,color)
 			},
 			change: function(color) {
-                changeColor(el,color)
+                changeTextColor(el,color)
 			},
 			hide: function(color) {
-                changeColor(el,color)
+                changeTextColor(el,color)
+			}
+		})
+	})
+
+    $(".roundelSelector").each(function() {
+        const el = $(this).attr('id')
+        const canvas = $(this).data('canvas')
+        const group = $(this).data('group')
+		var color = $(this).attr('id');
+		$(this).spectrum({
+			type: "color",
+			showAlpha: false,
+			showInput: true,
+			preferredFormat: 'hex',
+			showInitial: true,
+			showPalette: true,
+			showButtons: true,
+			//showSelectionPalette: true,
+			color: initialColors[el],
+			beforeShow: function(color) {
+				//$(this).spectrum("option", "palette", commonPalette)
+			},
+			show: function(color) {
+				var original_color = color;
+				$(this).data('changed', false);
+			},
+			move: function(color) {
+                changeElementColor(canvas,el,group,color)
+			},
+			change: function(color) {
+                changeElementColor(canvas,el,group,color)
+			},
+			hide: function(color) {
+                changeElementColor(canvas,el,group,color)
+			}
+		})
+	})
+
+    $(".objectSelector").each(function() {
+        const el = $(this).attr('id')
+        console.log(el)
+        const canvas = $(this).data('canvas')
+        const group = $(this).data('group')
+		var color = $(this).attr('id');
+		$(this).spectrum({
+			type: "color",
+			showAlpha: false,
+			showInput: true,
+			preferredFormat: 'hex',
+			showInitial: true,
+			showPalette: true,
+			showButtons: true,
+			//showSelectionPalette: true,
+			color: initialColors[el],
+			beforeShow: function(color) {
+				//$(this).spectrum("option", "palette", commonPalette)
+			},
+			show: function(color) {
+				var original_color = color;
+				$(this).data('changed', false);
+			},
+			move: function(color) {
+                changeShapeColor(canvas,el,group,color)
+			},
+			change: function(color) {
+                changeShapeColor(canvas,el,group,color)
+			},
+			hide: function(color) {
+                changeShapeColor(canvas,el,group,color)
 			}
 		})
 	})
@@ -320,7 +402,7 @@
         logoCreator.renderAll()
     }
     
-    function changeColor(el,color) {
+    function changeTextColor(el,color) {
         switch (el) {
             case "topTextColor":
                 logoCreator.getObjects("text").forEach(function (o) {
@@ -351,6 +433,33 @@
                 })
                 break;
         }
+        logoCreator.renderAll()
+    }
+
+    function changeElementColor(canvas,element,group,color) {
+        var g = logoCreator.getObjects("group").find(o => o.id == group)
+        var o = g.getObjects().find(o => o.id == element)
+        o.set("fill",color.toHexString())
+        logoCreator.renderAll()
+    }
+
+    function changeShapeColor(canvas,element,group,color) {
+        const c = logoCreator.getObjects("group").find(o => o.id == 'circle')
+        const h = logoCreator.getObjects("group").find(o => o.id == 'homePlate')
+        const s = logoCreator.getObjects("group").find(o => o.id == 'square')
+        const r = logoCreator.getObjects("group").find(o => o.id == 'roundedSquare')
+        
+        const co = c.getObjects().find(o => o.id == 'circle'+element)
+        co.set('fill',color.toHexString())
+        
+        const ho = h.getObjects().find(o => o.id == 'homePlate'+element)
+        ho.set('fill',color.toHexString())
+        
+        const so = s.getObjects().find(o => o.id == 'square'+element)
+        so.set('fill',color.toHexString())
+        
+        const ro = r.getObjects().find(o => o.id == 'roundedSquare'+element)
+        ro.set('fill',color.toHexString())
         logoCreator.renderAll()
     }
 
@@ -453,7 +562,7 @@
             absolutePositioned: true
         })
 
-        homePlateClip = new fabric.Path("m 100.00017,99.99967 v 150 l 150.00002,150 149.99999,-150 v -150 H 250.00019 Z",{
+        homePlateClip = new fabric.Path("M 118,118.00195 V 242.54102 L 249.99414,374.53711 381.99805,242.54102 V 118.00195 h -131.9961 z",{
             id: 'homePlateClip',
             absolutePositioned: true
         })
@@ -617,36 +726,40 @@
             radius: 144,
 			top: 250,
 			left: 250,
-			fill: 'red',
+			fill: initialColors['OuterStroke'],
 			originX: 'center',
-            originY: 'center'
+            originY: 'center',
+            id: 'circleOuterStroke'
         })
 
 		circleCenterStroke = new fabric.Circle({
             radius: 138,
 			top: 250,
 			left: 250,
-			fill: 'green',
+			fill: initialColors['CenterStroke'],
 			originX: 'center',
-            originY: 'center'
+            originY: 'center',
+            id: 'circleCenterStroke'
         })
 
 		circleInnerStroke = new fabric.Circle({
             radius: 132,
 			top: 250,
 			left: 250,
-			fill: 'blue',
+			fill: initialColors['InnerStroke'],
 			originX: 'center',
-            originY: 'center'
+            originY: 'center',
+            id: 'circleInnerStroke'
         })
 
 		circleFill = new fabric.Circle({
             radius: 126,
 			top: 250,
 			left: 250,
-			fill: 'yellow',
+			fill: initialColors['Fill'],
 			originX: 'center',
-            originY: 'center'
+            originY: 'center',
+            id: 'circleFill'
         })
 
 		var circle = new fabric.Group ([circleOuterStroke, circleCenterStroke, circleInnerStroke, circleFill])
@@ -725,34 +838,38 @@
 
         homePlateOuterStroke = new fabric.Path("M 100 100 L 100 250 L 250 400 L 400 250 L 400 100 L 250 100 L 100 100 z M 105.99609 106 L 250.00195 106 L 394 106 L 394 247.51758 L 249.99414 391.51562 L 105.99609 247.51758 L 105.99609 106 z",{
             id: 'homePlateOuterStroke',
-            fill: 'green',
+            fill: initialColors['OuterStroke'],
             visible: true,
             selectable: false,
-            evented: false
+            evented: false,
+            id: 'homePlateOuterStroke'
         })
 
         homePlateCenterStroke = new fabric.Path("M 100 100 L 100 250 L 250 400 L 400 250 L 400 100 L 250 100 L 100 100 z M 111.99805 112 L 250.00195 112 L 388 112 L 388 245.0293 L 249.99414 383.02734 L 111.99805 245.0293 L 111.99805 112 z ",{
             id: 'homePlateCenterStroke',
-            fill: 'red',
+            fill: initialColors['CenterStroke'],
             visible: true,
             selectable: false,
-            evented: false
+            evented: false,
+            id: 'homePlateCenterStroke'
         })
 
         homePlateInnerStroke = new fabric.Path("M 100 100 L 100 250 L 250 400 L 400 250 L 400 100 L 250 100 L 100 100 z M 118 118.00195 L 250.00195 118.00195 L 381.99805 118.00195 L 381.99805 242.54102 L 249.99414 374.53711 L 118 242.54102 L 118 118.00195 z ",{
             id: 'homePlateInnerStroke',
-            fill: 'blue',
+            fill: initialColors['InnerStroke'],
             visible: true,
             selectable: false,
-            evented: false
+            evented: false,
+            id: 'homePlateInnerStroke'
         })
 
         homePlateFill = new fabric.Path("m 100.00017,99.99967 v 150 l 150.00002,150 149.99999,-150 v -150 H 250.00019 Z",{
             id: 'homePlateFill',
-            fill: 'yellow',
+            fill: initialColors['Fill'],
             visible: true,
             selectable: false,
-            evented: false
+                evented: false,
+                id: 'homePlateFill'
         })
 
         var homePlate = new fabric.Group ([homePlateFill, homePlateInnerStroke, homePlateCenterStroke, homePlateOuterStroke])
@@ -763,9 +880,39 @@
             visible: false
 		});
 
+        homePlateText = new fabric.Text($("#cityName").val()+" "+$("#nickName").val(),{
+			visible: false,
+			fontFamily: "Arial",
+			fontSize: 25,
+			originX: 'center',
+			originY: 'center',
+			textAlign: 'center',
+			id: 'homePlateText',
+			fill: 'white',
+			stroke: 'black',
+            paintFirst: "stroke",
+			strokeWidth: 4,
+            pathAlign: 'descender',
+			borderColor: 'red',
+			cornerColor: 'yellow',
+			cornerSize: 12,
+			transparentCorners: false,
+			lockScalingFlip: true,
+			lockScalingX: true,
+			lockScalingY: true,
+			lockMovementX: true,
+			lockMovementY: true,
+			snapAngle: 5,
+			selectable: false,
+            top: 135,
+            left: 250,
+            originX: 'center',
+            originY: 'center'
+		})
+
         squareOuterStroke = new fabric.Rect({
             id: 'squareOuterStroke',
-            fill: 'blue',
+            fill: initialColors['OuterStroke'],
             height: 300,
             width: 300,
             originX: 'center',
@@ -776,7 +923,7 @@
 
         squareCenterStroke = new fabric.Rect({
             id: 'squareCenterStroke',
-            fill: 'red',
+            fill: initialColors['CenterStroke'],
             height: 288,
             width: 288,
             originX: 'center',
@@ -787,7 +934,7 @@
 
         squareInnerStroke = new fabric.Rect({
             id: 'squareInnerStroke',
-            fill: 'green',
+            fill: initialColors['InnerStroke'],
             height: 276,
             width: 276,
             originX: 'center',
@@ -798,7 +945,7 @@
 
         squareFill = new fabric.Rect({
             id: 'squareFill',
-            fill: 'yellow',
+            fill: initialColors['Fill'],
             height: 264,
             width: 264,
             originX: 'center',
@@ -815,9 +962,69 @@
             visible: false
 		});
 
+        squareTextTop = new fabric.Text($("#cityName").val(),{
+			visible: false,
+			fontFamily: "Arial",
+			fontSize: 35,
+			originX: 'center',
+			originY: 'center',
+			textAlign: 'center',
+			id: 'squareTextTop',
+			fill: 'white',
+			stroke: 'black',
+            paintFirst: "stroke",
+			strokeWidth: 4,
+            pathAlign: 'descender',
+			borderColor: 'red',
+			cornerColor: 'yellow',
+			cornerSize: 12,
+			transparentCorners: false,
+			lockScalingFlip: true,
+			lockScalingX: true,
+			lockScalingY: true,
+			lockMovementX: true,
+			lockMovementY: true,
+			snapAngle: 5,
+			selectable: false,
+            top: 140,
+            left: 250,
+            originX: 'center',
+            originY: 'center'
+		})
+
+        squareTextBottom = new fabric.Text($("#nickName").val(),{
+			visible: false,
+			fontFamily: "Arial",
+			fontSize: 35,
+			originX: 'center',
+			originY: 'center',
+			textAlign: 'center',
+			id: 'squareTextBottom',
+			fill: 'white',
+			stroke: 'black',
+            paintFirst: "stroke",
+			strokeWidth: 4,
+            pathAlign: 'descender',
+			borderColor: 'red',
+			cornerColor: 'yellow',
+			cornerSize: 12,
+			transparentCorners: false,
+			lockScalingFlip: true,
+			lockScalingX: true,
+			lockScalingY: true,
+			lockMovementX: true,
+			lockMovementY: true,
+			snapAngle: 5,
+			selectable: false,
+            top: 360,
+            left: 250,
+            originX: 'center',
+            originY: 'center'
+		})
+
         roundedSquareOuterStroke = new fabric.Rect({
             id: 'roundedSquareOuterStroke',
-            fill: 'blue',
+            fill: initialColors['OuterStroke'],
             height: 300,
             width: 300,
             originX: 'center',
@@ -830,7 +1037,7 @@
 
         roundedSquareCenterStroke = new fabric.Rect({
             id: 'roundedSquareCenterStroke',
-            fill: 'red',
+            fill: initialColors['CenterStroke'],
             height: 288,
             width: 288,
             originX: 'center',
@@ -843,7 +1050,7 @@
 
         roundedSquareInnerStroke = new fabric.Rect({
             id: 'roundedSquareInnerStroke',
-            fill: 'green',
+            fill: initialColors['InnerStroke'],
             height: 276,
             width: 276,
             originX: 'center',
@@ -856,7 +1063,7 @@
 
         roundedSquareFill = new fabric.Rect({
             id: 'roundedSquareFill',
-            fill: 'yellow',
+            fill: initialColors['Fill'],
             height: 264,
             width: 264,
             originX: 'center',
@@ -874,6 +1081,66 @@
 			id:'roundedSquare',
             visible: false
 		});
+
+        roundedSquareTextTop = new fabric.Text($("#cityName").val(),{
+			visible: false,
+			fontFamily: "Arial",
+			fontSize: 35,
+			originX: 'center',
+			originY: 'center',
+			textAlign: 'center',
+			id: 'roundedSquareTextTop',
+			fill: 'white',
+			stroke: 'black',
+            paintFirst: "stroke",
+			strokeWidth: 4,
+            pathAlign: 'descender',
+			borderColor: 'red',
+			cornerColor: 'yellow',
+			cornerSize: 12,
+			transparentCorners: false,
+			lockScalingFlip: true,
+			lockScalingX: true,
+			lockScalingY: true,
+			lockMovementX: true,
+			lockMovementY: true,
+			snapAngle: 5,
+			selectable: false,
+            top: 140,
+            left: 250,
+            originX: 'center',
+            originY: 'center'
+		})
+
+        roundedSquareTextBottom = new fabric.Text($("#nickName").val(),{
+			visible: false,
+			fontFamily: "Arial",
+			fontSize: 35,
+			originX: 'center',
+			originY: 'center',
+			textAlign: 'center',
+			id: 'roundedSquareTextBottom',
+			fill: 'white',
+			stroke: 'black',
+            paintFirst: "stroke",
+			strokeWidth: 4,
+            pathAlign: 'descender',
+			borderColor: 'red',
+			cornerColor: 'yellow',
+			cornerSize: 12,
+			transparentCorners: false,
+			lockScalingFlip: true,
+			lockScalingX: true,
+			lockScalingY: true,
+			lockMovementX: true,
+			lockMovementY: true,
+			snapAngle: 5,
+			selectable: false,
+            top: 360,
+            left: 250,
+            originX: 'center',
+            originY: 'center'
+		})
 
         stitches1 = new fabric.Path("m 158.99023,138.20508 -5.20507,14.19336 -2.09961,-2.39649 -7.09571,1.33008 c -1.90756,2.03947 -3.76215,4.12507 -5.55078,6.26953 l 13.78711,-2.58594 -0.0156,0.041 3.36914,4.49414 6.73633,-16.85156 z m 179.20899,2.24414 -4.49805,4.49414 15.38672,3.36719 -2.46094,2.8164 5.61914,16.85157 3.92969,-4.49414 -4.89844,-14.69336 0.4043,0.0879 0.83984,-0.83985 c -1.84452,-1.83957 -3.73425,-3.62093 -5.67382,-5.35547 z m -167.97461,10.11328 -7.28125,14.07617 -1.70703,-2.27929 -17.97852,1.68554 3.3711,4.49805 15.33593,-1.44141 3.20508,4.80664 7.86328,-16.28711 z m 157.30273,3.375 -3.93359,4.49219 15.40625,1.92383 -1.92578,2.57031 7.30859,16.85156 3.36914,-5.05469 -6.30859,-14.06054 0.13086,0.0156 3.92773,-4.49414 z m -147.75195,10.67188 -8.21094,13.52539 -1.90039,-2.85352 -17.97656,-0.55859 3.36914,5.05273 15.2207,0.47852 -0.0527,0.0859 2.80859,5.05469 9.55274,-15.16601 z m 138.75781,3.36914 -3.36328,5.05273 15.64453,0.48828 -1.60351,2.88672 8.98828,15.72656 2.81055,-5.05469 -7.7793,-13.61328 3.28515,-4.92187 z m -130.89258,11.79687 -9.15039,12.03906 -1.52539,-3.05078 -17.97461,-1.68555 2.2461,5.05469 15.79687,1.91602 1.61914,5.39258 11.23438,-14.04688 z m 141.01172,2.25 -17.98046,1.11914 -2.80469,5.61914 15.29101,-1.43359 -1.25,3.12304 10.67188,14.60157 2.24609,-5.61328 -9.02344,-12.35938 0.0352,-0.004 z m -134.27343,13.48047 -10.53516,11.01367 -1.25781,-3.15039 -17.41602,-3.92773 1.6836,5.61328 15.20703,3.32812 -0.0391,0.041 1.68555,5.61914 12.35742,-12.91797 z m 128.08984,0 -17.9707,3.36914 -2.25586,5.61914 15.65429,-2.93164 -1.04687,3.49219 11.80273,13.48633 1.6836,-5.61914 -10.29688,-11.76172 0.18946,-0.0352 z m -5.05469,14.60742 -17.41601,5.0586 -1.125,6.17773 14.55468,-4.22852 -0.50781,2.53907 13.48242,12.36132 1.125,-5.61718 -11.20898,-10.27735 z m -117.97851,1.6836 -11.81641,9.45507 -0.54102,-2.71093 -17.41406,-5.61914 1.12305,5.61914 14.64453,4.7207 1.08398,5.94922 14.04493,-11.79492 z m 114.60937,13.48242 -16.29687,6.74218 -1.11914,6.17774 14.35547,-6.2207 -0.3125,3.41406 14.60546,10.67383 0.56055,-6.17969 -12.35351,-9.03125 z m -141.01172,1.125 0.5625,5.61718 14.05664,6.30274 0.54688,6.05664 14.60742,-10.11133 v -6.18164 h -0.002 l -13.16407,8.77734 -0.31445,-3.1582 z m 1.68555,13.48242 v 6.17969 l 13.625,7.7832 -0.14453,0.084 -0.5586,5.61524 16.28907,-8.42578 v -6.17969 l -13.48047,7.70508 v -3.20899 z m 137.64258,0.56055 -15.73242,8.42773 -0.56446,6.17773 14.04688,-7.26171 v 3.33203 l 15.72656,8.98633 -0.56055,-6.17579 -12.91601,-7.6582 z m -137.08008,13.48632 -0.5625,6.17579 12.35156,9.02539 -1.11523,5.57812 16.85156,-6.73437 1.12305,-5.6211 -14.35938,5.7461 0.31641,-3.49805 z m 137.08008,1.6836 -15.17188,10.10742 0.5586,6.1875 12.64257,-8.43359 0.28126,2.81054 16.85546,7.86914 -0.56445,-6.17968 -14.13281,-6.125 0.0898,-0.0605 z m -138.20703,12.36133 -1.1211,5.61523 11.54688,10.58203 -0.31055,0.0898 -1.68359,5.62305 17.41406,-5.05859 1.68555,-5.61328 -14.67383,4.2539 0.6289,-3.13476 z m 139.89062,2.80468 -14.04687,11.80078 1.125,6.17579 11.7207,-10.25 0.63672,3.50976 17.41992,5.62109 -1.68945,-6.18554 -14.64063,-4.87696 z m -142.69531,11.23633 -1.68555,5.62109 10.55664,11.51758 -2.1289,5.33203 17.97265,-3.36718 1.68555,-5.6211 -14.91016,2.88867 0.86719,-2.88867 z m 145.5,3.92969 -12.35156,12.92773 1.67968,6.17774 10.3711,-11.31836 0.86523,2.89258 17.97656,3.92968 -1.68945,-5.62109 -15.20508,-3.32617 0.0371,-0.0391 z m -148.87305,8.98828 -2.80664,5.62109 9.02539,12.35352 -0.041,0.002 -2.24414,5.62305 17.97656,-1.68359 2.80859,-5.05664 -15.77929,0.95117 1.17578,-2.63477 z m 153.36719,5.62109 -11.23242,14.60352 2.25,5.05859 9.67578,-12.09765 1.55664,3.10742 17.98047,2.24805 -2.81055,-5.61329 -15.25586,-1.90625 z m -158.98242,7.30664 -2.8086,5.61329 7.60352,13.30859 -3.11133,4.66992 17.97656,0.56445 3.36914,-5.05859 -15.48242,-0.48633 1.44141,-2.8789 z m 165.16601,6.74415 -9.55273,15.72851 2.80859,5.04883 8.14258,-12.92969 1.41016,2.82227 h 18.54101 l -3.375,-5.0586 -15.4082,-0.48437 z m -171.9082,5.61132 -3.37109,5.0586 6.30664,14.06445 -0.12891,-0.0156 -3.36914,4.49219 17.97656,2.25 3.3711,-4.49804 -15.41211,-1.92383 1.92383,-2.56836 z m 179.20703,7.86914 -7.86328,16.28516 3.37305,5.05859 6.68359,-13.84961 1.74414,2.61524 18.53711,-1.6836 -3.92969,-5.05859 -15.33789,1.43555 z m -187.07422,3.93164 -3.93164,4.49414 4.79492,14.86133 -0.7207,0.72657 c 0.45818,0.45882 0.92953,0.90503 1.39453,1.35742 v 0.002 c 0.0994,0.0983 0.19943,0.2073 0.29883,0.29688 l 0.004,-0.004 c 1.20727,1.1674 2.42865,2.32185 3.67578,3.44922 l 9.09375,2.3457 3.92773,-4.49414 -14.88867,-3.36914 1.97266,-2.25391 z m 196.06641,8.42383 -6.17969,17.41407 3.66016,4.18945 c 0.17941,-0.14223 0.36508,-0.28531 0.53515,-0.42969 l 4.96485,-13.99609 2.07812,2.37304 6.78321,-1.26953 c 1.92461,-2.04245 3.78917,-4.13712 5.59375,-6.28711 l -13.51563,2.53907 0.0137,-0.0391 z", {
             fill: "#e82a50",
@@ -1080,8 +1347,11 @@
         logoCreator.add(roundel)
 		logoCreator.add(circle)
         logoCreator.add(homePlate)
+        
         logoCreator.add(square)
+        
         logoCreator.add(roundedSquare)
+        
 
         logoCreator.add(roundelTextTop)
         logoCreator.centerObject(roundelTextTop)
@@ -1098,6 +1368,13 @@
 		logoCreator.centerObject(circleTextTop)
         logoCreator.add(circleTextBottom)
         logoCreator.centerObject(circleTextBottom)
+
+        logoCreator.add(homePlateText)
+        logoCreator.add(squareTextTop)
+        logoCreator.add(squareTextBottom)
+        logoCreator.add(roundedSquareTextTop)
+        logoCreator.add(roundedSquareTextBottom)
+        
         
         logoCreator.renderAll()
     }
@@ -1136,6 +1413,8 @@
                     visible: false,
                     clipPath: circleClip,
                 })
+                $("#roundelSpan").css("display","inline-block")
+                $("#otherSpan").css("display","none")
                 break;
             case "circle":
                 s.set({
@@ -1150,6 +1429,8 @@
                     visible: visible,
                     clipPath: circleClip,
                 })
+                $("#roundelSpan").css("display","none")
+                $("#otherSpan").css("display","inline-block")
                 break;
             case "homePlate":
                 s.set({
@@ -1164,6 +1445,8 @@
                     visible: false,
                     clipPath: circleClip,
                 })
+                $("#roundelSpan").css("display","none")
+                $("#otherSpan").css("display","inline-block")
                 break;
             case "square":
                 s.set({
@@ -1178,6 +1461,8 @@
                     visible: false,
                     clipPath: circleClip,
                 })
+                $("#roundelSpan").css("display","none")
+                $("#otherSpan").css("display","inline-block")
                 break;
             case "roundedSquare":
                 s.set({
@@ -1192,6 +1477,8 @@
                     visible: false,
                     clipPath: circleClip,
                 })
+                $("#roundelSpan").css("display","none")
+                $("#otherSpan").css("display","inline-block")
                 break;
         }
 		logoCreator.renderAll()
@@ -1246,6 +1533,8 @@
 				o.set("text", text)
 			}	
 		})
+        var tx = logoCreator.getObjects('text').find(o => o.id == 'homePlateText')
+        tx.set("text", text + " " + $("#nickName").val())
         $("#exampleText").val($("#cityName").val()+" "+$("#nickName").val())
 		logoCreator.renderAll()
 	})
@@ -1257,6 +1546,8 @@
 				o.set("text", text)
 			}	
 		})
+        var tx = logoCreator.getObjects('text').find(o => o.id == 'homePlateText')
+        tx.set("text", $("#cityName").val() + " " + text)
         $("#exampleText").val($("#cityName").val()+" "+$("#nickName").val())
 		logoCreator.renderAll()
 	})
