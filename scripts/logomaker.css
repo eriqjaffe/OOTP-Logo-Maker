@@ -41,6 +41,10 @@ input {
 	font-family: 'BenchNine', sans-serif;
 }
 
+input[type=number] {
+	text-align: center;
+}
+
 select {
 	font-family: 'BenchNine', sans-serif;
 }

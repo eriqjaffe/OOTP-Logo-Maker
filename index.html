@@ -12,12 +12,10 @@
         <script type="text/javascript" src="./scripts/spectrum.js"></script>
         <script type="text/javascript" src="./scripts/opentype.js"></script>
         <script type="text/javascript" src="./scripts/skeletabs.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.js"></script>
         <link href='./scripts/logomaker.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/spectrum.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/skeletabs.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/magnific-popup.css' rel='stylesheet' type='text/css'>
-		<link href='https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.css' rel="stylesheet" type="text/css">
 
         <script>
             const initialColors = {topTextColor:"#ffffff", topTextStrokeColor:"#000000", bottomTextColor:"#ffffff", bottomTextStrokeColor:"#000000", teamBGColor:"#0C2340", teamTextColor: "#ffffff", stitches: "#e82a50"}
@@ -51,10 +49,10 @@
                             <table style="width:100%;">
                                 <tr>
                                     <td>
-                                        City Name: <input type="text" id="cityName">
+                                        City Name: <input type="text" id="cityName" value="TEAM">
                                     </td>
                                     <td>
-                                        Nickname: <input type="text" id="nickName">
+                                        Nickname: <input type="text" id="nickName" value="NAME">
                                     </td>
                                     <td><label for="startYear">Start:</label>
                                         <input type="number" class="year" id="startYear" name="startYear" onkeypress="return isNumberKey(event)" style="width:35px;">
@@ -86,20 +84,20 @@
 													<td>&nbsp;</td>
 													<td colspan="2">
 														Team Display Colors:&nbsp;&nbsp;
-														<input type="text" id="exampleText" value="CHICAGO BULLDOGS" readonly>
+														<input type="text" id="exampleText" readonly>
 														<div style="float:right;">	
-															<input class="teamSelector selector" type="text" id="teamTextColor">
-															<input class="teamSelector selector" type="text" id="teamBGColor">
+                                                            <input class="teamSelector selector" type="text" id="teamBGColor">
+															<input class="teamSelector selector" type="text" id="teamTextColor">	
 														</div>
 													</td>	
 												</tr>
                                                 <tr class="color_tr">
                                                     <td class="checkcell">&nbsp;</td>
                                                     <td>
-                                                        <label>Text Rotation:</label>
+                                                        <label>Text Angle:</label>
                                                     </td>
                                                     <td style="text-align:right;">
-                                                        <div id="slider" style="float:right;"></div>
+                                                        <input id="textRotation" type="number" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">
                                                     </td>
                                                 </tr>
                                                 <tr class="color_tr">
@@ -152,10 +150,11 @@
                                                             <option value="stitches6">Style 6</option>
                                                             <option value="stitches7">Style 7</option>
 														</select>
+                                                        <label style="padding-left:5px; padding-right:5px;">Angle:</label>
+                                                        <input id="stitchRotation" type="number" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">
                                                     </td>
                                                     <td style="text-align:right;">
                                                         <input class="stitchSelector selector" type="text" id="stitchSelector">
-														<label style="padding-left:5px;">Stitch Rotation:&nbsp;</label><div id="stitchSlider" style="float:right; padding-left:5px;"></div>
 													</td>
 												</tr>
 											</table>
@@ -200,6 +199,7 @@
     </body>
     <script>
     $(document).ready(function() {
+        $("#exampleText").val($("#cityName").val()+" "+$("#nickName").val())
         $("#tabContainer").skeletabs('goTo', 1)
     })
 
@@ -354,39 +354,36 @@
         logoCreator.renderAll()
     }
 
-	$("#slider").roundSlider({
-		sliderType: "min-range",
-		handleShape: "round",
-		width: 4,
-		radius: 20,
-		value: 0,
-		handleSize: "+4",
-		max: "360",
-		startAngle: 90,
-		drag: function (args) {
-			rotateCircleText($("#slider").roundSlider("getValue"))
-		},
-		change: function (args) {
-			rotateCircleText($("#slider").roundSlider("getValue"))
-		}
-	});
+    $("#textRotation").on("change",function(e) {
+        const angle = parseInt($(this).val())
+        logoCreator.getObjects('text').forEach(function(o) {
+            switch (o.id) {
+                case "roundelTextTop":
+                    o.set("angle", (angle + 180) % 360)
+                    break;
+                case "roundelTextBottom":
+                    o.set("angle", angle)
+                    break;
+				case "circleTextTop":
+                    o.set("angle", (angle + 180) % 360)
+                    break;
+                case "circleTextBottom":
+                    o.set("angle", angle)
+                    break;
+            }
+        })
+        logoCreator.renderAll()
+    })
 
-     $("#stitchSlider").roundSlider({
-		sliderType: "min-range",
-		handleShape: "round",
-		width: 4,
-		radius: 20,
-		value: 0,
-		handleSize: "+4",
-		max: "360",
-		startAngle: 90,
-		drag: function (args) {
-			rotateStitches($("#stitchSlider").roundSlider("getValue"))
-		},
-		change: function (args) {
-			rotateStitches($("#stitchSlider").roundSlider("getValue"))
-		}
-	});
+    $("#stitchRotation").on("change",function(e) {
+        const s = logoCreator.getObjects('group').find(o => o.id == "stitches")
+        const r = logoCreator.getObjects('group').find(o => o.id == "roundelStitches")
+        const c = logoCreator.getObjects('group').find(o => o.id == "circleStitches")      
+        logoCreator.getObjects('group').find(o => o.id == "stitches").set("angle", parseInt($(this).val()))
+        logoCreator.getObjects('group').find(o => o.id == "roundelStitches").set("angle", parseInt($(this).val()))
+        logoCreator.getObjects('group').find(o => o.id == "circleStitches").set("angle", parseInt($(this).val()))
+        logoCreator.renderAll()
+    })
 
     fabric.Object.prototype.set({
     	borderColor: 'red',
@@ -547,7 +544,7 @@
 
         var roundel = new fabric.Group ([roundelOuterStroke, roundelInnerStroke, roundelOuterCircle, roundelCenterStroke, roundelInnerCircle])
 
-		roundelTextTop = new fabric.Text('CHICAGO',{
+		roundelTextTop = new fabric.Text($("#cityName").val(),{
 			visible: true,
 			fontFamily: "Arial",
 			fontSize: 40,
@@ -579,38 +576,7 @@
 			angle: 180
 		})
 
-        /* roundelTextTopStroke = new fabric.Text('CHICAGO',{
-			visible: true,
-			fontFamily: "Arial",
-			fontSize: 40,
-			originX: 'center',
-			originY: 'center',
-			textAlign: 'center',
-			id: 'roundelTextTopStroke',
-			fill: 'black',
-			stroke: 'black',
-            strokeWidth: 4,
-			path: new fabric.Path("M 250,155.26758 A 94.733186,94.733186 0 0 1 344.73242,250 94.733186,94.733186 0 0 1 250,344.73242 94.733186,94.733186 0 0 1 155.26758,250 94.733186,94.733186 0 0 1 250,155.26758 Z", {
-				visible: false,
-				selectable:false,
-				evented: false,
-			}),
-            pathAlign: 'descender',
-			borderColor: 'red',
-			cornerColor: 'yellow',
-			cornerSize: 12,
-			transparentCorners: false,
-			lockScalingFlip: true,
-			lockScalingX: true,
-			lockScalingY: true,
-			lockMovementX: true,
-			lockMovementY: true,
-			snapAngle: 5,
-			selectable: false,
-			angle: 180
-		}) */
-
-		roundelTextBottom = new fabric.Text('BULLDOGS',{
+		roundelTextBottom = new fabric.Text($("#nickName").val(),{
 			visible: true,
 			fontFamily: "Arial",
 			fontSize: 40,
@@ -641,37 +607,6 @@
             angle: 0,
 			selectable: false
 		})
-
-/*         roundelTextBottomStroke = new fabric.Text('BULLDOGS',{
-			visible: true,
-			fontFamily: "Arial",
-			fontSize: 40,
-			originX: 'center',
-			originY: 'center',
-			textAlign: 'center',
-			id: 'roundelTextBottomStroke',
-			fill: 'black',
-			stroke: 'black',
-            strokeWidth: 4,
-            path: new fabric.Path("M 250 148.60352 A 101.39774 101.39774 0 0 0 148.60352 250 A 101.39774 101.39774 0 0 0 250 351.39648 A 101.39774 101.39774 0 0 0 351.39648 250 A 101.39774 101.39774 0 0 0 250 148.60352 z", {
-				visible: false,
-				selectable:false,
-				evented: false,
-			}),
-            pathAlign: 'ascender',
-			borderColor: 'red',
-			cornerColor: 'yellow',
-			cornerSize: 12,
-			transparentCorners: false,
-			lockScalingFlip: true,
-			lockScalingX: true,
-			lockScalingY: true,
-			lockMovementX: true,
-			lockMovementY: true,
-			snapAngle: 5,
-            angle: 0,
-			selectable: false
-		}) */
         
 		roundel.set({
 			selectable:false,
@@ -716,7 +651,7 @@
 
 		var circle = new fabric.Group ([circleOuterStroke, circleCenterStroke, circleInnerStroke, circleFill])
 
-		circleTextTop = new fabric.Text('CHICAGO',{
+		circleTextTop = new fabric.Text($("#cityName").val(),{
 			visible: false,
 			fontFamily: "Arial",
 			fontSize: 30,
@@ -749,7 +684,7 @@
 			angle: 180
 		})
 
-		circleTextBottom = new fabric.Text('BULLDOGS',{
+		circleTextBottom = new fabric.Text($("#nickName").val(),{
 			visible: false,
 			fontFamily: "Arial",
 			fontSize: 30,
@@ -1311,6 +1246,7 @@
 				o.set("text", text)
 			}	
 		})
+        $("#exampleText").val($("#cityName").val()+" "+$("#nickName").val())
 		logoCreator.renderAll()
 	})
 
@@ -1321,40 +1257,9 @@
 				o.set("text", text)
 			}	
 		})
+        $("#exampleText").val($("#cityName").val()+" "+$("#nickName").val())
 		logoCreator.renderAll()
 	})
-
-    function rotateCircleText(angle) {
-        logoCreator.getObjects('text').forEach(function(o) {
-            switch (o.id) {
-                case "roundelTextTop":
-                    o.set("angle", (angle + 180) % 360)
-                    break;
-                case "roundelTextTopStroke":
-                    o.set("angle", (angle + 180) % 360)
-                    break;
-                case "roundelTextBottom":
-                    o.set("angle", angle)
-                    break;
-                case "roundelTextBottomStroke":
-                    o.set("angle", angle)
-                    break;
-				case "circleTextTop":
-                    o.set("angle", (angle + 180) % 360)
-                    break;
-                case "circleTextTopStroke":
-                    o.set("angle", (angle + 180) % 360)
-                    break;
-                case "circleTextBottom":
-                    o.set("angle", angle)
-                    break;
-                case "circleTextBottomStroke":
-                    o.set("angle", angle)
-                    break;
-            }
-        })
-        logoCreator.renderAll()
-    }
 
     function rotateStitches(angle) {
         const s = logoCreator.getObjects('group').find(o => o.id == "stitches")
@@ -1369,5 +1274,12 @@
     logoCreator.on('selection:created', function(e) {
 		var obj = e.selected[0];
 	})
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    }
     </script>
 </html>
