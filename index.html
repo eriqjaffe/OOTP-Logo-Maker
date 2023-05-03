@@ -170,6 +170,14 @@
                                                         <input class="stitchSelector selector" type="text" id="stitchSelector">
 													</td>
 												</tr>
+                                                <tr class="color_tr">
+                                                    <td class="checkCell">
+                                                        <input type="checkbox" id="overlayCheck" >
+                                                    </td>
+                                                    <td colspan="2">
+                                                        Overlay
+                                                    </td>
+                                                </tr>
 											</table>
                                         </div>
                                     </div>
@@ -498,6 +506,25 @@
         logoCreator.renderAll()
     })
 
+    $("#overlayCheck").on("change",function(e) {
+        const checked = $(this).is(":checked")
+        if (checked) {
+            overlayImage = new fabric.Image.fromURL('./images/circle_glossy_justafan.png', function(oImg) {
+                oImg.set({
+                    id: 'overlayImage',
+                    visible: true,
+                    evented: false
+                })
+                logoCreator.add(oImg)
+                logoCreator.renderAll()
+		    })
+        } else {
+            var o = logoCreator.getObjects('image').find(o => o.id == 'overlayImage')
+            logoCreator.remove(o)
+            logoCreator.renderAll()
+        }
+    })
+
     fabric.Object.prototype.set({
     	borderColor: 'red',
 		cornerColor: 'yellow',
@@ -542,7 +569,7 @@
         logoCreator.renderAll.bind(logoCreator),
     );
 
-    //logoCreator.setOverlayImage('./images/smooth-glass.png',logoCreator.renderAll.bind(logoCreator));
+    //logoCreator.setOverlayImage('./images/circle_simple_justafan.png',logoCreator.renderAll.bind(logoCreator));
 
     initializeCreator()
 
@@ -1419,6 +1446,7 @@
                     visible: false,
                     clipPath: circleClip,
                 })
+                //logoCreator.setOverlayImage('./images/circle_glossy.png',logoCreator.renderAll.bind(logoCreator));
                 $("#roundelSpan").css("display","inline-block")
                 $("#otherSpan").css("display","none")
                 break;
@@ -1435,6 +1463,7 @@
                     visible: visible,
                     clipPath: circleClip,
                 })
+                //logoCreator.setOverlayImage('./images/circle_glossy.png',logoCreator.renderAll.bind(logoCreator));
                 $("#roundelSpan").css("display","none")
                 $("#otherSpan").css("display","inline-block")
                 break;
@@ -1451,6 +1480,7 @@
                     visible: false,
                     clipPath: circleClip,
                 })
+                //logoCreator.setOverlayImage('./images/home_plate_glossy.png',logoCreator.renderAll.bind(logoCreator));
                 $("#roundelSpan").css("display","none")
                 $("#otherSpan").css("display","inline-block")
                 break;
@@ -1467,6 +1497,7 @@
                     visible: false,
                     clipPath: circleClip,
                 })
+                //logoCreator.setOverlayImage('./images/square_glossy.png',logoCreator.renderAll.bind(logoCreator));
                 $("#roundelSpan").css("display","none")
                 $("#otherSpan").css("display","inline-block")
                 break;
@@ -1483,6 +1514,7 @@
                     visible: false,
                     clipPath: circleClip,
                 })
+                //logoCreator.setOverlayImage('./images/rounded_square_glossy.png',logoCreator.renderAll.bind(logoCreator));
                 $("#roundelSpan").css("display","none")
                 $("#otherSpan").css("display","inline-block")
                 break;
