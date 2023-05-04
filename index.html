@@ -175,7 +175,12 @@
                                                         <input type="checkbox" id="overlayCheck" >
                                                     </td>
                                                     <td colspan="2">
-                                                        Overlay
+                                                        <label>Overlay:&nbsp;</label>
+                                                        <select id="overlaySelect">
+                                                            <option value="gloss">Glossy</option>
+                                                            <option value="simple">Simple</option>
+                                                            <option value="highGloss">High Gloss</option>
+                                                        </select>
                                                     </td>
                                                 </tr>
 											</table>
@@ -551,16 +556,106 @@
 
     $("#overlayCheck").on("change",function(e) {
         const checked = $(this).is(":checked")
+        const style = $("#overlaySelect").val()
+        switch ($("#logoShapeSelect").val()) {
+            case "square":
+                var clip = squareClip;
+                break;
+            case "roundedSquare":
+                var clip = roundedSquareClip;
+                break;
+            case "homePlate":
+                var clip = homePlateClip;
+                break;
+            default:
+                var clip = circleClip;
+                break;
+        }
         if (checked) {
-            overlayImage = new fabric.Image.fromURL('./images/circle_glossy_justafan.png', function(oImg) {
-                oImg.set({
-                    id: 'overlayImage',
-                    visible: true,
-                    evented: false
+            if (style != "highGloss") {
+                overlayImage = new fabric.Image.fromURL('./images/'+style+'.png', function(oImg) {
+                    oImg.set({
+                        id: 'overlayImage',
+                        visible: true,
+                        evented: false,
+                        clipPath: clip
+                    })
+                    logoCreator.add(oImg)
+                    logoCreator.renderAll()
                 })
-                logoCreator.add(oImg)
-                logoCreator.renderAll()
-		    })
+            } else {
+                if ($("#logoShapeSelect").val() == "circle" || $("#logoShapeSelect").val() == "roundel") {
+                    var imgSrc = './images/circle_glossy.png'
+                } else {
+                    var imgSrc = './images/'+$("#logoShapeSelect").val()+'_glossy.png'
+                }
+                overlayImage = new fabric.Image.fromURL(imgSrc, function(oImg) {
+                    oImg.set({
+                        id: 'overlayImage',
+                        visible: true,
+                        evented: false,
+                        clipPath: clip
+                    })
+                    logoCreator.add(oImg)
+                    logoCreator.renderAll()
+                })
+            }
+        } else {
+            var o = logoCreator.getObjects('image').find(o => o.id == 'overlayImage')
+            logoCreator.remove(o)
+            logoCreator.renderAll()
+        }
+    })
+
+    $("#overlaySelect").on("change",function(e) {
+        const checked = $("#overlayCheck").is(":checked")
+        const style = $(this).val()
+        switch ($("#logoShapeSelect").val()) {
+            case "square":
+                var clip = squareClip;
+                break;
+            case "roundedSquare":
+                var clip = roundedSquareClip;
+                break;
+            case "homePlate":
+                var clip = homePlateClip;
+                break;
+            default:
+                var clip = circleClip;
+                break;
+        }
+        if (checked) {
+            var o = logoCreator.getObjects('image').find(o => o.id == 'overlayImage')
+            logoCreator.remove(o)
+            if (style != "highGloss") {
+                overlayImage = new fabric.Image.fromURL('./images/'+style+'.png', function(oImg) {
+                    oImg.set({
+                        id: 'overlayImage',
+                        visible: true,
+                        evented: false,
+                        clipPath: clip
+                    })
+                    logoCreator.add(oImg)
+                    logoCreator.renderAll()
+                })
+            } else {
+                if ($("#logoShapeSelect").val() == "circle" || $("#logoShapeSelect").val() == "roundel") {
+                    var imgSrc = './images/circle_glossy.png'
+                } else {
+                    var imgSrc = './images/'+$("#logoShapeSelect").val()+'_glossy.png'
+                }
+                overlayImage = new fabric.Image.fromURL(imgSrc, function(oImg) {
+                    oImg.set({
+                        id: 'overlayImage',
+                        visible: true,
+                        evented: false,
+                        clipPath: clip
+                    })
+                    logoCreator.add(oImg)
+                    logoCreator.renderAll()
+                })
+            }
+        
         } else {
             var o = logoCreator.getObjects('image').find(o => o.id == 'overlayImage')
             logoCreator.remove(o)
@@ -1432,6 +1527,7 @@
         const hf = logoCreator.getObjects().find(o => o.id == 'homePlateFill')
         const sf = logoCreator.getObjects().find(o => o.id == 'squareFill')
         const rf = logoCreator.getObjects().find(o => o.id == 'roundedSquareFill')
+        const overlay = logoCreator.getObjects('image').find(o => o.id == 'overlayImage')
 		logoCreator.getObjects('group').forEach(function(o) {
 			if (o.id == selected) {
 				o.set("visible", true)
@@ -1472,7 +1568,6 @@
                 rf.set({
                     visible: false
                 })
-                //logoCreator.setOverlayImage('./images/circle_glossy.png',logoCreator.renderAll.bind(logoCreator));
                 $("#roundelSpan").css("display","inline-block")
                 $("#otherSpan").css("display","none")
                 break;
@@ -1501,7 +1596,6 @@
                 rf.set({
                     visible: false
                 })
-                //logoCreator.setOverlayImage('./images/circle_glossy.png',logoCreator.renderAll.bind(logoCreator));
                 $("#roundelSpan").css("display","none")
                 $("#otherSpan").css("display","inline-block")
                 break;
@@ -1530,7 +1624,6 @@
                 rf.set({
                     visible: false
                 })
-                //logoCreator.setOverlayImage('./images/home_plate_glossy.png',logoCreator.renderAll.bind(logoCreator));
                 $("#roundelSpan").css("display","none")
                 $("#otherSpan").css("display","inline-block")
                 break;
@@ -1559,7 +1652,6 @@
                 rf.set({
                     visible: false
                 })
-                //logoCreator.setOverlayImage('./images/square_glossy.png',logoCreator.renderAll.bind(logoCreator));
                 $("#roundelSpan").css("display","none")
                 $("#otherSpan").css("display","inline-block")
                 break;
@@ -1588,10 +1680,12 @@
                 rf.set({
                     visible: true
                 })
-                //logoCreator.setOverlayImage('./images/rounded_square_glossy.png',logoCreator.renderAll.bind(logoCreator));
                 $("#roundelSpan").css("display","none")
                 $("#otherSpan").css("display","inline-block")
                 break;
+        }
+        if (overlay) {
+            $("#overlaySelect").trigger("change")
         }
 		logoCreator.renderAll()
 	})
