@@ -12,6 +12,7 @@
         <script type="text/javascript" src="./scripts/spectrum.js"></script>
         <script type="text/javascript" src="./scripts/opentype.js"></script>
         <script type="text/javascript" src="./scripts/skeletabs.js"></script>
+        <script type="text/javascript" src="./scripts/fontfaceobserver.js"></script>
         <link href='./scripts/logomaker.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/spectrum.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/skeletabs.css' rel='stylesheet' type='text/css'>
@@ -118,6 +119,162 @@
                                                     <td style="text-align:right;">
                                                         <input class="textSelector selector" type="text" id="bottomTextColor">
                                                         <input class="textSelector selector" type="text" id="bottomTextStrokeColor">
+                                                    </td>
+                                                </tr>
+                                                <tr class="color_tr">
+                                                    <td class="checkCell">&nbsp;</td>
+                                                    <td>
+                                                        <label>Top Font:</label>
+                                                    </td>
+                                                    <td style="text-align:right;">
+                                                        <select id="topFont">
+                                                            <option value='Acme' selected>Acme</option>
+                                                            <option value='All State'>All State</option>
+                                                            <option value='Athletic Gothic Shadow'>Athletic Gothic Shadow</option>
+                                                            <option value='Athletic Gothic'>Athletic Gothic</option>
+                                                            <option value='Beaverton Script'>Beaverton Script</option>
+                                                            <option value='Berkshire Swash'>Berkshire Swash</option>
+                                                            <option value='CantoraOne'>CantoraOne</option>
+                                                            <option value='Caxton Roman'>Caxton Roman</option>
+                                                            <option value='Chela One'>Chela One</option>
+                                                            <option value='Condiment'>Condiment</option>
+                                                            <option value='Cookie'>Cookie</option>
+                                                            <option value='Courgette'>Courgette</option>
+                                                            <option value='Croissant One'>Croissant One</option>
+                                                            <option value='Damion'>Damion</option>
+                                                            <option value='Engagement'>Engagement</option>
+                                                            <option value='Germania One'>Germania One</option>
+                                                            <option value='Graduate'>Graduate</option>
+                                                            <option value='Grand Hotel'>Grand Hotel</option>
+                                                            <option value='Jockey One'>Jockey One'</option>
+                                                            <option value='Kansas'>Kansas</option>
+                                                            <option value='Kaushan Script'>Kaushan Script</option>
+                                                            <option value='Leckerli One'>Leckerli One</option>
+                                                            <option value='Lily Script One'>Lily Script One</option>
+                                                            <option value='Lobster Two'>Lobster Two</option>
+                                                            <option value='Lobster'>Lobster</option>
+                                                            <option value='Metal Mania'>Metal Mania</option>
+                                                            <option value='Miniver'>Miniver</option>
+                                                            <option value='MLB Block'>MLB Block</option>
+                                                            <option value='MLB_Tuscan_New'>MLB Tuscan</option>
+                                                            <option value='Molle'>Molle</option>
+                                                            <option value='New Rocker'>New Rocker</option>
+                                                            <option value='Norican'>Norican</option>
+                                                            <option value='Oleo Script Swash Caps'>Oleo Script Swash Caps</option>
+                                                            <option value='Oleo Script'>Oleo Script</option>
+                                                            <option value='Pacifico'>Pacifico</option>
+                                                            <option value='Pirata One'>Pirata One</option>
+                                                            <option value='Playball'>Playball</option>
+                                                            <option value='Pro Full Block'>Pro Full Block</option>
+                                                            <option value='Quicksand'>Quicksand</option>
+                                                            <option value='Rawlings Fancy Block'>Rawlings Fancy Block</option>
+                                                            <option value='Rawlings Old English'>Rawlings Old English</option>
+                                                            <option value='Richardson Fancy Block'>Richardson Fancy Block</option>
+                                                            <option value='Rubik Mono One'>Rubik Mono One</option>
+                                                            <option value='Rubik One'>Rubik One</option>
+                                                            <option value='Rum Raisin'>Rum Raisin</option>
+                                                            <option value='Russell Circus'>Russell Circus</option>
+                                                            <option value='Satisfy'>Satisfy</option>
+                                                            <option value='Seymour One'>Seymour One</option>
+                                                            <option value='SPL28Script'>SPL28Script</option>
+                                                            <option value='Trade Winds'>Trade Winds</option>
+                                                            <option value='UA Tiffany'>UA Tiffany</option>
+                                                            <option value='UnifrakturCook'>UnifrakturCook</option>
+                                                            <option value='UnifrakturMaguntia'>UnifrakturMaguntia</option>
+                                                            <option value='Varsity Block A'>Varsity Block A</option>
+                                                            <option value='Varsity Block B'>Varsity Block B</option>
+                                                            <option value='Varsity Block C'>Varsity Block C</option>
+                                                            <option value='Varsity Block D'>Varsity Block D</option>
+                                                            <option value='Varsity Classic A'>Varsity Classic A</option>
+                                                            <option value='Varsity Classic B'>Varsity Classic B</option>
+                                                            <option value='Varsity Classic C'>Varsity Classic C</option>
+                                                            <option value='Varsity Classic D'>Varsity Classic D</option>
+                                                            <option value='Varsity Classic Serif A'>Varsity Classic Serif A</option>
+                                                            <option value='Varsity Classic Serif B'>Varsity Classic Serif B</option>
+                                                            <option value='Vibur'>Vibur</option>
+                                                            <option value='Viga'>Viga</option>
+                                                            <option value='Wellfleet'>Wellfleet</option>
+                                                            <option value='Wendy One'>Wendy One</option>
+                                                            <option value='Yellowtail'>Yellowtail</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr class="color_tr">
+                                                    <td class="checkCell">&nbsp;</td>
+                                                    <td>
+                                                        <label>Bottom Font:</label>
+                                                    </td>
+                                                    <td style="text-align:right;">
+                                                        <select id="bottomFont">
+                                                            <option value='Acme' selected>Acme</option>
+                                                            <option value='All State'>All State</option>
+                                                            <option value='Athletic Gothic Shadow'>Athletic Gothic Shadow</option>
+                                                            <option value='Athletic Gothic'>Athletic Gothic</option>
+                                                            <option value='Beaverton Script'>Beaverton Script</option>
+                                                            <option value='Berkshire Swash'>Berkshire Swash</option>
+                                                            <option value='CantoraOne'>CantoraOne</option>
+                                                            <option value='Caxton Roman'>Caxton Roman</option>
+                                                            <option value='Chela One'>Chela One</option>
+                                                            <option value='Condiment'>Condiment</option>
+                                                            <option value='Cookie'>Cookie</option>
+                                                            <option value='Courgette'>Courgette</option>
+                                                            <option value='Croissant One'>Croissant One</option>
+                                                            <option value='Damion'>Damion</option>
+                                                            <option value='Engagement'>Engagement</option>
+                                                            <option value='Germania One'>Germania One</option>
+                                                            <option value='Graduate'>Graduate</option>
+                                                            <option value='Grand Hotel'>Grand Hotel</option>
+                                                            <option value='Jockey One'>Jockey One'</option>
+                                                            <option value='Kansas'>Kansas</option>
+                                                            <option value='Kaushan Script'>Kaushan Script</option>
+                                                            <option value='Leckerli One'>Leckerli One</option>
+                                                            <option value='Lily Script One'>Lily Script One</option>
+                                                            <option value='Lobster Two'>Lobster Two</option>
+                                                            <option value='Lobster'>Lobster</option>
+                                                            <option value='Metal Mania'>Metal Mania</option>
+                                                            <option value='Miniver'>Miniver</option>
+                                                            <option value='MLB Block'>MLB Block</option>
+                                                            <option value='MLB_Tuscan_New'>MLB Tuscan</option>
+                                                            <option value='Molle'>Molle</option>
+                                                            <option value='New Rocker'>New Rocker</option>
+                                                            <option value='Norican'>Norican</option>
+                                                            <option value='Oleo Script Swash Caps'>Oleo Script Swash Caps</option>
+                                                            <option value='Oleo Script'>Oleo Script</option>
+                                                            <option value='Pacifico'>Pacifico</option>
+                                                            <option value='Pirata One'>Pirata One</option>
+                                                            <option value='Playball'>Playball</option>
+                                                            <option value='Pro Full Block'>Pro Full Block</option>
+                                                            <option value='Quicksand'>Quicksand</option>
+                                                            <option value='Rawlings Fancy Block'>Rawlings Fancy Block</option>
+                                                            <option value='Rawlings Old English'>Rawlings Old English</option>
+                                                            <option value='Richardson Fancy Block'>Richardson Fancy Block</option>
+                                                            <option value='Rubik Mono One'>Rubik Mono One</option>
+                                                            <option value='Rubik One'>Rubik One</option>
+                                                            <option value='Rum Raisin'>Rum Raisin</option>
+                                                            <option value='Russell Circus'>Russell Circus</option>
+                                                            <option value='Satisfy'>Satisfy</option>
+                                                            <option value='Seymour One'>Seymour One</option>
+                                                            <option value='SPL28Script'>SPL28Script</option>
+                                                            <option value='Trade Winds'>Trade Winds</option>
+                                                            <option value='UA Tiffany'>UA Tiffany</option>
+                                                            <option value='UnifrakturCook'>UnifrakturCook</option>
+                                                            <option value='UnifrakturMaguntia'>UnifrakturMaguntia</option>
+                                                            <option value='Varsity Block A'>Varsity Block A</option>
+                                                            <option value='Varsity Block B'>Varsity Block B</option>
+                                                            <option value='Varsity Block C'>Varsity Block C</option>
+                                                            <option value='Varsity Block D'>Varsity Block D</option>
+                                                            <option value='Varsity Classic A'>Varsity Classic A</option>
+                                                            <option value='Varsity Classic B'>Varsity Classic B</option>
+                                                            <option value='Varsity Classic C'>Varsity Classic C</option>
+                                                            <option value='Varsity Classic D'>Varsity Classic D</option>
+                                                            <option value='Varsity Classic Serif A'>Varsity Classic Serif A</option>
+                                                            <option value='Varsity Classic Serif B'>Varsity Classic Serif B</option>
+                                                            <option value='Vibur'>Vibur</option>
+                                                            <option value='Viga'>Viga</option>
+                                                            <option value='Wellfleet'>Wellfleet</option>
+                                                            <option value='Wendy One'>Wendy One</option>
+                                                            <option value='Yellowtail'>Yellowtail</option>
+                                                        </select>
                                                     </td>
                                                 </tr>
 												<tr class="color_tr">
@@ -875,69 +1032,6 @@
 
         var roundel = new fabric.Group ([roundelOuterStroke, roundelInnerStroke, roundelOuterCircle, roundelCenterStroke, roundelInnerCircle])
 
-		roundelTextTop = new fabric.Text($("#cityName").val(),{
-			visible: true,
-			fontFamily: "Arial",
-			fontSize: 40,
-			originX: 'center',
-			originY: 'center',
-			textAlign: 'center',
-			id: 'roundelTextTop',
-			fill: 'white',
-			stroke: 'black',
-            paintFirst: "stroke",
-			strokeWidth: 4,
-			path: new fabric.Path("M 250,155.26758 A 94.733186,94.733186 0 0 1 344.73242,250 94.733186,94.733186 0 0 1 250,344.73242 94.733186,94.733186 0 0 1 155.26758,250 94.733186,94.733186 0 0 1 250,155.26758 Z", {
-				visible: false,
-				selectable:false,
-				evented: false,
-			}),
-            pathAlign: 'descender',
-			borderColor: 'red',
-			cornerColor: 'yellow',
-			cornerSize: 12,
-			transparentCorners: false,
-			lockScalingFlip: true,
-			lockScalingX: true,
-			lockScalingY: true,
-			lockMovementX: true,
-			lockMovementY: true,
-			snapAngle: 5,
-			selectable: false,
-			angle: 180
-		})
-
-		roundelTextBottom = new fabric.Text($("#nickName").val(),{
-			visible: true,
-			fontFamily: "Arial",
-			fontSize: 40,
-			originX: 'center',
-			originY: 'center',
-			textAlign: 'center',
-			id: 'roundelTextBottom',
-			fill: 'white',
-			stroke: 'black',
-            paintFirst: "stroke",
-			strokeWidth: 4,
-            path: new fabric.Path("M 250 148.60352 A 101.39774 101.39774 0 0 0 148.60352 250 A 101.39774 101.39774 0 0 0 250 351.39648 A 101.39774 101.39774 0 0 0 351.39648 250 A 101.39774 101.39774 0 0 0 250 148.60352 z ", {
-				visible: false,
-				selectable:false,
-				evented: false,
-			}),
-            pathAlign: 'ascender',
-			borderColor: 'red',
-			cornerColor: 'yellow',
-			cornerSize: 12,
-			transparentCorners: false,
-			lockScalingFlip: true,
-			lockScalingX: true,
-			lockScalingY: true,
-			lockMovementX: true,
-			lockMovementY: true,
-			snapAngle: 5,
-            angle: 0,
-			selectable: false
-		})
         
 		roundel.set({
 			selectable:false,
@@ -975,72 +1069,7 @@
 
 		var circle = new fabric.Group ([circleInnerStroke, circleCenterStroke, circleOuterStroke])
 
-		circleTextTop = new fabric.Text($("#cityName").val(),{
-			visible: false,
-			fontFamily: "Arial",
-			fontSize: 30,
-			charSpacing: 250,
-			originX: 'center',
-			originY: 'center',
-			textAlign: 'center',
-			id: 'circleTextTop',
-			fill: 'white',
-			stroke: 'black',
-            paintFirst: "stroke",
-			strokeWidth: 4,
-			path: new fabric.Path("M 250,128.13672 A 121.86793,121.86793 0 0 1 371.86328,250 121.86793,121.86793 0 0 1 250,371.86328 121.86793,121.86793 0 0 1 128.13672,250 121.86793,121.86793 0 0 1 250,128.13672 Z", {
-				visible: false,
-				selectable:false,
-				evented: false,
-			}),
-            pathAlign: 'ascender',
-			borderColor: 'red',
-			cornerColor: 'yellow',
-			cornerSize: 12,
-			transparentCorners: false,
-			lockScalingFlip: true,
-			lockScalingX: true,
-			lockScalingY: true,
-			lockMovementX: true,
-			lockMovementY: true,
-			snapAngle: 5,
-			selectable: false,
-			angle: 180
-		})
-
-		circleTextBottom = new fabric.Text($("#nickName").val(),{
-			visible: false,
-			fontFamily: "Arial",
-			fontSize: 30,
-			charSpacing: 250,
-			originX: 'center',
-			originY: 'center',
-			textAlign: 'center',
-			id: 'circleTextBottom',
-			fill: 'white',
-			stroke: 'black',
-            paintFirst: "stroke",
-			strokeWidth: 4,
-            path: new fabric.Path("M 250 123.37891 A 126.62352 126.62352 0 0 0 123.37891 250 A 126.62352 126.62352 0 0 0 250 376.62109 A 126.62352 126.62352 0 0 0 376.62109 250 A 126.62352 126.62352 0 0 0 250 123.37891 z ", {
-				visible: false,
-				selectable:false,
-				evented: false,
-			}),
-            pathAlign: 'descender',
-			borderColor: 'red',
-			cornerColor: 'yellow',
-			cornerSize: 12,
-			transparentCorners: false,
-			lockScalingFlip: true,
-			lockScalingX: true,
-			lockScalingY: true,
-			lockMovementX: true,
-			lockMovementY: true,
-			snapAngle: 5,
-            angle: 0,
-			selectable: false
-		})
-        
+		
 		circle.set({
 			visible: false,
 			selectable:false,
@@ -1091,36 +1120,6 @@
             visible: false
 		});
 
-        homePlateText = new fabric.Text($("#cityName").val()+" "+$("#nickName").val(),{
-			visible: false,
-			fontFamily: "Arial",
-			fontSize: 25,
-			originX: 'center',
-			originY: 'center',
-			textAlign: 'center',
-			id: 'homePlateText',
-			fill: 'white',
-			stroke: 'black',
-            paintFirst: "stroke",
-			strokeWidth: 4,
-            pathAlign: 'descender',
-			borderColor: 'red',
-			cornerColor: 'yellow',
-			cornerSize: 12,
-			transparentCorners: false,
-			lockScalingFlip: true,
-			lockScalingX: true,
-			lockScalingY: true,
-			lockMovementX: true,
-			lockMovementY: true,
-			snapAngle: 5,
-			selectable: false,
-            top: 135,
-            left: 250,
-            originX: 'center',
-            originY: 'center'
-		})
-
         squareOuterStroke = new fabric.Path("M 100 100 L 100 400 L 400 400 L 400 100 L 100 100 z M 106 106 L 394 106 L 394 394 L 106 394 L 106 106 z",{
             id: 'squareOuterStroke',
             fill: initialColors['OuterStroke'],
@@ -1162,66 +1161,6 @@
             visible: false
 		});
 
-        squareTextTop = new fabric.Text($("#cityName").val(),{
-			visible: false,
-			fontFamily: "Arial",
-			fontSize: 35,
-			originX: 'center',
-			originY: 'center',
-			textAlign: 'center',
-			id: 'squareTextTop',
-			fill: 'white',
-			stroke: 'black',
-            paintFirst: "stroke",
-			strokeWidth: 4,
-            pathAlign: 'descender',
-			borderColor: 'red',
-			cornerColor: 'yellow',
-			cornerSize: 12,
-			transparentCorners: false,
-			lockScalingFlip: true,
-			lockScalingX: true,
-			lockScalingY: true,
-			lockMovementX: true,
-			lockMovementY: true,
-			snapAngle: 5,
-			selectable: false,
-            top: 140,
-            left: 250,
-            originX: 'center',
-            originY: 'center'
-		})
-
-        squareTextBottom = new fabric.Text($("#nickName").val(),{
-			visible: false,
-			fontFamily: "Arial",
-			fontSize: 35,
-			originX: 'center',
-			originY: 'center',
-			textAlign: 'center',
-			id: 'squareTextBottom',
-			fill: 'white',
-			stroke: 'black',
-            paintFirst: "stroke",
-			strokeWidth: 4,
-            pathAlign: 'descender',
-			borderColor: 'red',
-			cornerColor: 'yellow',
-			cornerSize: 12,
-			transparentCorners: false,
-			lockScalingFlip: true,
-			lockScalingX: true,
-			lockScalingY: true,
-			lockMovementX: true,
-			lockMovementY: true,
-			snapAngle: 5,
-			selectable: false,
-            top: 360,
-            left: 250,
-            originX: 'center',
-            originY: 'center'
-		})
-
         roundedSquareOuterStroke = new fabric.Path("M 107.01562 100 C 103.12901 100 100 103.12901 100 107.01562 L 100 392.98438 C 100 396.87099 103.12901 400 107.01562 400 L 392.98438 400 C 396.87099 400 400 396.87099 400 392.98438 L 400 107.01562 C 400 103.12901 396.87099 100 392.98438 100 L 107.01562 100 z M 124.17383 118 L 375.82617 118 C 379.24641 118 382 120.75359 382 124.17383 L 382 375.82617 C 382 379.24641 379.24641 382 375.82617 382 L 124.17383 382 C 120.75359 382 118 379.24641 118 375.82617 L 118 124.17383 C 118 120.75359 120.75359 118 124.17383 118 z",{
             id: 'roundedSquareOuterStroke',
             fill: initialColors['OuterStroke'],
@@ -1258,66 +1197,6 @@
 			id:'roundedSquare',
             visible: false
 		});
-
-        roundedSquareTextTop = new fabric.Text($("#cityName").val(),{
-			visible: false,
-			fontFamily: "Arial",
-			fontSize: 35,
-			originX: 'center',
-			originY: 'center',
-			textAlign: 'center',
-			id: 'roundedSquareTextTop',
-			fill: 'white',
-			stroke: 'black',
-            paintFirst: "stroke",
-			strokeWidth: 4,
-            pathAlign: 'descender',
-			borderColor: 'red',
-			cornerColor: 'yellow',
-			cornerSize: 12,
-			transparentCorners: false,
-			lockScalingFlip: true,
-			lockScalingX: true,
-			lockScalingY: true,
-			lockMovementX: true,
-			lockMovementY: true,
-			snapAngle: 5,
-			selectable: false,
-            top: 140,
-            left: 250,
-            originX: 'center',
-            originY: 'center'
-		})
-
-        roundedSquareTextBottom = new fabric.Text($("#nickName").val(),{
-			visible: false,
-			fontFamily: "Arial",
-			fontSize: 35,
-			originX: 'center',
-			originY: 'center',
-			textAlign: 'center',
-			id: 'roundedSquareTextBottom',
-			fill: 'white',
-			stroke: 'black',
-            paintFirst: "stroke",
-			strokeWidth: 4,
-            pathAlign: 'descender',
-			borderColor: 'red',
-			cornerColor: 'yellow',
-			cornerSize: 12,
-			transparentCorners: false,
-			lockScalingFlip: true,
-			lockScalingX: true,
-			lockScalingY: true,
-			lockMovementX: true,
-			lockMovementY: true,
-			snapAngle: 5,
-			selectable: false,
-            top: 360,
-            left: 250,
-            originX: 'center',
-            originY: 'center'
-		})
 
         stitches1 = new fabric.Path("m 158.99023,138.20508 -5.20507,14.19336 -2.09961,-2.39649 -7.09571,1.33008 c -1.90756,2.03947 -3.76215,4.12507 -5.55078,6.26953 l 13.78711,-2.58594 -0.0156,0.041 3.36914,4.49414 6.73633,-16.85156 z m 179.20899,2.24414 -4.49805,4.49414 15.38672,3.36719 -2.46094,2.8164 5.61914,16.85157 3.92969,-4.49414 -4.89844,-14.69336 0.4043,0.0879 0.83984,-0.83985 c -1.84452,-1.83957 -3.73425,-3.62093 -5.67382,-5.35547 z m -167.97461,10.11328 -7.28125,14.07617 -1.70703,-2.27929 -17.97852,1.68554 3.3711,4.49805 15.33593,-1.44141 3.20508,4.80664 7.86328,-16.28711 z m 157.30273,3.375 -3.93359,4.49219 15.40625,1.92383 -1.92578,2.57031 7.30859,16.85156 3.36914,-5.05469 -6.30859,-14.06054 0.13086,0.0156 3.92773,-4.49414 z m -147.75195,10.67188 -8.21094,13.52539 -1.90039,-2.85352 -17.97656,-0.55859 3.36914,5.05273 15.2207,0.47852 -0.0527,0.0859 2.80859,5.05469 9.55274,-15.16601 z m 138.75781,3.36914 -3.36328,5.05273 15.64453,0.48828 -1.60351,2.88672 8.98828,15.72656 2.81055,-5.05469 -7.7793,-13.61328 3.28515,-4.92187 z m -130.89258,11.79687 -9.15039,12.03906 -1.52539,-3.05078 -17.97461,-1.68555 2.2461,5.05469 15.79687,1.91602 1.61914,5.39258 11.23438,-14.04688 z m 141.01172,2.25 -17.98046,1.11914 -2.80469,5.61914 15.29101,-1.43359 -1.25,3.12304 10.67188,14.60157 2.24609,-5.61328 -9.02344,-12.35938 0.0352,-0.004 z m -134.27343,13.48047 -10.53516,11.01367 -1.25781,-3.15039 -17.41602,-3.92773 1.6836,5.61328 15.20703,3.32812 -0.0391,0.041 1.68555,5.61914 12.35742,-12.91797 z m 128.08984,0 -17.9707,3.36914 -2.25586,5.61914 15.65429,-2.93164 -1.04687,3.49219 11.80273,13.48633 1.6836,-5.61914 -10.29688,-11.76172 0.18946,-0.0352 z m -5.05469,14.60742 -17.41601,5.0586 -1.125,6.17773 14.55468,-4.22852 -0.50781,2.53907 13.48242,12.36132 1.125,-5.61718 -11.20898,-10.27735 z m -117.97851,1.6836 -11.81641,9.45507 -0.54102,-2.71093 -17.41406,-5.61914 1.12305,5.61914 14.64453,4.7207 1.08398,5.94922 14.04493,-11.79492 z m 114.60937,13.48242 -16.29687,6.74218 -1.11914,6.17774 14.35547,-6.2207 -0.3125,3.41406 14.60546,10.67383 0.56055,-6.17969 -12.35351,-9.03125 z m -141.01172,1.125 0.5625,5.61718 14.05664,6.30274 0.54688,6.05664 14.60742,-10.11133 v -6.18164 h -0.002 l -13.16407,8.77734 -0.31445,-3.1582 z m 1.68555,13.48242 v 6.17969 l 13.625,7.7832 -0.14453,0.084 -0.5586,5.61524 16.28907,-8.42578 v -6.17969 l -13.48047,7.70508 v -3.20899 z m 137.64258,0.56055 -15.73242,8.42773 -0.56446,6.17773 14.04688,-7.26171 v 3.33203 l 15.72656,8.98633 -0.56055,-6.17579 -12.91601,-7.6582 z m -137.08008,13.48632 -0.5625,6.17579 12.35156,9.02539 -1.11523,5.57812 16.85156,-6.73437 1.12305,-5.6211 -14.35938,5.7461 0.31641,-3.49805 z m 137.08008,1.6836 -15.17188,10.10742 0.5586,6.1875 12.64257,-8.43359 0.28126,2.81054 16.85546,7.86914 -0.56445,-6.17968 -14.13281,-6.125 0.0898,-0.0605 z m -138.20703,12.36133 -1.1211,5.61523 11.54688,10.58203 -0.31055,0.0898 -1.68359,5.62305 17.41406,-5.05859 1.68555,-5.61328 -14.67383,4.2539 0.6289,-3.13476 z m 139.89062,2.80468 -14.04687,11.80078 1.125,6.17579 11.7207,-10.25 0.63672,3.50976 17.41992,5.62109 -1.68945,-6.18554 -14.64063,-4.87696 z m -142.69531,11.23633 -1.68555,5.62109 10.55664,11.51758 -2.1289,5.33203 17.97265,-3.36718 1.68555,-5.6211 -14.91016,2.88867 0.86719,-2.88867 z m 145.5,3.92969 -12.35156,12.92773 1.67968,6.17774 10.3711,-11.31836 0.86523,2.89258 17.97656,3.92968 -1.68945,-5.62109 -15.20508,-3.32617 0.0371,-0.0391 z m -148.87305,8.98828 -2.80664,5.62109 9.02539,12.35352 -0.041,0.002 -2.24414,5.62305 17.97656,-1.68359 2.80859,-5.05664 -15.77929,0.95117 1.17578,-2.63477 z m 153.36719,5.62109 -11.23242,14.60352 2.25,5.05859 9.67578,-12.09765 1.55664,3.10742 17.98047,2.24805 -2.81055,-5.61329 -15.25586,-1.90625 z m -158.98242,7.30664 -2.8086,5.61329 7.60352,13.30859 -3.11133,4.66992 17.97656,0.56445 3.36914,-5.05859 -15.48242,-0.48633 1.44141,-2.8789 z m 165.16601,6.74415 -9.55273,15.72851 2.80859,5.04883 8.14258,-12.92969 1.41016,2.82227 h 18.54101 l -3.375,-5.0586 -15.4082,-0.48437 z m -171.9082,5.61132 -3.37109,5.0586 6.30664,14.06445 -0.12891,-0.0156 -3.36914,4.49219 17.97656,2.25 3.3711,-4.49804 -15.41211,-1.92383 1.92383,-2.56836 z m 179.20703,7.86914 -7.86328,16.28516 3.37305,5.05859 6.68359,-13.84961 1.74414,2.61524 18.53711,-1.6836 -3.92969,-5.05859 -15.33789,1.43555 z m -187.07422,3.93164 -3.93164,4.49414 4.79492,14.86133 -0.7207,0.72657 c 0.45818,0.45882 0.92953,0.90503 1.39453,1.35742 v 0.002 c 0.0994,0.0983 0.19943,0.2073 0.29883,0.29688 l 0.004,-0.004 c 1.20727,1.1674 2.42865,2.32185 3.67578,3.44922 l 9.09375,2.3457 3.92773,-4.49414 -14.88867,-3.36914 1.97266,-2.25391 z m 196.06641,8.42383 -6.17969,17.41407 3.66016,4.18945 c 0.17941,-0.14223 0.36508,-0.28531 0.53515,-0.42969 l 4.96485,-13.99609 2.07812,2.37304 6.78321,-1.26953 c 1.92461,-2.04245 3.78917,-4.13712 5.59375,-6.28711 l -13.51563,2.53907 0.0137,-0.0391 z", {
             fill: "#e82a50",
@@ -1581,10 +1460,316 @@
         logoCreator.add(squareFill)
         logoCreator.add(roundedSquareFill)
 		
-        logoCreator.add(roundelTextTop)
-        logoCreator.centerObject(roundelTextTop)
-		logoCreator.add(roundelTextBottom)
-        logoCreator.centerObject(roundelTextBottom)
+        var topfont = new FontFaceObserver($("#topFont").val())
+        topfont.load()
+        .then(function() {
+        // when font is loaded, use it.
+            roundelTextTop = new fabric.Text($("#cityName").val(),{
+                visible: true,
+                fontFamily: $("#topFont").val(),
+                fontSize: 40,
+                originX: 'center',
+                originY: 'center',
+                textAlign: 'center',
+                id: 'roundelTextTop',
+                fill: 'white',
+                stroke: 'black',
+                paintFirst: "stroke",
+                strokeWidth: 4,
+                path: new fabric.Path("M 250,155.26758 A 94.733186,94.733186 0 0 1 344.73242,250 94.733186,94.733186 0 0 1 250,344.73242 94.733186,94.733186 0 0 1 155.26758,250 94.733186,94.733186 0 0 1 250,155.26758 Z", {
+                    visible: false,
+                    selectable:false,
+                    evented: false,
+                }),
+                pathAlign: 'descender',
+                borderColor: 'red',
+                cornerColor: 'yellow',
+                cornerSize: 12,
+                transparentCorners: false,
+                lockScalingFlip: true,
+                lockScalingX: true,
+                lockScalingY: true,
+                lockMovementX: true,
+                lockMovementY: true,
+                snapAngle: 5,
+                selectable: false,
+                angle: 180
+            })
+
+            circleTextTop = new fabric.Text($("#cityName").val(),{
+                visible: false,
+                fontFamily: $("#topFont").val(),
+                fontSize: 30,
+                charSpacing: 250,
+                originX: 'center',
+                originY: 'center',
+                textAlign: 'center',
+                id: 'circleTextTop',
+                fill: 'white',
+                stroke: 'black',
+                paintFirst: "stroke",
+                strokeWidth: 4,
+                path: new fabric.Path("M 250,128.13672 A 121.86793,121.86793 0 0 1 371.86328,250 121.86793,121.86793 0 0 1 250,371.86328 121.86793,121.86793 0 0 1 128.13672,250 121.86793,121.86793 0 0 1 250,128.13672 Z", {
+                    visible: false,
+                    selectable:false,
+                    evented: false,
+                }),
+                pathAlign: 'ascender',
+                borderColor: 'red',
+                cornerColor: 'yellow',
+                cornerSize: 12,
+                transparentCorners: false,
+                lockScalingFlip: true,
+                lockScalingX: true,
+                lockScalingY: true,
+                lockMovementX: true,
+                lockMovementY: true,
+                snapAngle: 5,
+                selectable: false,
+                angle: 180
+            })
+
+            homePlateText = new fabric.Text($("#cityName").val()+" "+$("#nickName").val(),{
+                visible: false,
+                fontFamily: $("#topFont").val(),
+                fontSize: 25,
+                originX: 'center',
+                originY: 'center',
+                textAlign: 'center',
+                id: 'homePlateText',
+                fill: 'white',
+                stroke: 'black',
+                paintFirst: "stroke",
+                strokeWidth: 4,
+                pathAlign: 'descender',
+                borderColor: 'red',
+                cornerColor: 'yellow',
+                cornerSize: 12,
+                transparentCorners: false,
+                lockScalingFlip: true,
+                lockScalingX: true,
+                lockScalingY: true,
+                lockMovementX: true,
+                lockMovementY: true,
+                snapAngle: 5,
+                selectable: false,
+                top: 135,
+                left: 250,
+                originX: 'center',
+                originY: 'center'
+            })
+
+            squareTextTop = new fabric.Text($("#cityName").val(),{
+                visible: false,
+                fontFamily: $("#topFont").val(),
+                fontSize: 35,
+                originX: 'center',
+                originY: 'center',
+                textAlign: 'center',
+                id: 'squareTextTop',
+                fill: 'white',
+                stroke: 'black',
+                paintFirst: "stroke",
+                strokeWidth: 4,
+                pathAlign: 'descender',
+                borderColor: 'red',
+                cornerColor: 'yellow',
+                cornerSize: 12,
+                transparentCorners: false,
+                lockScalingFlip: true,
+                lockScalingX: true,
+                lockScalingY: true,
+                lockMovementX: true,
+                lockMovementY: true,
+                snapAngle: 5,
+                selectable: false,
+                top: 140,
+                left: 250,
+                originX: 'center',
+                originY: 'center'
+            })
+
+            roundedSquareTextTop = new fabric.Text($("#cityName").val(),{
+                visible: false,
+                fontFamily: $("#topFont").val(),
+                fontSize: 35,
+                originX: 'center',
+                originY: 'center',
+                textAlign: 'center',
+                id: 'roundedSquareTextTop',
+                fill: 'white',
+                stroke: 'black',
+                paintFirst: "stroke",
+                strokeWidth: 4,
+                pathAlign: 'descender',
+                borderColor: 'red',
+                cornerColor: 'yellow',
+                cornerSize: 12,
+                transparentCorners: false,
+                lockScalingFlip: true,
+                lockScalingX: true,
+                lockScalingY: true,
+                lockMovementX: true,
+                lockMovementY: true,
+                snapAngle: 5,
+                selectable: false,
+                top: 140,
+                left: 250,
+                originX: 'center',
+                originY: 'center'
+            })
+
+            logoCreator.add(roundelTextTop)
+            logoCreator.centerObject(roundelTextTop)
+            logoCreator.add(circleTextTop)
+            logoCreator.centerObject(circleTextTop)
+            logoCreator.add(homePlateText)
+            logoCreator.add(squareTextTop)
+            logoCreator.add(roundedSquareTextTop)
+        }).catch(function(e) {
+            console.log(e)
+            alert('font loading failed ' + data.familyName);
+        });
+        
+        var bottomFont = new FontFaceObserver($("#bottomFont").val())
+        bottomFont.load()
+        .then(function() {
+        // when font is loaded, use it.
+            roundelTextBottom = new fabric.Text($("#nickName").val(),{
+                visible: true,
+                fontFamily: $("#bottomFont").val(),
+                fontSize: 40,
+                originX: 'center',
+                originY: 'center',
+                textAlign: 'center',
+                id: 'roundelTextBottom',
+                fill: 'white',
+                stroke: 'black',
+                paintFirst: "stroke",
+                strokeWidth: 4,
+                path: new fabric.Path("M 250 148.60352 A 101.39774 101.39774 0 0 0 148.60352 250 A 101.39774 101.39774 0 0 0 250 351.39648 A 101.39774 101.39774 0 0 0 351.39648 250 A 101.39774 101.39774 0 0 0 250 148.60352 z ", {
+                    visible: false,
+                    selectable:false,
+                    evented: false,
+                }),
+                pathAlign: 'ascender',
+                borderColor: 'red',
+                cornerColor: 'yellow',
+                cornerSize: 12,
+                transparentCorners: false,
+                lockScalingFlip: true,
+                lockScalingX: true,
+                lockScalingY: true,
+                lockMovementX: true,
+                lockMovementY: true,
+                snapAngle: 5,
+                angle: 0,
+                selectable: false
+            })
+
+            circleTextBottom = new fabric.Text($("#nickName").val(),{
+                visible: false,
+                fontFamily: $("#bottomFont").val(),
+                fontSize: 30,
+                charSpacing: 250,
+                originX: 'center',
+                originY: 'center',
+                textAlign: 'center',
+                id: 'circleTextBottom',
+                fill: 'white',
+                stroke: 'black',
+                paintFirst: "stroke",
+                strokeWidth: 4,
+                path: new fabric.Path("M 250 123.37891 A 126.62352 126.62352 0 0 0 123.37891 250 A 126.62352 126.62352 0 0 0 250 376.62109 A 126.62352 126.62352 0 0 0 376.62109 250 A 126.62352 126.62352 0 0 0 250 123.37891 z ", {
+                    visible: false,
+                    selectable:false,
+                    evented: false,
+                }),
+                pathAlign: 'descender',
+                borderColor: 'red',
+                cornerColor: 'yellow',
+                cornerSize: 12,
+                transparentCorners: false,
+                lockScalingFlip: true,
+                lockScalingX: true,
+                lockScalingY: true,
+                lockMovementX: true,
+                lockMovementY: true,
+                snapAngle: 5,
+                angle: 0,
+                selectable: false
+            })
+
+            squareTextBottom = new fabric.Text($("#nickName").val(),{
+                visible: false,
+                fontFamily: $("#bottomFont").val(),
+                fontSize: 35,
+                originX: 'center',
+                originY: 'center',
+                textAlign: 'center',
+                id: 'squareTextBottom',
+                fill: 'white',
+                stroke: 'black',
+                paintFirst: "stroke",
+                strokeWidth: 4,
+                pathAlign: 'descender',
+                borderColor: 'red',
+                cornerColor: 'yellow',
+                cornerSize: 12,
+                transparentCorners: false,
+                lockScalingFlip: true,
+                lockScalingX: true,
+                lockScalingY: true,
+                lockMovementX: true,
+                lockMovementY: true,
+                snapAngle: 5,
+                selectable: false,
+                top: 360,
+                left: 250,
+                originX: 'center',
+                originY: 'center'
+            })
+
+            roundedSquareTextBottom = new fabric.Text($("#nickName").val(),{
+                visible: false,
+                fontFamily: $("#bottomFont").val(),
+                fontSize: 35,
+                originX: 'center',
+                originY: 'center',
+                textAlign: 'center',
+                id: 'roundedSquareTextBottom',
+                fill: 'white',
+                stroke: 'black',
+                paintFirst: "stroke",
+                strokeWidth: 4,
+                pathAlign: 'descender',
+                borderColor: 'red',
+                cornerColor: 'yellow',
+                cornerSize: 12,
+                transparentCorners: false,
+                lockScalingFlip: true,
+                lockScalingX: true,
+                lockScalingY: true,
+                lockMovementX: true,
+                lockMovementY: true,
+                snapAngle: 5,
+                selectable: false,
+                top: 360,
+                left: 250,
+                originX: 'center',
+                originY: 'center'
+            })
+
+            logoCreator.add(roundelTextBottom)
+            logoCreator.centerObject(roundelTextBottom)
+            logoCreator.add(circleTextBottom)
+            logoCreator.centerObject(circleTextBottom)
+            logoCreator.add(squareTextBottom)
+            logoCreator.add(roundedSquareTextBottom)
+        }).catch(function(e) {
+            console.log(e)
+            alert('font loading failed ' + data.familyName);
+        });
 
         logoCreator.centerObject(homePlate)
 
@@ -1594,16 +1779,7 @@
         logoCreator.add(roundelStitches)
         logoCreator.add(circleStitches)
 
-        logoCreator.add(circleTextTop)
-		logoCreator.centerObject(circleTextTop)
-        logoCreator.add(circleTextBottom)
-        logoCreator.centerObject(circleTextBottom)
-
-        logoCreator.add(homePlateText)
-        logoCreator.add(squareTextTop)
-        logoCreator.add(squareTextBottom)
-        logoCreator.add(roundedSquareTextTop)
-        logoCreator.add(roundedSquareTextBottom)
+        
 
         logoCreator.add(circle)
         logoCreator.add(homePlate)
@@ -1612,6 +1788,32 @@
         
         logoCreator.renderAll()
     }
+
+    $("#topFont").on("change",function(e) {
+        var topfont = new FontFaceObserver($("#topFont").val())
+        topfont.load()
+        .then(function() {
+            roundelTextTop.set('fontFamily',$("#topFont").val())
+            circleTextTop.set('fontFamily',$("#topFont").val())
+            homePlateText.set('fontFamily',$("#topFont").val())
+            squareTextTop.set('fontFamily',$("#topFont").val())
+            roundedSquareTextTop.set('fontFamily',$("#topFont").val())
+            logoCreator.renderAll()
+        })
+    })
+
+    $("#bottomFont").on("change",function(e) {
+        var bottomFont = new FontFaceObserver($("#bottomFont").val())
+        bottomFont.load()
+        .then(function() {
+            roundelTextBottom.set('fontFamily',$("#bottomFont").val())
+            circleTextBottom.set('fontFamily',$("#bottomFont").val())
+            squareTextBottom.set('fontFamily',$("#bottomFont").val())
+            roundedSquareTextBottom.set('fontFamily',$("#bottomFont").val())
+            logoCreator.renderAll()
+        })
+    })
+
 
 	$("#logoShapeSelect").on("change",function(e){
 		const selected = $(this).val()
