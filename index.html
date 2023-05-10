@@ -112,6 +112,8 @@
                                                         <input type="number" id="topTextSize" value="40" min="0" max="359" onkeypress="return isNumberKey(event)">
                                                         <label>&nbsp;Spacing:&nbsp;</label>
                                                         <input type="number" id="topTextSpacing" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">
+                                                        <label>&nbsp;Baseline:&nbsp;</label>
+                                                        <input type="number" id="topTextDeltaY" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">
                                                         <input class="textSelector selector" type="text" id="topTextColor">
                                                         <input class="textSelector selector" type="text" id="topTextStrokeColor">
                                                     </td>
@@ -749,6 +751,12 @@
     $("#topTextSpacing").on("change",function(e) {
         const r = logoCreator.getObjects('text').find(o => o.id = 'roundelTextTop')
         r.set('charSpacing', parseInt($(this).val()))
+        logoCreator.renderAll()
+    })
+
+    $("#topTextDeltaY").on("change", function(e) {
+        const r = logoCreator.getObjects('text').find(o => o.id = 'roundelTextTop')
+        r.set('deltaY', parseInt($(this).val()))
         logoCreator.renderAll()
     })
 
