@@ -54,10 +54,10 @@
                                     <table style="width:478px;">
                                         <tr>
                                             <td>
-                                                City Name: <input type="text" id="cityName" value="TEAM">
+                                                City Name: 
                                             </td>
                                             <td>
-                                                Nickname: <input type="text" id="nickName" value="NAME">
+                                                Nickname: 
                                             </td>
                                             <td><label for="startYear">Start:</label>
                                                 <input type="number" class="year" id="startYear" name="startYear" onkeypress="return isNumberKey(event)" style="width:35px;">
@@ -89,29 +89,17 @@
                                             </td>
                                         </tr>
                                         <tr class="color_tr">
-                                            <td class="checkCell">&nbsp;</td>
-                                            <td>
-                                                <label>Top Text:</label>
-                                            </td>
-                                            <td style="text-align:right;">
-                                                <label>Size:&nbsp;</label>
-                                                <input type="number" id="topTextSize" value="40" min="0" max="359" onkeypress="return isNumberKey(event)">
-                                                <label>&nbsp;Spacing:&nbsp;</label>
-                                                <input type="number" id="topTextSpacing" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">
-                                                <label>&nbsp;Baseline:&nbsp;</label>
-                                                <input type="number" id="topTextDeltaY" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">
-                                                <input class="textSelector selector" type="text" id="topTextColor">
-                                                <input class="textSelector selector" type="text" id="topTextStrokeColor">
-                                            </td>
+                                            <td colspan="3"><hr></td>
                                         </tr>
                                         <tr class="color_tr">
-                                            <td class="checkCell">&nbsp;</td>
+                                            <td class="checkCell"><input type="checkbox" id="topTextCheck" checked></td>
                                             <td>
-                                                <label>Bottom Text:</label>
+                                                <label>Top Text:&nbsp;</label>
                                             </td>
-                                            <td style="text-align:right;">
-                                                <input class="textSelector selector" type="text" id="bottomTextColor">
-                                                <input class="textSelector selector" type="text" id="bottomTextStrokeColor">
+                                            <td style="text-align:right;"> 
+                                                <input type="text" class="topTextClass" id="cityName" value="TEAM" style="width:250px; text-align:center;">
+                                                <input class="textSelector selector topTextClass" type="text" id="topTextColor">
+                                                <input class="textSelector selector topTextClass" type="text" id="topTextStrokeColor">
                                             </td>
                                         </tr>
                                         <tr class="color_tr">
@@ -119,7 +107,7 @@
                                             <td>
                                                 <label>Top Font:</label>
                                             </td>
-                                            <td style="text-align:right;">
+                                            <td id="topFontTD" style="text-align:right;">
                                                 <select id="topFont">
                                                     <option data-image="./images/Acme.png" value='Acme' selected>Acme</option>
                                                     <option data-image="./images/All State.png" value='All State'>All State</option>
@@ -194,10 +182,35 @@
                                         </tr>
                                         <tr class="color_tr">
                                             <td class="checkCell">&nbsp;</td>
+                                            <td colspan="2" style="text-align:center;">
+                                                <label>Size:&nbsp;</label>
+                                                <input type="number" class="topTextClass" id="topTextSize" value="40" min="0" max="359" onkeypress="return isNumberKey(event)">
+                                                <label>&nbsp;Spacing:&nbsp;</label>
+                                                <input type="number" class="topTextClass" id="topTextSpacing" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">
+                                                <label>&nbsp;Baseline:&nbsp;</label>
+                                                <input type="number" class="topTextClass" id="topTextDeltaY" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">
+                                            </td>
+                                        </tr>
+                                        <tr class="color_tr">
+                                            <td colspan="3"><hr></td>
+                                        </tr>
+                                        <tr class="color_tr">
+                                            <td class="checkCell"><input type="checkbox" id="bottomTextCheck" checked></td>
+                                            <td>
+                                                <label>Bottom Text:</label>
+                                            </td>
+                                            <td style="text-align:right;">
+                                                <input type="text" class="bottomTextClass" id="nickName" value="NAME" style="width:250px; text-align:center;">
+                                                <input class="textSelector selector" type="text" id="bottomTextColor">
+                                                <input class="textSelector selector" type="text" id="bottomTextStrokeColor">
+                                            </td>
+                                        </tr>
+                                        <tr class="color_tr">
+                                            <td class="checkCell">&nbsp;</td>
                                             <td>
                                                 <label>Bottom Font:</label>
                                             </td>
-                                            <td style="text-align:right;">
+                                            <td id="bottomFontTD" style="text-align:right;">
                                                 <select id="bottomFont">
                                                     <option data-image="./images/Acme.png" value='Acme' selected>Acme</option>
                                                     <option data-image="./images/All State.png" value='All State'>All State</option>
@@ -268,6 +281,17 @@
                                                     <option data-image="./images/Wendy One.png" value='Wendy One'>Wendy</option>
                                                     <option data-image="./images/Yellowtail.png" value='Yellowtail'>Yellowtail</option>
                                                 </select>
+                                            </td>
+                                        </tr>
+                                        <tr class="color_tr">
+                                            <td class="checkCell">&nbsp;</td>
+                                            <td colspan="2" style="text-align:center;">
+                                                <label>Size:&nbsp;</label>
+                                                <input type="number" class="bottomTextClass" id="bottomTextSize" value="40" min="0" max="359" onkeypress="return isNumberKey(event)">
+                                                <label>&nbsp;Spacing:&nbsp;</label>
+                                                <input type="number" class="bottomTextClass" id="bottomTextSpacing" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">
+                                                <label>&nbsp;Baseline:&nbsp;</label>
+                                                <input type="number" class="bottomTextClass" id="bottomTextDeltaY" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">
                                             </td>
                                         </tr>
                                     </table>
@@ -1843,6 +1867,45 @@
         logoCreator.renderAll()
     }
 
+    $("#topTextCheck").on("change",function(e) {
+        const checked = $(this).is(":checked")
+        $(".topTextClass").each(function(o) {
+            $(this).prop('disabled',checked ? false : true);
+        })
+        $("#topTextColor").spectrum(checked ? 'enable' : 'disable');
+        $("#topTextStrokeColor").spectrum(checked ? 'enable' : 'disable');
+        $("#topFont").prop('disabled',checked ? false : true)
+        if (!checked) {
+            $("#topFontTD").find(".ms-dd").addClass("disabled")
+            roundelTextTop.set('visible',false)
+            circleTextTop.set('visible',false)
+            homePlateText.set('visible',false)
+            squareTextTop.set('visible',false)
+            roundedSquareTextTop.set('visible',false)
+        } else {
+            switch ($("#logoShapeSelect").val()) {
+                case "roundel":
+                    roundelTextTop.set('visible',true)
+                    break;
+                case "circle":
+                    circleTextTop.set('visible',true)
+                    break;
+                case "homePlate":
+                    homePlateTextTop.set('visible',true)
+                    break;
+                case "square":
+                    squareTextTop.set('visible',true)
+                    break;
+                case "roundedSquare":
+                    roundedSquareTextTop.set('visible',true)
+                    break;
+            }
+            $("#topFontTD").find(".ms-dd").removeClass("disabled")
+        }
+        
+        logoCreator.renderAll()
+    })
+
     $("#topFont").on("change",function(e) {
         var topfont = new FontFaceObserver($("#topFont").val())
         topfont.load()
@@ -1854,6 +1917,40 @@
             roundedSquareTextTop.set('fontFamily',$("#topFont").val())
             logoCreator.renderAll()
         })
+    })
+
+    $("#bottomTextCheck").on("change",function(e) {
+        const checked = $(this).is(":checked")
+        $(".bottomTextClass").each(function(o) {
+            $(this).prop('disabled',checked ? false : true);
+        })
+        $("#bottomTextColor").spectrum(checked ? 'enable' : 'disable');
+        $("#bottomTextStrokeColor").spectrum(checked ? 'enable' : 'disable');
+        $("#bottomFont").prop('disabled',checked ? false : true)
+        if (!checked) {
+            $("#bottomFontTD").find(".ms-dd").addClass("disabled")
+            roundelTextBottom.set('visible',false)
+            circleTextBottom.set('visible',false)
+            squareTextBottom.set('visible',false)
+            roundedSquareTextBottom.set('visible',false)
+        } else {
+            switch ($("#logoShapeSelect").val()) {
+                case "roundel":
+                    roundelTextBottom.set('visible',true)
+                    break;
+                case "circle":
+                    circleTextBottom.set('visible',true)
+                    break;
+                case "square":
+                    squareTextBottom.set('visible',true)
+                    break;
+                case "roundedSquare":
+                    roundedSquareTextBottom.set('visible',true)
+                    break;
+            }
+            $("#bottomFontTD").find(".ms-dd").removeClass("disabled")
+        }
+        logoCreator.renderAll()
     })
 
     $("#bottomFont").on("change",function(e) {
@@ -1890,8 +1987,14 @@
 			}
 		})
 		logoCreator.getObjects('text').forEach(function(o) {
+            console.log(selected)
 			if (o.id.startsWith(selected)) {
-				o.set("visible", true)
+                if (o.id.includes("Top")) {
+                    o.set("visible",$("#topTextCheck").is(":checked"))
+                } else if (o.id.includes("Bottom")) {
+                    o.set("visible",$("#bottomTextCheck").is(":checked"))
+                }
+				
 			} else {
 				o.set("visible", false)
 			}	
