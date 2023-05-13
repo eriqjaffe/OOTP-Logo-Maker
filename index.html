@@ -92,7 +92,7 @@
                                             <td colspan="3"><hr></td>
                                         </tr>
                                         <tr class="color_tr">
-                                            <td class="checkCell"><input type="checkbox" id="topTextCheck" checked></td>
+                                            <td class="checkCell"><input type="checkbox" id="topTextCheck" class="toggleAll" checked></td>
                                             <td>
                                                 <label>Top Text:&nbsp;</label>
                                             </td>
@@ -194,7 +194,7 @@
                                             <td colspan="3"><hr></td>
                                         </tr>
                                         <tr class="color_tr">
-                                            <td class="checkCell"><input type="checkbox" id="bottomTextCheck" checked></td>
+                                            <td class="checkCell"><input type="checkbox" id="bottomTextCheck" class="toggleAll" checked></td>
                                             <td>
                                                 <label>Bottom Text:</label>
                                             </td>
@@ -307,6 +307,7 @@
                                                     <option value="homePlate">Home Plate</option>
                                                     <option value="square">Square</option>
                                                     <option value="roundedSquare">Rounded Square</option>
+                                                    <option value="none">None</option>
                                                 </select>
                                             </td>
                                             <td style="text-align:right;">
@@ -327,11 +328,11 @@
                                         </tr>
                                         <tr class="color_tr">
                                             <td class="checkCell">
-                                                <input type="checkbox" id="stitchesCheck" >
+                                                <input type="checkbox" id="stitchesCheck" class="toggleAll">
                                             </td>
                                             <td>
                                                 <label>Stitches:&nbsp;</label>
-                                                <select id="stitchesSelect">
+                                                <select id="stitchesSelect" disabled>
                                                     <option value="stitches1" selected>Style 1</option>
                                                     <option value="stitches2">Style 2</option>
                                                     <option value="stitches3">Style 3</option>
@@ -341,7 +342,7 @@
                                                     <option value="stitches7">Style 7</option>
                                                 </select>
                                                 <label style="padding-left:5px; padding-right:5px;">Angle:</label>
-                                                <input id="stitchRotation" type="number" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">
+                                                <input id="stitchRotation" type="number" value="0" min="0" max="359" onkeypress="return isNumberKey(event)" disabled>
                                             </td>
                                             <td style="text-align:right;">
                                                 <input class="stitchSelector selector" type="text" id="stitchSelector">
@@ -349,11 +350,11 @@
                                         </tr>
                                         <tr class="color_tr">
                                             <td class="checkCell">
-                                                <input type="checkbox" id="patternCheck" >
+                                                <input type="checkbox" id="patternCheck" class="toggleAll">
                                             </td>
                                             <td>
                                                 <label>Pattern:&nbsp;</label>
-                                                <select id="patternSelect">
+                                                <select id="patternSelect" disabled>
                                                     <option value="grid">Grid</option>
                                                     <!--<option value="horizontalLines">Horizontal Lines</option>-->
                                                     <option value="verticalLines" selected>Pinstripes</option>
@@ -368,7 +369,7 @@
                                                     <option value="herringbone">Herringbone</option>
                                                 </select>
                                                 <label style="padding-left:5px; padding-right:5px;">Angle:</label>
-                                                <input id="patternRotation" type="number" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">
+                                                <input id="patternRotation" type="number" value="0" min="0" max="359" onkeypress="return isNumberKey(event)" disabled>
                                             </td>
                                             <td style="text-align:right;">
                                                 <input class="patternSelector selector" type="text" id="patternSelector">
@@ -376,11 +377,11 @@
                                         </tr>
                                         <tr class="color_tr">
                                             <td class="checkCell">
-                                                <input type="checkbox" id="overlayCheck" >
+                                                <input type="checkbox" id="overlayCheck" class="toggleAll">
                                             </td>
                                             <td colspan="2">
                                                 <label>Overlay:&nbsp;</label>
-                                                <select id="overlaySelect">
+                                                <select id="overlaySelect" disabled>
                                                     <option value="gloss">Glossy</option>
                                                     <option value="simple">Simple</option>
                                                     <option value="highGloss">High Gloss</option>
@@ -508,6 +509,7 @@
 		showInitial: true,
 		showPalette: true,
 		showButtons: true,
+        disabled: true,
 		color: initialColors["pattern"],
 		beforeShow: function(color) {
 			//$(this).spectrum("option", "palette", [capPalette, commonPalette])
@@ -532,6 +534,7 @@
 		showPalette: true,
 		showButtons: true,
 		color: initialColors["stitches"],
+        disabled: true,
 		beforeShow: function(color) {
 			//$(this).spectrum("option", "palette", [capPalette, commonPalette])
 		},
@@ -835,6 +838,7 @@
 
     $("#overlayCheck").on("change",function(e) {
         const checked = $(this).is(":checked")
+        $("#overlaySelect").prop('disabled',checked ? false : true);
         const style = $("#overlaySelect").val()
         switch ($("#logoShapeSelect").val()) {
             case "square":
@@ -1966,6 +1970,20 @@
 
 	$("#logoShapeSelect").on("change",function(e){
 		const selected = $(this).val()
+        if (selected == "none") {
+            // just hide everything but images and exit function
+            logoCreator.getObjects().forEach(function (o) {
+                if (o.type != "image") {
+                    o.set("visible",false)
+                }
+            })
+            logoCreator.renderAll()
+            $(".toggleAll").each(function(o) {
+                $(this).prop( "checked", false );
+                $(this).trigger("change")
+            })
+            return false;
+        }
         const s = logoCreator.getObjects('group').find(o => o.id == "stitches")
         const r = logoCreator.getObjects('group').find(o => o.id == "roundelStitches")
         const c = logoCreator.getObjects('group').find(o => o.id == "circleStitches")
@@ -2170,6 +2188,11 @@
         const r = logoCreator.getObjects('group').find(o => o.id == "roundelStitches")
         const c = logoCreator.getObjects('group').find(o => o.id == "circleStitches")
         const checked = $(this).is(":checked")
+        $("#stitchesSelect").prop('disabled',checked ? false : true);
+        $("#stitchRotation").prop('disabled',checked ? false : true);
+        $(".stitchSelector").each(function() {
+            $(this).spectrum(checked ? 'enable' : 'disable');
+        })
         switch ($("#logoShapeSelect").val()) {
             case "roundel":
                 r.set("visible",checked)
@@ -2217,6 +2240,12 @@
     })
 
     $("#patternCheck").on("change",function(e) {
+        const checked = $(this).is(":checked")
+        $("#patternSelect").prop('disabled',checked ? false : true);
+        $("#patternRotation").prop('disabled',checked ? false : true);
+        $(".patternSelector").each(function() {
+            $(this).spectrum(checked ? 'enable' : 'disable');
+        })
         const p = logoCreator.getObjects('group').find(o => o.id == "pattern")
         p.set("visible",$(this).is(":checked"))
         switch ($("#logoShapeSelect").val()) {
