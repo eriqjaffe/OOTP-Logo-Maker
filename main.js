@@ -1,6 +1,28 @@
 const { app, BrowserWindow, dialog, Menu, shell, webContents  } = require('electron')
+const express = require('express')
+const Jimp = require('jimp')
+const Store = require("electron-store")
+const hasbin = require('hasbin');
+const fontname = require('fontname')
 
 const isMac = process.platform === 'darwin'
+
+const app2 = express();
+const store = new Store();
+
+const server = app2.listen(0, () => {
+	console.log(`Server running on port ${server.address().port}`);
+});
+
+const imInstalled = hasbin.sync('magick');
+
+app2.use(express.urlencoded({limit: '200mb', extended: true, parameterLimit: 500000}));
+
+app2.get("/helloWorld", (req, res)  => {
+    console.log("HELLO WORLD")
+    res.json({"status":"hello world"})
+    res.end()
+})
 
 function createWindow () {
     const mainWindow = new BrowserWindow({
@@ -113,9 +135,9 @@ function createWindow () {
   
     //mainWindow.loadURL(`file://${__dirname}/index.html?port=${server.address().port}&preferredColorFormat=${preferredColorFormat}&preferredTexture=${preferredTexture}`);
 
-    //mainWindow.loadURL(`file://${__dirname}/index.html?port=${server.address().port}`)
+    mainWindow.loadURL(`file://${__dirname}/index.html?port=${server.address().port}`)
 
-    mainWindow.loadURL(`file://${__dirname}/index.html`)
+    //mainWindow.loadURL(`file://${__dirname}/index.html`)
   
     mainWindow.webContents.setWindowOpenHandler(({ url }) => {
       shell.openExternal(url);

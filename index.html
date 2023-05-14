@@ -20,6 +20,9 @@
         <link href='./scripts/magnific-popup.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/dd.css' rel='stylesheet' type='text/css'>
         <script>
+            const params = new URLSearchParams(window.location.search)
+		    const port = params.get('port')
+
             const initialColors = {topTextColor:"#ffffff", topTextStrokeColor:"#000000", bottomTextColor:"#ffffff", bottomTextStrokeColor:"#000000", teamBGColor:"#0C2340", teamTextColor: "#ffffff", stitches: "#e82a50", roundelOuterStroke: "#ffffff", roundelInnerStroke: "red", roundelOuterCircle: "blue", roundelCenterStroke: "green", roundelInnerCircle: "#ffffff", OuterStroke: 'red', CenterStroke: 'green', InnerStroke: 'blue', Fill: 'yellow', pattern: "#e82a50"}
         </script>
     </head>
@@ -2293,6 +2296,16 @@
         $("#exampleText").val($("#cityName").val()+" "+$("#nickName").val())
 		logoCreator.renderAll()
 	})
+
+    $("#save").on("click",function(e) {
+        $.ajax({
+            type: "GET",
+            url: "http://127.0.0.1:"+port+"/helloWorld",
+            success: function(data) { 
+                alert(data.status)
+            }
+        })
+    })
 
     function rotateStitches(angle) {
         const s = logoCreator.getObjects('group').find(o => o.id == "stitches")
