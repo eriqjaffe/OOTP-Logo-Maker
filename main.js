@@ -40,6 +40,61 @@ app2.get("/dropImage", (req, res) => {
 	})
 })
 
+app2.get("/customFont", (req, res) => {
+	const options = {
+		defaultPath: store.get("uploadFontPath", app.getPath('desktop')),
+		properties: ['openFile'],
+		filters: [
+			{ name: 'Fonts', extensions: ['ttf', 'otf'] }
+		]
+	}
+	dialog.showOpenDialog(null, options).then(result => {
+		if(!result.canceled) {
+			store.set("uploadFontPath", path.dirname(result.filePaths[0]))
+			const filePath = path.join(userFontsFolder,path.basename(result.filePaths[0]))
+			try {
+				const fontMeta = fontname.parse(fs.readFileSync(result.filePaths[0]))[0];
+				var ext = getExtension(result.filePaths[0])
+				var fontPath = url.pathToFileURL(result.filePaths[0])
+				var json = {
+					"status": "ok",
+					"fontName": fontMeta.fullName,
+					"fontStyle": fontMeta.fontSubfamily,
+					"familyName": fontMeta.fontFamily,
+					"fontFormat": ext,
+					"fontMimetype": 'font/' + ext,
+					"fontData": fontPath.href,
+					"fontPath": filePath
+				};
+				//fs.copyFileSync(result.filePaths[0], filePath)
+				res.json(json)
+				res.end()
+			} catch (err) {
+				const json = {
+					"status": "error",
+					"fontName": path.basename(result.filePaths[0]),
+					"fontPath": result.filePaths[0],
+					"message": err
+				}
+				res.json(json)
+				res.end()
+				//fs.unlinkSync(result.filePaths[0])
+			}
+		} else {
+			res.json({"status":"cancelled"})
+			res.end()
+			console.log("cancelled")
+		}
+	}).catch(err => {
+		console.log(err)
+		res.json({
+			"status":"error",
+			"message": err
+		})
+		res.end()
+	})
+})
+
 app2.get("/dropFont", (req, res) => {
 	try {
 		const filePath = path.join(userFontsFolder,path.basename(req.query.file))

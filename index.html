@@ -58,7 +58,7 @@
                             <div class="accordion">
                                 <div class="accord-header active-header">Text</div>
                                 <div class="accord-content" style="display:inline-block;">
-                                    <table style="width:478px;">
+                                    <!-- <table style="width:478px;">
                                         <tr>
                                             <td>
                                                 City Name: 
@@ -73,7 +73,7 @@
                                                 <input type="number" class="year" id="endYear" name="endYear" onkeypress="return isNumberKey(event)" style="width:35px;">
                                             </td>
                                         </tr>
-                                    </table>
+                                    </table> -->
                                     <table style="width:478px;">
                                         <tr class="color_tr">
                                             <td>&nbsp;</td>
@@ -297,6 +297,14 @@
                                                 <input type="number" class="bottomTextClass" id="bottomTextSpacing" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">
                                                 <label>&nbsp;Baseline:&nbsp;</label>
                                                 <input type="number" class="bottomTextClass" id="bottomTextDeltaY" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">
+                                            </td>
+                                        </tr>
+                                        <tr class="color_tr">
+                                            <td colspan="3"><hr></td>
+                                        </tr>
+                                        <tr class="color_tr">
+                                            <td colspan="3" style="text-align:center;">
+                                                <input type="button" id="localFont" value="Choose a Local Font...">
                                             </td>
                                         </tr>
                                     </table>
@@ -2343,6 +2351,16 @@
 		return false;
 	});
 
+    $("#localFont").on("click",function(e) {
+        $.ajax({
+			type: "GET",
+			url: "http://127.0.0.1:"+port+"/customFont",
+			success: function(data) {
+                addFont(data)
+            }
+        })
+    })
+
     function dropFile(file, tab) {
 		if ($.inArray(getExtension(file).toLowerCase(), validFontTypes) > -1) {
             $.ajax({
@@ -2350,58 +2368,7 @@
 				url: "http://127.0.0.1:"+port+"/dropFont",
 				data: {file:file},
 				success: function(data) { 
-					if (data.result == "error") {
-						alert("An error occurred:\r\n\r\n"+data.message)
-						return false;
-					} else if (data.status == "error") {
-						alert("The font '"+data.fontName+"' could not be loaded.")
-						return false;
-					} else {
-						if (fontList.includes(data.fontName)) {
-                            // switch to the already known font
-							const topFontDropdown= document.getElementById("topFont").msDropdown;
-							const bottomFontDropdown = document.getElementById("bottomFont").msDropdown;
-                            var foo = findIndexByText(topFontDropdown, data.fontName)
-                            topFontDropdown.selectedIndex = foo
-                            topFontDropdown.refresh()
-                            var bar = findIndexByText(bottomFontDropdown, data.fontName)
-                            bottomFontDropdown.selectedIndex = bar
-                            bottomFontDropdown.refresh()
-						} else {
-                            // add the font to the app
-                            $("head").prepend("<style>@font-face {\n   font-family: '"+data.familyName+"';\n   src: url('"+data.fontData+"') format('truetype');\n}\n."+data.familyName+" { font-family: '"+data.familyName+"';}\n</style>");
-							fontList.push(data.fontName)
-                            // switch to the font
-                            var topfont = new FontFaceObserver(data.familyName)
-                            topfont.load()
-                            .then(function() {
-                                roundelTextTop.set('fontFamily',data.familyName)
-                                roundelTextBottom.set('fontFamily',data.familyName)
-                                circleTextTop.set('fontFamily',data.familyName)
-                                circleTextBottom.set('fontFamily',data.familyName)
-                                homePlateText.set('fontFamily',data.familyName)
-                                squareTextTop.set('fontFamily',data.familyName)
-                                squareTextBottom.set('fontFamily',data.familyName)
-                                roundedSquareTextTop.set('fontFamily',data.familyName)
-                                roundedSquareTextBottom.set('fontFamily',data.familyName)
-                                logoCreator.renderAll()
-
-                                var tmpTxt = new fabric.Text("ABC 123",{
-                                    fontFamily: data.familyName,
-                                    fontSize: 96,
-                                    originX: 'center',
-                                    originY: 'center',
-                                    textAlign: 'center',
-                                    fill: 'black',
-                                    stroke: 'black',
-                                    originX: 'center',
-                                    originY: 'center',
-                                })
-
-                                refreshDropdowns(data,tmpTxt)
-                            })
-						}
-					}
+					addFont(data)
 				}
 			})
         } else {
@@ -2460,6 +2427,61 @@
                 })
             } else {
                 console.log("it's an invalid file")
+            }
+        }
+    }
+
+    function addFont(data) {
+        if (data.result == "error") {
+            alert("An error occurred:\r\n\r\n"+data.message)
+            return false;
+        } else if (data.status == "error") {
+            alert("The font '"+data.fontName+"' could not be loaded.")
+            return false;
+        } else {
+            if (fontList.includes(data.fontName)) {
+                // switch to the already known font
+                const topFontDropdown= document.getElementById("topFont").msDropdown;
+                const bottomFontDropdown = document.getElementById("bottomFont").msDropdown;
+                var foo = findIndexByText(topFontDropdown, data.fontName)
+                topFontDropdown.selectedIndex = foo
+                topFontDropdown.refresh()
+                var bar = findIndexByText(bottomFontDropdown, data.fontName)
+                bottomFontDropdown.selectedIndex = bar
+                bottomFontDropdown.refresh()
+            } else {
+                // add the font to the app
+                $("head").prepend("<style>@font-face {\n   font-family: '"+data.familyName+"';\n   src: url('"+data.fontData+"') format('truetype');\n}\n."+data.familyName+" { font-family: '"+data.familyName+"';}\n</style>");
+                fontList.push(data.fontName)
+                // switch to the font
+                var topfont = new FontFaceObserver(data.familyName)
+                topfont.load()
+                .then(function() {
+                    roundelTextTop.set('fontFamily',data.familyName)
+                    roundelTextBottom.set('fontFamily',data.familyName)
+                    circleTextTop.set('fontFamily',data.familyName)
+                    circleTextBottom.set('fontFamily',data.familyName)
+                    homePlateText.set('fontFamily',data.familyName)
+                    squareTextTop.set('fontFamily',data.familyName)
+                    squareTextBottom.set('fontFamily',data.familyName)
+                    roundedSquareTextTop.set('fontFamily',data.familyName)
+                    roundedSquareTextBottom.set('fontFamily',data.familyName)
+                    logoCreator.renderAll()
+
+                    var tmpTxt = new fabric.Text("ABC 123",{
+                        fontFamily: data.familyName,
+                        fontSize: 96,
+                        originX: 'center',
+                        originY: 'center',
+                        textAlign: 'center',
+                        fill: 'black',
+                        stroke: 'black',
+                        originX: 'center',
+                        originY: 'center',
+                    })
+
+                    refreshDropdowns(data,tmpTxt)
+                })
             }
         }
     }
