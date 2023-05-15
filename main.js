@@ -1,4 +1,7 @@
 const { app, BrowserWindow, dialog, Menu, shell, webContents  } = require('electron')
+const path = require('path')
+const fs = require('fs')
+const url = require('url');
 const express = require('express')
 const Jimp = require('jimp')
 const Store = require("electron-store")
@@ -9,6 +12,7 @@ const isMac = process.platform === 'darwin'
 
 const app2 = express();
 const store = new Store();
+const userFontsFolder = path.join(app.getPath('userData'),"fonts")
 
 const server = app2.listen(0, () => {
 	console.log(`Server running on port ${server.address().port}`);
@@ -18,10 +22,54 @@ const imInstalled = hasbin.sync('magick');
 
 app2.use(express.urlencoded({limit: '200mb', extended: true, parameterLimit: 500000}));
 
-app2.get("/helloWorld", (req, res)  => {
-    console.log("HELLO WORLD")
-    res.json({"status":"hello world"})
-    res.end()
+app2.get("/dropImage", (req, res) => {
+	Jimp.read(req.query.file, (err, image) => {
+		if (err) {
+			res.json({
+				"filename": "error not an image",
+				"image": "error not an image"
+			})
+		} else {
+			image.getBase64(Jimp.AUTO, (err, ret) => {
+				res.json({
+					"filename": path.basename(req.query.file),
+					"image": ret
+				});
+			})
+		}
+	})
+})
+
+app2.get("/dropFont", (req, res) => {
+	try {
+		const filePath = path.join(userFontsFolder,path.basename(req.query.file))
+		const fontMeta = fontname.parse(fs.readFileSync(req.query.file))[0];
+		var ext = getExtension(req.query.file)
+		var fontPath = url.pathToFileURL(req.query.file)
+		var json = {
+			"status": "ok",
+			"fontName": fontMeta.fullName,
+			"fontStyle": fontMeta.fontSubfamily,
+			"familyName": fontMeta.fontFamily,
+			"fontFormat": ext,
+			"fontMimetype": 'font/' + ext,
+			"fontData": fontPath.href,
+			"fontPath": filePath
+		};
+		// const fs = require('fs')fs.copyFileSync(req.query.file, filePath)
+		res.json(json)
+		res.end()
+	} catch (err) {
+		const json = {
+			"status": "error",
+			"fontName": path.basename(req.query.file),
+			"fontPath": req.query.file,
+			"message": err
+		}
+		res.json(json)
+		res.end()
+		//fs.unlinkSync(req.query.file)
+	}
 })
 
 function createWindow () {
@@ -162,3 +210,7 @@ function createWindow () {
     if (process.platform !== 'darwin') app.quit()
   })
 
+function getExtension(filename) {
+    var ext = path.extname(filename||'').split('.');
+	return ext[ext.length - 1];
+}

@@ -24,6 +24,13 @@
 		    const port = params.get('port')
 
             const initialColors = {topTextColor:"#ffffff", topTextStrokeColor:"#000000", bottomTextColor:"#ffffff", bottomTextStrokeColor:"#000000", teamBGColor:"#0C2340", teamTextColor: "#ffffff", stitches: "#e82a50", roundelOuterStroke: "#ffffff", roundelInnerStroke: "red", roundelOuterCircle: "blue", roundelCenterStroke: "green", roundelInnerCircle: "#ffffff", OuterStroke: 'red', CenterStroke: 'green', InnerStroke: 'blue', Fill: 'yellow', pattern: "#e82a50"}
+
+            const validFontTypes = ["ttf", "otf"]
+            const validImageTypes = ["png","jpg","jpeg","bmp","gif","tiff"]
+            var customFonts = []
+
+            var fontList = ["Acme", "All State", "Athletic Gothic", "Athletic Gothic Shadow", "Beaverton Script", "Berkshire Swash", "CantoraOne", "Caxton Roman", "Chela", "Russell Circus", "Condiment", "Cookie", "Courgette", "Croissant", "Damion", "Engagement", "Germania", "Graduate", "Grand Hotel", "Jockey", "Kaushan Script", "Leckerli", "Lily Script", "Lobster", "Lobster Two", "Metal Mania", "Miniver", "MLB Block", "MLB Chicago N", "McAuliffe", "Molle", "New Rocker", "Norican", "Oleo Script", "Pacifico", "Pirata", "Playball", "Pro Full Block", "Quicksand", "Rubik Mono", "Rubik", "Rum Raisin", "Satisfy", "Seymour", "Tiffany", "Trade Winds", "Kansas", "Unifraktur Cook", "Unifraktur Maguntia", "Varsity Block C", "Varsity Classic Serif A", "Varsity Classic Serif B", "Vibur", "Viga", "Wellfleet", "Wendy", "Yellowtail", "Fancy Block", "Old English", "Fancy Block 2", "SPL Script", "Varsity Classic D", "Varsity Block A", "Varsity Block B", "Varsity Block D", "Varsity Classic A", "Varsity Classic B", "Varsity Classic C"]
+
         </script>
     </head>
     <body>
@@ -35,9 +42,6 @@
                 <div class="section group" style="position:relative;">
                     <div class="col span_1_of_2" style="float:left;">
                         <div id="canvasContainer" style="width:500px; height:575px;">
-                            <div id="editorContainer">
-						        <canvas id="logoEditor" width="500" height="500" style="position:absolute; top:50; float:left; z-index:-1;"></canvas>
-					        </div>
                             <div id="creatorContainer">
 						        <canvas id="logoCreator" width="500" height="500" style="position:absolute; top:50; float:left; z-index:0;"></canvas>
 					        </div>
@@ -2006,7 +2010,6 @@
 			}
 		})
 		logoCreator.getObjects('text').forEach(function(o) {
-            console.log(selected)
 			if (o.id.startsWith(selected)) {
                 if (o.id.includes("Top")) {
                     o.set("visible",$("#topTextCheck").is(":checked"))
@@ -2321,12 +2324,181 @@
 		var obj = e.selected[0];
 	})
 
+    $("#creatorContainer").on('dragover', function() {
+		$("#creatorContainer").addClass('hover')
+		return false;
+	});
+
+	$("#creatorContainer").on('dragleave', function() {
+		$("#creatorContainer").removeClass('hover');
+		return false;
+	});
+
+	$("#creatorContainer").on('drop', function(e) {
+		$("#creatorContainer").removeClass('hover');
+		e.stopPropagation();
+		e.preventDefault();
+		var files = e.originalEvent.dataTransfer.files;
+		dropFile(files[0].path, 0)
+		return false;
+	});
+
+    function dropFile(file, tab) {
+		if ($.inArray(getExtension(file).toLowerCase(), validFontTypes) > -1) {
+            $.ajax({
+				type: "GET",
+				url: "http://127.0.0.1:"+port+"/dropFont",
+				data: {file:file},
+				success: function(data) { 
+					if (data.result == "error") {
+						alert("An error occurred:\r\n\r\n"+data.message)
+						return false;
+					} else if (data.status == "error") {
+						alert("The font '"+data.fontName+"' could not be loaded.")
+						return false;
+					} else {
+						if (fontList.includes(data.fontName)) {
+                            // switch to the already known font
+							const topFontDropdown= document.getElementById("topFont").msDropdown;
+							const bottomFontDropdown = document.getElementById("bottomFont").msDropdown;
+                            var foo = findIndexByText(topFontDropdown, data.fontName)
+                            topFontDropdown.selectedIndex = foo
+                            topFontDropdown.refresh()
+                            var bar = findIndexByText(bottomFontDropdown, data.fontName)
+                            bottomFontDropdown.selectedIndex = bar
+                            bottomFontDropdown.refresh()
+						} else {
+                            // add the font to the app
+                            $("head").prepend("<style>@font-face {\n   font-family: '"+data.familyName+"';\n   src: url('"+data.fontData+"') format('truetype');\n}\n."+data.familyName+" { font-family: '"+data.familyName+"';}\n</style>");
+							fontList.push(data.fontName)
+                            // switch to the font
+                            var topfont = new FontFaceObserver(data.familyName)
+                            topfont.load()
+                            .then(function() {
+                                roundelTextTop.set('fontFamily',data.familyName)
+                                roundelTextBottom.set('fontFamily',data.familyName)
+                                circleTextTop.set('fontFamily',data.familyName)
+                                circleTextBottom.set('fontFamily',data.familyName)
+                                homePlateText.set('fontFamily',data.familyName)
+                                squareTextTop.set('fontFamily',data.familyName)
+                                squareTextBottom.set('fontFamily',data.familyName)
+                                roundedSquareTextTop.set('fontFamily',data.familyName)
+                                roundedSquareTextBottom.set('fontFamily',data.familyName)
+                                logoCreator.renderAll()
+
+                                var tmpTxt = new fabric.Text("ABC 123",{
+                                    fontFamily: data.familyName,
+                                    fontSize: 96,
+                                    originX: 'center',
+                                    originY: 'center',
+                                    textAlign: 'center',
+                                    fill: 'black',
+                                    stroke: 'black',
+                                    originX: 'center',
+                                    originY: 'center',
+                                })
+
+                                refreshDropdowns(data,tmpTxt)
+                            })
+						}
+					}
+				}
+			})
+        } else {
+            if ($.inArray(getExtension(file).toLowerCase(), validImageTypes) > -1) {
+                $.ajax({
+                    type: "GET",
+                    url: "http://127.0.0.1:"+port+"/dropImage",
+                    data: {file:file},
+                    success: function(data) { 
+                        if (data.image != "error not an image") {
+                            var imgObj = new Image();
+                            imgObj.src = data.image;
+                            //$("#fileName").html(data.filename);
+                            imgObj.onload = function () {
+                                var image = new fabric.Image(imgObj);
+                                image.set({
+                                    originX: 'center',
+                                    originY: 'center',
+                                    perPixelTargetFind: true,
+                                    centeredScaling: true,
+                                    centeredRotation: true,
+                                    name: data.filename,
+                                    id: data.filename,
+                                });
+                                image.filters.push(new fabric.Image.filters.Resize({
+                                    resizeType: 'lanczos', // typo fixed
+                                    lanczosLobes: 2 // typo fixed
+                                }));
+                                image.on('object:modified',function() {
+                                    imLeft = image.get('left')
+                                    imTop = image.get('top');
+                                })
+                                image.on('selected',function() {
+/*                                     $("#"+canStr+"FileName").html(image.get('id'));
+                                    if ($("#"+canStr+"TrimImageDiv").css("display") == "none") {
+                                        $("#"+canStr+"TrimImageDiv").css("display","block");
+                                        $("#"+canStr+"UploadImageDiv").css("display","none");
+                                        $("#"+canStr+"SelectedImageDiv").css("display","block");
+                                    } */
+                                    $("#tipSpan").html("Use Arrow keys to move image 1 pixel.<br>Use Shift + Arrow keys to move image 10 pixels.<br>Use Delete key to remove image.");
+/*                                     $(".copypaste").each(function() {
+                                        $(this).css("display","inline-block")
+                                    }) */
+                                })
+                                var h = image.height;
+                                var w = image.width;
+                                logoCreator.add(image);
+                                image.set({"left":250,"top":250});
+                                image.setCoords();
+                                logoCreator.setActiveObject(image)
+                                logoCreator.requestRenderAll()
+                                logoCreator.renderAll();
+                            }
+                        }
+                    }
+                })
+            } else {
+                console.log("it's an invalid file")
+            }
+        }
+    }
+
+    function getExtension(filename) {
+		var ext = (filename||'').split('.');
+		return ext[ext.length - 1];
+	}
+
     function isNumberKey(evt) {
         var charCode = (evt.which) ? evt.which : event.keyCode
         if (charCode > 31 && (charCode < 48 || charCode > 57))
             return false;
         return true;
     }
+
+    function refreshDropdowns(data,thumb) {
+		data.thumb = thumb.toDataURL()
+		customFonts.push(data)
+
+		const topFontDropdown= document.getElementById("topFont").msDropdown;
+        const bottomFontDropdown = document.getElementById("bottomFont").msDropdown;
+
+		const displayName = (data.fontStyle == "Regular") ? data.fontName : data.fontName +" "+data.fontStyle
+
+		const idx = findIndexByText(topFontDropdown, displayName)
+
+		if (idx == -1) {
+			topFontDropdown.add({text:displayName, value:data.fontName, image:data.thumb},0)
+			bottomFontDropdown.add({text:displayName, value:data.fontName, image:data.thumb},0)
+            topFontDropdown.selectedIndex = 0;
+            bottomFontDropdown.selectedIndex = 0;
+		} else {
+            topFontDropdown.selectedIndex = idx;
+            topFontDropdown.selectedIndex = idx;
+		}
+
+		sortFontDropdowns()
+	}
 
     function sortFontDropdowns() {
         const selectedTopFont = $("#topFont").val()
@@ -2348,5 +2520,14 @@
 		}))
 		$("#patternSelect").val(selectedPattern)
     }
+
+    function findIndexByText(dropdown, text) {
+		for (child of dropdown.children) {
+			if (child.text == text) {
+				return child.index
+			}
+		}
+		return -1
+	}
     </script>
 </html>
