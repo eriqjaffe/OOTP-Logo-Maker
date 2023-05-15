@@ -405,6 +405,73 @@
                                         </tr>
                                     </table>
                                 </div>
+                                <div class="accord-header inactive-header" id="imagesHeader">Images</div>
+                                <div class="accord-content">
+                                    <div id="uploadImageDiv">
+                                    <table style="width:478px;">
+                                        <tr>
+                                            <td style="text-align: center;">
+                                                <input type="button" class="button" id="uploadImage" value="Upload An Image">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    </div>
+                                    <div id="selectedImageDiv" style="display:none;">
+                                        <table style="width:100%;"><tr><td><center>
+                                        <b>Selected Image:</b> <span id="fileName"></span>
+                                        </td></tr></table>
+                                    </div>
+                                    <div id="trimImageDiv" style="display:none;">
+                                        <table style="width:478px;">
+                                            <!--<tr>
+                                                <td><center>
+                                                    <input type="button" id="makeCenterIceLogo" class="button" value="Make Center Ice Logo">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><center>
+                                                    <input type="button" class="button makeAd" data-adLoc="1" value="&nbsp;Ad Location 1&nbsp;">
+                                                    <input type="button" class="button makeAd" data-adLoc="2" value="&nbsp;Ad Location 2&nbsp;">
+                                                    <input type="button" class="button makeAd" data-adLoc="3" value="&nbsp;Ad Location 3&nbsp;">
+                                                    <input type="button" class="button makeAd" data-adLoc="4" value="&nbsp;Ad Location 4&nbsp;">
+                                                </center></td>
+                                            </tr>
+                                            <tr>
+                                                <td><center>
+                                                    <input type="button" class="button makeAd" data-adLoc="5" value="&nbsp;Ad Location 5&nbsp;">
+                                                    <input type="button" class="button makeAd" data-adLoc="6" value="&nbsp;Ad Location 6&nbsp;">
+                                                    <input type="button" class="button makeAd" data-adLoc="7" value="&nbsp;Ad Location 7&nbsp;">
+                                                    <input type="button" class="button makeAd" data-adLoc="8" value="&nbsp;Ad Location 8&nbsp;">
+                                                </center></td>
+                                            </tr>-->
+                                            <tr>
+                                                <td><center>
+                                                    <input type="button" id="colorSquare" class="colorSquare" value="Click To Choose Color" style="margin-right:10px;"><span id="chosenCoordinates" style="margin-right:5px;"></span>
+                                                    Fuzz %:
+                                                    <input type="range" class="range" id="colorFuzz" value="40" min="1" max="100" style="margin-left:5px; margin-right:5px;"> 
+                                                    <span id="fuzzAmount">40</span>%
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><center>
+                                                    <input type="button" class="button" id="border" value="Remove Border">
+                                                    <input type="button" class="button removeColor" id="removeColorRange" value="Remove Section" data-x="0" data-y="0">
+                                                    <input type="button" class="button removeColor" id="removeAllColor" value="Remove All" data-x="0" data-y="0">
+                                                    <input type="button" class="button replaceColor" id="replaceColorRange" value="Replace Section" data-x="0" data-y="0">
+                                                    <input type="button" class="button replaceColor" id="replaceAllColor" value="Replace All" data-x="0" data-y="0">
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div id="replaceColorDiv" style="display:none;">
+                                        <table style="width:478px;"><tr>
+                                        <td><center>
+                                        Select Replacement Color:
+                                        <input class="colorSelector" type="text" id="replacementColor" value="#FF0000">
+                                        <input type="button" class="button" id="replaceColorSubmit" value="Replace Color" data-x="0" data-y="0" data-action="null">
+                                        </tr></table>
+                                    </div>
+                                </div>
                             </div>
                             <div style="text-align:center; margin-top:5px;">
                                 <input type="button" class="button" id="straightenObject" value="Reset Object Rotation" style="display:none;">
@@ -469,6 +536,70 @@
         })
         logoCreator.renderAll()
     })
+
+    $(document).keydown(function(e) {   
+		var obj = logoCreator.getActiveObject();
+		if (e.shiftKey) {
+			var movementDelta = 10;
+		} else {
+			var movementDelta = 1;
+		}
+		switch (e.keyCode) {
+			case 107: // plus
+				if (obj.get('type') == "group") {
+					obj.bringToFront();
+					logoCreator.renderAll();
+				}
+				return false;
+			case 109: // minus
+				if (obj.get('type') == "group") {
+					obj.sendToBack();
+					logoCreator.renderAll();
+				}
+				return false;
+			case 37:
+				e.preventDefault();
+				var a = obj.get('left') - movementDelta;
+				obj.set('left', a);
+				obj.setCoords();
+				logoCreator.renderAll();
+				break;
+			case 38:
+				e.preventDefault();
+				var a = obj.get('top') - movementDelta;
+				obj.set('top', a);
+				obj.setCoords();
+				logoCreator.renderAll();
+				break;
+			case 39:
+				e.preventDefault();
+				var a = obj.get('left') + movementDelta;
+				obj.set('left', a);
+				obj.setCoords();
+				logoCreator.renderAll();
+				break;
+			case 40:
+				e.preventDefault();
+				var a = obj.get('top') + movementDelta;
+				obj.set('top', a);
+				obj.setCoords();
+				logoCreator.renderAll();
+				break;
+			case 46: // delete
+				if (obj.get('type') == "image") {
+					$("#fileName").html("");
+					logoCreator.remove(obj);
+					logoCreator.renderAll();
+                    $("#trimImageDiv").css("display","none");
+                    $("#uploadImageDiv").css("display","block");
+                    $("#selectedImageDiv").css("display","none");
+				}
+				$("#tipContainer").html("");
+                
+			return false;
+		}
+		return;
+	});
 
     $("#teamBGColor").spectrum({
 		type: "color",
@@ -2329,8 +2460,39 @@
     }
 
     logoCreator.on('selection:created', function(e) {
+		$("#straightenObject").css("display","inline-block");
 		var obj = e.selected[0];
+		if (obj.type == 'image') {
+			$("#fileName").html(obj.get('name'));
+			if ($("#trimImageDiv").css("display") == "none") {
+				$("#trimImageDiv").css("display","block");
+				$("#uploadImageDiv").css("display","none");
+				$("#selectedImageDiv").css("display","block");
+			}
+			$("#tipContainer").html("Use Arrow keys to move image 1 pixel.<br>Use Shift + Arrow keys to move image 10 pixels.<br>Use Delete key to remove image.");
+		}
 	})
+
+    logoCreator.on('selection:cleared', function(e) {
+        $("#fileName").html("");
+        $("#trimImageDiv").css("display","none");
+        $("#uploadImageDiv").css("display","block");
+        $("#selectedImageDiv").css("display","none");
+    })
+
+    logoCreator.on('selection:updated', function(e) {
+        $("#straightenObject").css("display","inline-block");
+		var obj = e.selected[0];
+		if (obj.type == 'image') {
+			$("#fileName").html(obj.get('name'));
+			if ($("#trimImageDiv").css("display") == "none") {
+				$("#trimImageDiv").css("display","block");
+				$("#uploadImageDiv").css("display","none");
+				$("#selectedImageDiv").css("display","block");
+			}
+			$("#tipContainer").html("Use Arrow keys to move image 1 pixel.<br>Use Shift + Arrow keys to move image 10 pixels.<br>Use Delete key to remove image.");
+		}
+    })
 
     $("#creatorContainer").on('dragover', function() {
 		$("#creatorContainer").addClass('hover')
@@ -2361,6 +2523,17 @@
         })
     })
 
+    $("#uploadImage").on("click",function(e) {
+        $.ajax({
+            type: "GET",
+            url: "http://127.0.0.1:"+port+"/uploadImage",
+            data: {},
+            success: function(data) { 
+                addImage(data)
+            }
+        })
+    })
+
     function dropFile(file, tab) {
 		if ($.inArray(getExtension(file).toLowerCase(), validFontTypes) > -1) {
             $.ajax({
@@ -2378,51 +2551,7 @@
                     url: "http://127.0.0.1:"+port+"/dropImage",
                     data: {file:file},
                     success: function(data) { 
-                        if (data.image != "error not an image") {
-                            var imgObj = new Image();
-                            imgObj.src = data.image;
-                            //$("#fileName").html(data.filename);
-                            imgObj.onload = function () {
-                                var image = new fabric.Image(imgObj);
-                                image.set({
-                                    originX: 'center',
-                                    originY: 'center',
-                                    perPixelTargetFind: true,
-                                    centeredScaling: true,
-                                    centeredRotation: true,
-                                    name: data.filename,
-                                    id: data.filename,
-                                });
-                                image.filters.push(new fabric.Image.filters.Resize({
-                                    resizeType: 'lanczos', // typo fixed
-                                    lanczosLobes: 2 // typo fixed
-                                }));
-                                image.on('object:modified',function() {
-                                    imLeft = image.get('left')
-                                    imTop = image.get('top');
-                                })
-                                image.on('selected',function() {
-/*                                     $("#"+canStr+"FileName").html(image.get('id'));
-                                    if ($("#"+canStr+"TrimImageDiv").css("display") == "none") {
-                                        $("#"+canStr+"TrimImageDiv").css("display","block");
-                                        $("#"+canStr+"UploadImageDiv").css("display","none");
-                                        $("#"+canStr+"SelectedImageDiv").css("display","block");
-                                    } */
-                                    $("#tipSpan").html("Use Arrow keys to move image 1 pixel.<br>Use Shift + Arrow keys to move image 10 pixels.<br>Use Delete key to remove image.");
-/*                                     $(".copypaste").each(function() {
-                                        $(this).css("display","inline-block")
-                                    }) */
-                                })
-                                var h = image.height;
-                                var w = image.width;
-                                logoCreator.add(image);
-                                image.set({"left":250,"top":250});
-                                image.setCoords();
-                                logoCreator.setActiveObject(image)
-                                logoCreator.requestRenderAll()
-                                logoCreator.renderAll();
-                            }
-                        }
+                        addImage(data)
                     }
                 })
             } else {
@@ -2482,6 +2611,54 @@
 
                     refreshDropdowns(data,tmpTxt)
                 })
+            }
+        }
+    }
+
+    function addImage(data) {
+        if (data.image != "error not an image") {
+            var imgObj = new Image();
+            imgObj.src = data.image;
+            //$("#fileName").html(data.filename);
+            imgObj.onload = function () {
+                var image = new fabric.Image(imgObj);
+                image.set({
+                    originX: 'center',
+                    originY: 'center',
+                    perPixelTargetFind: true,
+                    centeredScaling: true,
+                    centeredRotation: true,
+                    name: data.filename,
+                    id: data.filename,
+                });
+                image.filters.push(new fabric.Image.filters.Resize({
+                    resizeType: 'lanczos', // typo fixed
+                    lanczosLobes: 2 // typo fixed
+                }));
+                image.on('object:modified',function() {
+                    imLeft = image.get('left')
+                    imTop = image.get('top');
+                })
+                image.on('selected',function() {
+                    $("#FileName").html(image.get('id'));
+                    if ($("#trimImageDiv").css("display") == "none") {
+                        $("#trimImageDiv").css("display","block");
+                        $("#uploadImageDiv").css("display","none");
+                        $("#selectedImageDiv").css("display","block");
+                    }
+                    $("#tipSpan").html("Use Arrow keys to move image 1 pixel.<br>Use Shift + Arrow keys to move image 10 pixels.<br>Use Delete key to remove image.");
+/*                                     $(".copypaste").each(function() {
+                        $(this).css("display","inline-block")
+                    }) */
+                })
+                var h = image.height;
+                var w = image.width;
+                logoCreator.add(image);
+                image.set({"left":250,"top":250});
+                image.setCoords();
+                logoCreator.setActiveObject(image)
+                logoCreator.requestRenderAll()
+                logoCreator.renderAll();
             }
         }
     }
