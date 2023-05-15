@@ -40,6 +40,37 @@ app2.get("/dropImage", (req, res) => {
 	})
 })
 
+app2.get("/uploadImage", (req, res) => {
+    const options = {
+		defaultPath: store.get("uploadImagePath", app.getPath('pictures')),
+		properties: ['openFile'],
+		filters: [
+			{ name: 'Images', extensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'tiff'] }
+		]
+	}
+    dialog.showOpenDialog(null, options).then(result => {
+        if (!result.canceled) {
+            Jimp.read(result.filePaths[0], (err, image) => {
+                if (err) {
+                    console.log(err);
+                    res.end()
+                } else {
+                    image.getBase64(Jimp.AUTO, (err, ret) => {
+                        res.json({
+                            "filename": path.basename(result.filePaths[0]),
+                            "image": ret
+                          });
+                        res.end();
+                    })
+                }
+            });
+        } else {
+            res.end()
+			  console.log("cancelled")
+        }
+    })
+})
+
 app2.get("/customFont", (req, res) => {
 	const options = {
 		defaultPath: store.get("uploadFontPath", app.getPath('desktop')),
