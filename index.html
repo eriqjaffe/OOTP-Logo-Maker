@@ -42,6 +42,9 @@
                 <div class="section group" style="position:relative;">
                     <div class="col span_1_of_2" style="float:left;">
                         <div id="canvasContainer" style="width:500px; height:575px;">
+                            <div id="editorContainer">
+						        <canvas id="infoCanvas" width="500" height="500" style="position:absolute; top:50; float:left; z-index:1; pointer-events:none;"></canvas>
+					        </div>
                             <div id="creatorContainer">
 						        <canvas id="logoCreator" width="500" height="500" style="position:absolute; top:50; float:left; z-index:0;"></canvas>
 					        </div>
@@ -615,12 +618,21 @@
 		},
 		move: function(color) {
 			$("#exampleText").css("background-color",color.toHexString())
+            const o = infoCanvas.getObjects().find(o => o.id == 'infoText')
+            o.set("text",outputName())
+            infoCanvas.renderAll()
 		},
 		change: function(color) {
 			$("#exampleText").css("background-color",color.toHexString())
+            const o = infoCanvas.getObjects().find(o => o.id == 'infoText')
+            o.set("text",outputName())
+            infoCanvas.renderAll()
 		},
 		hide: function(color) {
 			$("#exampleText").css("background-color",color.toHexString())
+            const o = infoCanvas.getObjects().find(o => o.id == 'infoText')
+            o.set("text",outputName())
+            infoCanvas.renderAll()
 		}
 	})
 
@@ -638,12 +650,21 @@
 		},
 		move: function(color) {
 			$("#exampleText").css("color",color.toHexString())
+            const o = infoCanvas.getObjects().find(o => o.id == 'infoText')
+            o.set("text",outputName())
+            infoCanvas.renderAll()
 		},
 		change: function(color) {
 			$("#exampleText").css("color",color.toHexString())
+            const o = infoCanvas.getObjects().find(o => o.id == 'infoText')
+            o.set("text",outputName())
+            infoCanvas.renderAll()
 		},
 		hide: function(color) {
 			$("#exampleText").css("color",color.toHexString())
+            const o = infoCanvas.getObjects().find(o => o.id == 'infoText')
+            o.set("text",outputName())
+            infoCanvas.renderAll()
 		}
 	})
 
@@ -1116,17 +1137,13 @@
 		withConnection: true
 	});
 
-    var logoEditor = new fabric.StaticCanvas('logoEditor',{
-		enableRetinaScaling: false,
-		preserveObjectStacking: true
-	});
+    const infoCanvas = new fabric.StaticCanvas('infoCanvas',{
+        enableRetinaScaling: false,
+		preserveObjectStacking: true,
+        evented: false
+    })
 
-    logoEditor.setBackgroundColor(
-        {source: './images/bg.png', repeat: 'repeat'}, 
-        logoEditor.renderAll.bind(logoEditor),
-    );
-
-    var logoCreator = new fabric.Canvas('logoCreator',{
+    const logoCreator = new fabric.Canvas('logoCreator',{
 		enableRetinaScaling: false,
 		preserveObjectStacking: true,
 	});
@@ -1136,9 +1153,11 @@
         logoCreator.renderAll.bind(logoCreator),
     );
 
-    //logoCreator.setOverlayImage('./images/circle_simple_justafan.png',logoCreator.renderAll.bind(logoCreator));
+    logoCreator.setOverlayImage('./images/guides.png',logoCreator.renderAll.bind(logoCreator));
 
     initializeCreator()
+
+    initializeInfoPanel()
 
     function initializeCreator() {
 
@@ -1846,8 +1865,6 @@
             logoCreator.add(homePlateText)
             logoCreator.add(squareTextTop)
             logoCreator.add(roundedSquareTextTop)
-
-            console.log(roundelTextTop.charSpacing)
         }).catch(function(e) {
             console.log(e)
             alert('font loading failed ' + data.familyName);
@@ -2015,6 +2032,31 @@
         logoCreator.renderAll()
     }
 
+    function initializeInfoPanel() {
+        
+        var font = new FontFaceObserver("mplus")
+        font.load()
+        .then(function() {
+            var infoText = new fabric.Text(outputName(), {
+                id: 'infoText',
+                fontFamily: "mplus",
+                fontSize: 25,
+                originX: 'center',
+                originY: 'center',
+                textAlign: 'center',
+                fill: 'black',
+                originX: 'center',
+                originY: 'center',
+                top: 450,
+                left: 250
+            })
+
+            infoCanvas.add(infoText)
+
+            infoCanvas.renderAll()
+        })
+    }
+    
     $("#topTextCheck").on("change",function(e) {
         const checked = $(this).is(":checked")
         $(".topTextClass").each(function(o) {
@@ -2415,6 +2457,7 @@
 
 	$("#cityName").on("keyup change", function(e) {
 		const text = $(this).val()
+        const info = infoCanvas.getObjects().find(o => o.id == 'infoText')
 		logoCreator.getObjects('text').forEach(function(o) {
 			if (o.id.includes("Top")) {
 				o.set("text", text)
@@ -2424,10 +2467,14 @@
         tx.set("text", text + " " + $("#nickName").val())
         $("#exampleText").val($("#cityName").val()+" "+$("#nickName").val())
 		logoCreator.renderAll()
+        
+        info.set("text",outputName())
+        infoCanvas.renderAll()
 	})
 
 	$("#nickName").on("keyup change", function(e) {
 		const text = $(this).val()
+        const info = infoCanvas.getObjects().find(o => o.id == 'infoText')
 		logoCreator.getObjects('text').forEach(function(o) {
 			if (o.id.includes("Bottom")) {
 				o.set("text", text)
@@ -2437,6 +2484,8 @@
         tx.set("text", $("#cityName").val() + " " + text)
         $("#exampleText").val($("#cityName").val()+" "+$("#nickName").val())
 		logoCreator.renderAll()
+        info.set("text",outputName())
+        infoCanvas.renderAll()
 	})
 
     $("#save").on("click",function(e) {
@@ -2447,6 +2496,16 @@
                 alert(data.status)
             }
         })
+    })
+
+    $("#toggleGuides").on("click",function(e) {
+        if ($(this).val() == "Hide Guides") {
+            logoCreator.setOverlayImage(null,logoCreator.renderAll.bind(logoCreator));
+            $(this).val("Show Guides")
+        } else {
+            logoCreator.setOverlayImage('./images/guides.png',logoCreator.renderAll.bind(logoCreator));
+            $(this).val("Hide Guides")
+        }
     })
 
     function rotateStitches(angle) {
@@ -2718,6 +2777,17 @@
          	return $(x).text().toLowerCase() < $(y).text().toLowerCase() ? -1 : 1;
 		}))
 		$("#patternSelect").val(selectedPattern)
+    }
+
+    function outputName() {
+        var outputName = $("#cityName").val().toLowerCase()
+                       + "_"
+                       + $("#nickName").val().toLowerCase()
+                       + "_"
+                       + $("#teamBGColor").spectrum("get").toHex().toLowerCase()
+                       + "_"
+                       + $("#teamTextColor").spectrum("get").toHex().toLowerCase()
+        return outputName
     }
 
     function findIndexByText(dropdown, text) {
