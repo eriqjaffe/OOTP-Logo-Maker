@@ -14,6 +14,10 @@ const app2 = express();
 const store = new Store();
 const userFontsFolder = path.join(app.getPath('userData'),"fonts")
 
+if (!fs.existsSync(userFontsFolder)) {
+    fs.mkdirSync(userFontsFolder);
+}
+
 const server = app2.listen(0, () => {
 	console.log(`Server running on port ${server.address().port}`);
 });
@@ -97,7 +101,7 @@ app2.get("/customFont", (req, res) => {
 					"fontData": fontPath.href,
 					"fontPath": filePath
 				};
-				//fs.copyFileSync(result.filePaths[0], filePath)
+				fs.copyFileSync(result.filePaths[0], filePath)
 				res.json(json)
 				res.end()
 			} catch (err) {
@@ -142,7 +146,7 @@ app2.get("/dropFont", (req, res) => {
 			"fontData": fontPath.href,
 			"fontPath": filePath
 		};
-		// const fs = require('fs')fs.copyFileSync(req.query.file, filePath)
+		fs.copyFileSync(req.query.file, filePath)
 		res.json(json)
 		res.end()
 	} catch (err) {
@@ -156,6 +160,49 @@ app2.get("/dropFont", (req, res) => {
 		res.end()
 		//fs.unlinkSync(req.query.file)
 	}
+})
+
+app2.get("/localFontFolder", (req, res) => {
+	const jsonObj = {}
+	const jsonArr = []
+
+	filenames = fs.readdirSync(userFontsFolder);
+	for (i=0; i<filenames.length; i++) {
+		if (path.extname(filenames[i]).toLowerCase() == ".ttf" || path.extname(filenames[i]).toLowerCase() == ".otf") {
+			const filePath = path.join(userFontsFolder,filenames[i])
+			try {
+				const fontMeta = fontname.parse(fs.readFileSync(filePath))[0];
+				var ext = getExtension(filePath)
+				//const dataUrl = font2base64.encodeToDataUrlSync(filePath)
+				var fontPath = url.pathToFileURL(filePath)
+				var json = {
+					"status": "ok",
+					"fontName": fontMeta.fullName,
+					"fontStyle": fontMeta.fontSubfamily,
+					"familyName": fontMeta.fontFamily,
+					"fontFormat": ext,
+					"fontMimetype": 'font/' + ext,
+					"fontData": fontPath.href,
+					//"fontBase64": dataUrl,
+					"fontPath": filePath,
+				};
+				jsonArr.push(json)
+			} catch (err) {
+				const json = {
+					"status": "error",
+					"fontName": path.basename(filePath),
+					"fontPath": filePath,
+					"message": err
+				}
+				jsonArr.push(json)
+				//fs.unlinkSync(filePath)
+			}
+		}
+	}
+	jsonObj.result = "success"
+	jsonObj.fonts = jsonArr
+	res.json(jsonObj)
+	res.end()
 })
 
 function createWindow () {
