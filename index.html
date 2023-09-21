@@ -305,7 +305,8 @@
                                         </tr>
                                         <tr class="color_tr">
                                             <td colspan="3" style="text-align:center;">
-                                                <input type="button" id="localFont" value="Choose a Local Font...">
+                                                <input type="button" class="button" id="localFont" value="Choose a Local Font...">
+                                                <input type="button" class="button" id="localFontFolder" value="Refresh User Fonts">
                                             </td>
                                         </tr>
                                     </table>
@@ -559,6 +560,8 @@
         let topFontDropdown = new MsDropdown(document.getElementById("topFont"), {visibleRows: 6})
         let bottomFontDropdown = new MsDropdown(document.getElementById("bottomFont"), {visibleRows: 6})
 
+        $("#localFontFolder").trigger("click")
+        
         $(".accordion .accord-header").click(function() {
 			if($(this).next("div").is(":visible")){
 				$(this).next("div").slideUp("fast");
@@ -2791,6 +2794,70 @@
     $("#localFont").on("click",function(e) {
         ipcRenderer.send('upload-font', null)
     })
+
+    $("#localFontFolder").on("click",function() {
+		const fontErrors = []
+		//showOverlay("Loading User Fonts...")
+		$.ajax({
+			type: "GET",
+			url: "http://127.0.0.1:"+port+"/localFontFolder",
+			success: function(data) {
+				if (data.result == 'success') {
+					const topFontDropdown= document.getElementById("topFont").msDropdown;
+                    const bottomFontDropdown = document.getElementById("bottomFont").msDropdown;
+                    var observers = []
+					for (result of data.fonts) {
+						if (result.status == "ok") {
+                            $("head").prepend("<style>@font-face {\n   font-family: '"+result.fontName+"';\n   src: url('"+result.fontData+"') format('truetype');\n}\n."+result.fontName+" { font-family: '"+result.fontName+"';}\n</style>");
+							fontList.push(result.fontName)
+                            const name = result.fontName
+							opentype.load(result.fontPath, (err,font) => {
+								if (err || !font) {
+									console.log(err)
+									return;
+								}
+								
+								var thumbText = font.getPath("ABC 123", 0, 0, 96)
+								var outPath = thumbText.toPathData(5)
+
+								thumbText = new fabric.Path(outPath, {
+									left: 0,
+									originX: 'center',
+									originY: 'center',
+									centeredScaling: true,
+									centeredRotation: true,
+									fill: 'black',
+									height: '80px'
+								})
+
+								thumb = thumbText.toDataURL()
+
+								if (findIndexByText(topFontDropdown, name) == -1) {
+									topFontDropdown.add({text:name, value:name, image:thumb},0)
+                                }
+
+                                if (findIndexByText(bottomFontDropdown, name) == -1) {
+									bottomFontDropdown.add({text:name, value:name, image:thumb},0)
+                                }
+
+								sortFontDropdowns()
+							})
+						} else {
+							fontErrors.push(result.fontName)
+						}
+					}
+				}
+				//hideOverlay()
+				if (fontErrors.length > 0) {
+					var message = "The following fonts failed to import, and have been removed from your user fonts folder:\r\n\r\n"
+					for (font of fontErrors) {
+						message += font+"\r\n"
+					}
+					alert(message)
+				}
+			}
+		})
+	})
 
     $("#uploadImage").on("click",function(e) {
         ipcRenderer.send('upload-image', null)

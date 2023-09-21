@@ -13,6 +13,10 @@ const isMac = process.platform === 'darwin'
 const store = new Store();
 const userFontsFolder = path.join(app.getPath('userData'),"fonts")
 
+if (!fs.existsSync(userFontsFolder)) {
+    fs.mkdirSync(userFontsFolder);
+}
+
 
 const imInstalled = hasbin.sync('magick');
 
