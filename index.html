@@ -21,8 +21,9 @@
         <link href='./scripts/magnific-popup.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/dd.css' rel='stylesheet' type='text/css'>
         <script>
+            const { ipcRenderer } = require('electron');
+
             const params = new URLSearchParams(window.location.search)
-		    const port = params.get('port')
 
             const initialColors = {topTextColor:"#ffffff", topTextStrokeColor:"#000000", bottomTextColor:"#ffffff", bottomTextStrokeColor:"#000000", teamBGColor:"#0C2340", teamTextColor: "#ffffff", stitches: "#e82a50", roundelOuterStroke: "#ffffff", roundelInnerStroke: "red", roundelOuterCircle: "blue", roundelCenterStroke: "green", roundelInnerCircle: "#ffffff", OuterStroke: 'red', CenterStroke: 'green', InnerStroke: 'blue', Fill: 'yellow', pattern: "#e82a50"}
 
@@ -65,22 +66,6 @@
                             <div class="accordion">
                                 <div class="accord-header active-header">Text</div>
                                 <div class="accord-content" style="display:inline-block;">
-                                    <!-- <table style="width:478px;">
-                                        <tr>
-                                            <td>
-                                                City Name: 
-                                            </td>
-                                            <td>
-                                                Nickname: 
-                                            </td>
-                                            <td><label for="startYear">Start:</label>
-                                                <input type="number" class="year" id="startYear" name="startYear" onkeypress="return isNumberKey(event)" style="width:35px;">
-                                            </td>
-                                            <td><label for="endYear">End:</label>
-                                                <input type="number" class="year" id="endYear" name="endYear" onkeypress="return isNumberKey(event)" style="width:35px;">
-                                            </td>
-                                        </tr>
-                                    </table> -->
                                     <table style="width:478px;">
                                         <tr class="color_tr">
                                             <td>&nbsp;</td>
@@ -92,6 +77,15 @@
                                                     <input class="teamSelector selector" type="text" id="teamTextColor">	
                                                 </div>
                                             </td>	
+                                        </tr>
+                                        <tr class="color_tr">
+                                            <td class="checkcell">&nbsp;</td>
+                                            <td colspan="2" style="text-align: center;">
+                                                <label>Start Year:</label>
+                                                <input type="number" class="year" id="startYear" name="startYear" onkeypress="return isNumberKey(event)" style="width:50px; margin-right: 25px;">
+                                                <label>End Year:</label>
+                                                <input type="number" class="year" id="endYear" name="endYear" onkeypress="return isNumberKey(event)" style="width:50px;">
+                                            </td>
                                         </tr>
                                         <tr class="color_tr">
                                             <td class="checkcell">&nbsp;</td>
@@ -504,7 +498,7 @@
                             <div style="text-align:center; margin-top:5px;">
                                 <input type="button" class="button" id="straightenObject" value="Reset Object Rotation" style="display:none;">
                                 <!--<input type="button" class="button" id="saveCap" value="Save Ballcap">-->
-                                <input type="button" class="button" id="save" value="Save Ballcap">
+                                <input type="button" class="button" id="save" value="Save Logo">
                                 <input type="button" class="button" id="loadCap" value="Load Ballcap">
                                 <!--<input type="button" class="button" id="imgur" value="Upload To Imgur" style="display:none;">-->
                                 <input type="button" class="button" id="toggleGuides" value="Hide Guides">
@@ -554,7 +548,10 @@
        // logoCreator.renderAll()
     })
 
+    let yearRange = ""
+
     $(document).ready(function() {
+
         $("#exampleText").val($("#cityName").val()+" "+$("#nickName").val())
 
         sortFontDropdowns()
@@ -647,6 +644,24 @@
 		return;
 	});
 
+    $("#startYear").on('input', function () {
+        if (parseInt($("#startYear").val()) > parseInt($("#endYear").val())) {
+            $("#startYear").val($("#endYear").val());
+        }
+        let o = infoCanvas.getObjects().find(o => o.id == 'infoText')
+        o.set("text",outputName())
+        infoCanvas.renderAll()
+    });
+
+    $("#endYear").on('input', function () {
+        if (parseInt($("#endYear").val()) < parseInt($("#startYear").val())) {
+            $("#endYear").val($("#startYear").val());
+        }
+        let o = infoCanvas.getObjects().find(o => o.id == 'infoText')
+        o.set("text",outputName())
+        infoCanvas.renderAll()
+    });
+    
     $("#teamBGColor").spectrum({
 		type: "color",
 		showAlpha: false,
@@ -2671,13 +2686,32 @@
 	})
 
     $("#save").on("click",function(e) {
-        $.ajax({
+		if ($("#toggleGuides").val() == "Hide Guides") {
+			logoCreator.setOverlayImage(null,logoCreator.renderAll.bind(logoCreator));
+		}
+        logoCreator.setBackgroundColor(null,logoCreator.renderAll.bind(logoCreator));
+        let json = {}
+        json.filename = outputName()
+        json.image = logoCreator.toDataURL()
+        console.log(json)
+        ipcRenderer.send('save-logo', json)
+/*         $.ajax({
             type: "GET",
             url: "http://127.0.0.1:"+port+"/helloWorld",
             success: function(data) { 
                 alert(data.status)
             }
-        })
+        }) */
+    })
+
+    ipcRenderer.on('save-logo-response', (event, response) => {
+        if ($("#toggleGuides").val() == "Hide Guides") {
+			logoCreator.setOverlayImage('./images/guides.png',logoCreator.renderAll.bind(logoCreator));
+		}
+        logoCreator.setBackgroundColor(
+            {source: './images/bg.png', repeat: 'repeat'}, 
+            logoCreator.renderAll.bind(logoCreator),
+        );
     })
 
     $("#toggleGuides").on("click",function(e) {
@@ -2755,51 +2789,34 @@
 	});
 
     $("#localFont").on("click",function(e) {
-        $.ajax({
-			type: "GET",
-			url: "http://127.0.0.1:"+port+"/customFont",
-			success: function(data) {
-                addFont(data)
-            }
-        })
+        ipcRenderer.send('upload-font', null)
     })
 
     $("#uploadImage").on("click",function(e) {
-        $.ajax({
-            type: "GET",
-            url: "http://127.0.0.1:"+port+"/uploadImage",
-            data: {},
-            success: function(data) { 
-                addImage(data)
-            }
-        })
+        ipcRenderer.send('upload-image', null)
     })
 
     function dropFile(file, tab) {
+        console.log(file)
 		if ($.inArray(getExtension(file).toLowerCase(), validFontTypes) > -1) {
-            $.ajax({
-				type: "GET",
-				url: "http://127.0.0.1:"+port+"/dropFont",
-				data: {file:file},
-				success: function(data) { 
-					addFont(data)
-				}
-			})
+            ipcRenderer.send('drop-font', file)
         } else {
             if ($.inArray(getExtension(file).toLowerCase(), validImageTypes) > -1) {
-                $.ajax({
-                    type: "GET",
-                    url: "http://127.0.0.1:"+port+"/dropImage",
-                    data: {file:file},
-                    success: function(data) { 
-                        addImage(data)
-                    }
-                })
+                ipcRenderer.send('drop-image', file)
             } else {
                 console.log("it's an invalid file")
+                return false;
             }
         }
     }
+
+    ipcRenderer.on('add-image-response', (event, data) => {
+        addImage(data)
+    })
+
+    ipcRenderer.on('add-font-response', (event, data) => {
+        addFont(data)
+    })
 
     function addFont(data) {
         if (data.result == "error") {
@@ -2968,13 +2985,36 @@
     }
 
     function outputName() {
-        var outputName = $("#cityName").val().toLowerCase()
+        var startYear = parseInt($("#startYear").val());
+		var endYear = parseInt($("#endYear").val())
+		var yearRange = "";
+		if (startYear > endYear && endYear > 0) {
+			alert("The start year has to be before the end year!");
+			return false;
+		}
+		if (startYear == endYear && startYear > 0) {
+			yearRange = $("#startYear").val();
+		} else if (startYear == 0 && endYear > 0) {
+			yearRange = $("#endYear").val();
+		} else if (startYear > 0 && endYear == 0) {
+			yearRange = $("#startYear").val();
+		} else if (startYear > 0 && endYear > 0) {
+			yearRange = $("#startYear").val()+"-"+$("#endYear").val()
+		} else {
+			yearRange = ""
+		}
+		if (yearRange.length > 0) {
+			yearRange = "_"+yearRange;
+		}
+        let outputName = $("#cityName").val().toLowerCase()
                        + "_"
                        + $("#nickName").val().toLowerCase()
+                       + yearRange
                        + "_"
                        + $("#teamBGColor").spectrum("get").toHex().toLowerCase()
                        + "_"
                        + $("#teamTextColor").spectrum("get").toHex().toLowerCase()
+        console.log(outputName)
         return outputName
     }
 

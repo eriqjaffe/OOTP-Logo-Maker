@@ -1,8 +1,8 @@
-const { app, BrowserWindow, dialog, Menu, shell, webContents  } = require('electron')
+const { app, BrowserWindow, dialog, Menu, shell, ipcMain, webContents  } = require('electron')
 const path = require('path')
 const fs = require('fs')
 const url = require('url');
-const express = require('express')
+const increment = require('add-filename-increment');
 const Jimp = require('jimp')
 const Store = require("electron-store")
 const hasbin = require('hasbin');
@@ -10,37 +10,31 @@ const fontname = require('fontname')
 
 const isMac = process.platform === 'darwin'
 
-const app2 = express();
 const store = new Store();
 const userFontsFolder = path.join(app.getPath('userData'),"fonts")
 
-const server = app2.listen(0, () => {
-	console.log(`Server running on port ${server.address().port}`);
-});
 
 const imInstalled = hasbin.sync('magick');
 
-app2.use(express.urlencoded({limit: '200mb', extended: true, parameterLimit: 500000}));
-
-app2.get("/dropImage", (req, res) => {
-	Jimp.read(req.query.file, (err, image) => {
+ipcMain.on('drop-image', (event, arg) => {
+    let json = {}
+    Jimp.read(arg, (err, image) => {
 		if (err) {
-			res.json({
-				"filename": "error not an image",
-				"image": "error not an image"
-			})
+            json.filename = "error not an image"
+            json.image = "error not an image"
+            event.sender.send('drop-image-response', json)
 		} else {
 			image.getBase64(Jimp.AUTO, (err, ret) => {
-				res.json({
-					"filename": path.basename(req.query.file),
-					"image": ret
-				});
+                json.filename = path.basename(arg)
+                json.image = ret
+                event.sender.send('drop-image-response', json)
 			})
 		}
 	})
 })
 
-app2.get("/uploadImage", (req, res) => {
+ipcMain.on('upload-image', (event, arg) => {
+    let json = {}
     const options = {
 		defaultPath: store.get("uploadImagePath", app.getPath('pictures')),
 		properties: ['openFile'],
@@ -52,15 +46,14 @@ app2.get("/uploadImage", (req, res) => {
         if (!result.canceled) {
             Jimp.read(result.filePaths[0], (err, image) => {
                 if (err) {
-                    console.log(err);
-                    res.end()
+                    json.filename = "error not an image"
+                    json.image = "error not an image"
+                    event.sender.send('add-image-response', json)
                 } else {
                     image.getBase64(Jimp.AUTO, (err, ret) => {
-                        res.json({
-                            "filename": path.basename(result.filePaths[0]),
-                            "image": ret
-                          });
-                        res.end();
+                        json.filename = path.basename(result.filePaths[0])
+                        json.image = ret
+                        event.sender.send('add-image-response', json)
                     })
                 }
             });
@@ -71,8 +64,9 @@ app2.get("/uploadImage", (req, res) => {
     })
 })
 
-app2.get("/customFont", (req, res) => {
-	const options = {
+ipcMain.on('upload-font', (event, arg) => {
+    let json = {}
+    const options = {
 		defaultPath: store.get("uploadFontPath", app.getPath('desktop')),
 		properties: ['openFile'],
 		filters: [
@@ -87,7 +81,7 @@ app2.get("/customFont", (req, res) => {
 				const fontMeta = fontname.parse(fs.readFileSync(result.filePaths[0]))[0];
 				var ext = getExtension(result.filePaths[0])
 				var fontPath = url.pathToFileURL(result.filePaths[0])
-				var json = {
+				json = {
 					"status": "ok",
 					"fontName": fontMeta.fullName,
 					"fontStyle": fontMeta.fontSubfamily,
@@ -98,23 +92,20 @@ app2.get("/customFont", (req, res) => {
 					"fontPath": filePath
 				};
 				//fs.copyFileSync(result.filePaths[0], filePath)
-				res.json(json)
-				res.end()
+				event.sender.send('add-font-response', json)
 			} catch (err) {
-				const json = {
+				json = {
 					"status": "error",
 					"fontName": path.basename(result.filePaths[0]),
 					"fontPath": result.filePaths[0],
 					"message": err
 				}
-				res.json(json)
-				res.end()
+				event.sender.send('add-font-response', json)
 				//fs.unlinkSync(result.filePaths[0])
 			}
 		} else {
-			res.json({"status":"cancelled"})
-			res.end()
-			console.log("cancelled")
+            json.status = "cancelled"
+			event.sender.send('add-font-response', json)
 		}
 	}).catch(err => {
 		console.log(err)
@@ -126,13 +117,14 @@ app2.get("/customFont", (req, res) => {
 	})
 })
 
-app2.get("/dropFont", (req, res) => {
-	try {
-		const filePath = path.join(userFontsFolder,path.basename(req.query.file))
-		const fontMeta = fontname.parse(fs.readFileSync(req.query.file))[0];
-		var ext = getExtension(req.query.file)
-		var fontPath = url.pathToFileURL(req.query.file)
-		var json = {
+ipcMain.on('drop-font', (event, arg) => {
+    let json = {}
+    try {
+		const filePath = path.join(userFontsFolder,path.basename(arg))
+		const fontMeta = fontname.parse(fs.readFileSync(arg))[0];
+		var ext = getExtension(arg)
+		var fontPath = url.pathToFileURL(arg)
+		json = {
 			"status": "ok",
 			"fontName": fontMeta.fullName,
 			"fontStyle": fontMeta.fontSubfamily,
@@ -143,19 +135,45 @@ app2.get("/dropFont", (req, res) => {
 			"fontPath": filePath
 		};
 		// const fs = require('fs')fs.copyFileSync(req.query.file, filePath)
-		res.json(json)
-		res.end()
+		event.sender.send('add-font-response', json)
 	} catch (err) {
-		const json = {
+		json = {
 			"status": "error",
 			"fontName": path.basename(req.query.file),
 			"fontPath": req.query.file,
 			"message": err
 		}
-		res.json(json)
-		res.end()
+		event.sender.send('add-font-response', json)
 		//fs.unlinkSync(req.query.file)
 	}
+})
+
+ipcMain.on('save-logo', (event, arg) => {
+    const buffer = Buffer.from(arg.image.replace(/^data:image\/(png|gif|jpeg);base64,/,''), 'base64');
+	const filename = arg.filename
+	
+	const options = {
+		defaultPath: increment(store.get("downloadPath", app.getPath('downloads')) + '/' + filename+'.png',{fs: true})
+	}
+
+    dialog.showSaveDialog(null, options).then((result) => {
+        if (!result.canceled) {
+            Jimp.read(buffer, (err, image) => {
+				if (err) {
+					console.log(err);
+				} else {
+					image.autocrop().resize(300,300);
+					image.write(result.filePath);
+				}
+			})
+            event.sender.send('save-logo-response', null)
+        } else {
+            event.sender.send('save-logo-response', null)
+        }
+    }).catch((err) => {
+        console.log(err);
+        event.sender.send('save-logo-response', null)
+    });
 })
 
 function createWindow () {
@@ -269,7 +287,7 @@ function createWindow () {
   
     //mainWindow.loadURL(`file://${__dirname}/index.html?port=${server.address().port}&preferredColorFormat=${preferredColorFormat}&preferredTexture=${preferredTexture}`);
 
-    mainWindow.loadURL(`file://${__dirname}/index.html?port=${server.address().port}`)
+    mainWindow.loadURL(`file://${__dirname}/index.html?`)
 
     //mainWindow.loadURL(`file://${__dirname}/index.html`)
   
