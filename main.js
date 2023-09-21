@@ -217,7 +217,12 @@ function createWindow () {
           {
               click: () => mainWindow.webContents.send('save','click'),
               accelerator: isMac ? 'Cmd+S' : 'Control+S',
-              label: 'Save Font',
+              label: 'Save Logo',
+          },
+          {
+            click: () => mainWindow.webContents.send('import-image','click'),
+            accelerator: isMac ? 'Cmd+I' : 'Control+I',
+            label: 'Import Image',
           },
           isMac ? { role: 'close' } : { role: 'quit' }
           ]

@@ -22,6 +22,7 @@
         <link href='./scripts/dd.css' rel='stylesheet' type='text/css'>
         <script>
             const { ipcRenderer } = require('electron');
+            require('./renderer.js')
 
             const params = new URLSearchParams(window.location.search)
 
@@ -2791,73 +2792,29 @@
 		return false;
 	});
 
+    $("#colorSquare").on("click",function(e) {
+        logoCreator.renderAll();
+		$(this).removeClass("colorSquareSelected").addClass("colorSquareActive");
+		var object = logoCreator.getActiveObject();
+		logoCreator.hoverCursor='url(./images/eyedropper.cur),default';
+		logoCreator.on('mouse:move', function(e) {	
+			var ctx = logoCreator.contextContainer;
+			var mouse = logoCreator.getPointer(e.e);
+			var mouse = logoCreator.getPointer(e.originalEvent);
+			var x = Math.round((mouse.x+logoCreator.viewportTransform[4])* fabric.devicePixelRatio*logoCreator.getZoom())
+			var y = Math.round((mouse.y+logoCreator.viewportTransform[5])* fabric.devicePixelRatio*logoCreator.getZoom())
+			var px = ctx.getImageData(x, y, 1, 1).data;
+			color = 'rgb('+px[0]+', '+px[1]+', '+px[2]+')';
+			var hex = rgb2hex(px[0],px[1],px[2])
+			$("#colorSquare").css("background",hex);
+			$("#colorSquare").css("color",idealTextColor(hex));
+			$("#colorSquare").val(hex);	
+		});
+	})
+
     $("#localFont").on("click",function(e) {
         ipcRenderer.send('upload-font', null)
     })
-
-    $("#localFontFolder").on("click",function() {
-		const fontErrors = []
-		//showOverlay("Loading User Fonts...")
-		$.ajax({
-			type: "GET",
-			url: "http://127.0.0.1:"+port+"/localFontFolder",
-			success: function(data) {
-				if (data.result == 'success') {
-					const topFontDropdown= document.getElementById("topFont").msDropdown;
-                    const bottomFontDropdown = document.getElementById("bottomFont").msDropdown;
-                    var observers = []
-					for (result of data.fonts) {
-						if (result.status == "ok") {
-                            $("head").prepend("<style>@font-face {\n   font-family: '"+result.fontName+"';\n   src: url('"+result.fontData+"') format('truetype');\n}\n."+result.fontName+" { font-family: '"+result.fontName+"';}\n</style>");
-							fontList.push(result.fontName)
-                            const name = result.fontName
-							opentype.load(result.fontPath, (err,font) => {
-								if (err || !font) {
-									console.log(err)
-									return;
-								}
-								
-								var thumbText = font.getPath("ABC 123", 0, 0, 96)
-								var outPath = thumbText.toPathData(5)
-
-								thumbText = new fabric.Path(outPath, {
-									left: 0,
-									originX: 'center',
-									originY: 'center',
-									centeredScaling: true,
-									centeredRotation: true,
-									fill: 'black',
-									height: '80px'
-								})
-
-								thumb = thumbText.toDataURL()
-
-								if (findIndexByText(topFontDropdown, name) == -1) {
-									topFontDropdown.add({text:name, value:name, image:thumb},0)
-                                }
-
-                                if (findIndexByText(bottomFontDropdown, name) == -1) {
-									bottomFontDropdown.add({text:name, value:name, image:thumb},0)
-                                }
-
-								sortFontDropdowns()
-							})
-						} else {
-							fontErrors.push(result.fontName)
-						}
-					}
-				}
-				//hideOverlay()
-				if (fontErrors.length > 0) {
-					var message = "The following fonts failed to import, and have been removed from your user fonts folder:\r\n\r\n"
-					for (font of fontErrors) {
-						message += font+"\r\n"
-					}
-					alert(message)
-				}
-			}
-		})
-	})
 
     $("#uploadImage").on("click",function(e) {
         ipcRenderer.send('upload-image', null)
@@ -2999,6 +2956,33 @@
             return false;
         return true;
     }
+
+    function rgb2hex(r,g,b) {
+		return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+	}
+	
+	function componentToHex(c) {
+		var hex = c.toString(16);
+		return hex.length == 1 ? "0" + hex : hex;
+	}
+
+	function idealTextColor(bgColor) {
+		var nThreshold = 105;
+		var components = getRGBComponents(bgColor);
+		var bgDelta = (components.R * 0.299) + (components.G * 0.587) + (components.B * 0.114);
+		return ((255 - bgDelta) < nThreshold) ? "#000000" : "#ffffff";   
+	}
+
+    function getRGBComponents(color) {       
+		var r = color.substring(1, 3);
+		var g = color.substring(3, 5);
+		var b = color.substring(5, 7);
+		return {
+		   R: parseInt(r, 16),
+		   G: parseInt(g, 16),
+		   B: parseInt(b, 16)
+		};
+	}
 
     function refreshDropdowns(data,thumb) {
 		data.thumb = thumb.toDataURL()
