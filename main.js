@@ -26,12 +26,12 @@ ipcMain.on('drop-image', (event, arg) => {
 		if (err) {
             json.filename = "error not an image"
             json.image = "error not an image"
-            event.sender.send('drop-image-response', json)
+            event.sender.send('add-image-response', json)
 		} else {
 			image.getBase64(Jimp.AUTO, (err, ret) => {
                 json.filename = path.basename(arg)
                 json.image = ret
-                event.sender.send('drop-image-response', json)
+                event.sender.send('add-image-response', json)
 			})
 		}
 	})
