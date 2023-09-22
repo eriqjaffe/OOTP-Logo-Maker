@@ -22,6 +22,7 @@
         <link href='./scripts/dd.css' rel='stylesheet' type='text/css'>
         <script>
             const { ipcRenderer } = require('electron');
+
             require('./renderer.js')
 
             const params = new URLSearchParams(window.location.search)
@@ -46,7 +47,7 @@
             <div style="width: 1100px; margin:0 auto;">
                 <div class="section group" style="position:relative;">
                     <div class="col span_1_of_2" style="float:left;">
-                        <canvas id="tempCanvas" width="500" height="500"></canvas>
+                        <canvas id="tempCanvas" width="500" height="500" style="display:none;"></canvas>
                         <div id="canvasContainer" style="width:500px; height:575px;">
                             <div id="editorContainer">
 						        <canvas id="infoCanvas" width="500" height="500" style="position:absolute; top:50; float:left; z-index:1; pointer-events:none;"></canvas>
@@ -2697,15 +2698,7 @@
         let json = {}
         json.filename = outputName()
         json.image = logoCreator.toDataURL()
-        console.log(json)
         ipcRenderer.send('save-logo', json)
-/*         $.ajax({
-            type: "GET",
-            url: "http://127.0.0.1:"+port+"/helloWorld",
-            success: function(data) { 
-                alert(data.status)
-            }
-        }) */
     })
 
     ipcRenderer.on('save-logo-response', (event, response) => {
@@ -2929,12 +2922,20 @@
                         $("#selectedImageDiv").css("display","block");
                     }
                     $("#tipSpan").html("Use Arrow keys to move image 1 pixel.<br>Use Shift + Arrow keys to move image 10 pixels.<br>Use Delete key to remove image.");
-/*                                     $(".copypaste").each(function() {
-                        $(this).css("display","inline-block")
-                    }) */
                 })
-                var h = image.height;
-                var w = image.width;
+
+                // scale image to fit in 300px box while maintaining aspect ratio
+                let imgRatio = image.width / image.height;
+                if (imgRatio <= 1) {
+                    if (image.height > 300) {
+                        image.scaleToHeight(300);
+                    }
+                } else {
+                    if (image.width > 300) {
+                        image.scaleToWidth(300);
+                    }
+                }
+
                 logoCreator.add(image);
                 image.set({"left":250,"top":250});
                 image.setCoords();
