@@ -958,8 +958,8 @@
 
     function changePatternColor(color) {
         const clr = (color == null) ? 'transparent' : color.toHexString()
-        const p = logoCreator.getObjects('group').find(o => o.id == "pattern")
-        p.getObjects('path').forEach(function(o) {
+        const g = logoCreator.getObjects('group').find(o => o.id == "pattern")
+        g.getObjects('path').forEach(function(o) {
             o.set("fill",clr)
         })
         logoCreator.renderAll()
