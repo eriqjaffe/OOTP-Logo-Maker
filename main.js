@@ -7,6 +7,7 @@ const Jimp = require('jimp')
 const Store = require("electron-store")
 const hasbin = require('hasbin');
 const fontname = require('fontname')
+const ColorThief = require('colorthief');
 
 const isMac = process.platform === 'darwin'
 
@@ -22,19 +23,28 @@ const imInstalled = hasbin.sync('magick');
 
 ipcMain.on('drop-image', (event, arg) => {
     let json = {}
-    Jimp.read(arg, (err, image) => {
-		if (err) {
-            json.filename = "error not an image"
+    ColorThief.getPalette(arg, 8)
+        .then(palette => { 
+            Jimp.read(arg, (err, image) => {
+                if (err) {
+                    json.filename = "error not an image"
+                    json.image = "error not an image"
+                    event.sender.send('add-image-response', json)
+                } else {
+                    image.getBase64(Jimp.AUTO, (err, ret) => {
+                        json.filename = path.basename(arg)
+                        json.image = ret
+                        json.palette = palette
+                        event.sender.send('add-image-response', json)
+                    })
+                }
+            })
+        })
+        .catch(err => { json.filename = "error not an image"
             json.image = "error not an image"
-            event.sender.send('add-image-response', json)
-		} else {
-			image.getBase64(Jimp.AUTO, (err, ret) => {
-                json.filename = path.basename(arg)
-                json.image = ret
-                event.sender.send('add-image-response', json)
-			})
-		}
-	})
+            event.sender.send('add-image-response', err) 
+        })
+    
 })
 
 ipcMain.on('upload-image', (event, arg) => {
@@ -48,19 +58,27 @@ ipcMain.on('upload-image', (event, arg) => {
 	}
     dialog.showOpenDialog(null, options).then(result => {
         if (!result.canceled) {
-            Jimp.read(result.filePaths[0], (err, image) => {
-                if (err) {
-                    json.filename = "error not an image"
-                    json.image = "error not an image"
-                    event.sender.send('add-image-response', json)
-                } else {
-                    image.getBase64(Jimp.AUTO, (err, ret) => {
-                        json.filename = path.basename(result.filePaths[0])
-                        json.image = ret
+            ColorThief.getPalette(result.filePaths[0], 8)
+            .then(palette => { 
+                Jimp.read(result.filePaths[0], (err, image) => {
+                    if (err) {
+                        json.filename = "error not an image"
+                        json.image = "error not an image"
                         event.sender.send('add-image-response', json)
-                    })
-                }
-            });
+                    } else {
+                        image.getBase64(Jimp.AUTO, (err, ret) => {
+                            json.filename = path.basename(result.filePaths[0])
+                            json.image = ret
+                            json.palette = palette
+                            event.sender.send('add-image-response', json)
+                        })
+                    }
+                })
+            })
+            .catch(err => { json.filename = "error not an image"
+                json.image = "error not an image"
+                event.sender.send('add-image-response', err) 
+            })
         } else {
             res.end()
 			  console.log("cancelled")

@@ -2942,6 +2942,17 @@
                 logoCreator.setActiveObject(image)
                 logoCreator.requestRenderAll()
                 logoCreator.renderAll();
+
+                let hexPalette = []
+
+                for (x of data.palette) {
+                    hexPalette.push(rgb2hex(x[0], x[1], x[2]))
+                }
+
+                $(".selector").each(function() {
+                    $(this).spectrum("option", "palette", hexPalette)
+                })
+
             }
         }
     }
