@@ -511,6 +511,7 @@
                                 <input type="button" class="button" id="clearTexture" value="Clear Custom Texture" style="display:none;">
                                 <input type="button" class="button" id="aboutCapmaker" value="About Cap Maker">
                                 <input type="button" id="testFloodFill" class="button" value="Test Flood Fill">
+                                <input type="button" class="button" id="openFontFolder" value="Open User Fonts Folder">
                             </div>
                         </div>
                     </div>
@@ -2789,6 +2790,71 @@
         }
     })
 
+    $("#localFontFolder").on("click",function() {
+        console.log('started looking for fonts')
+		//showOverlay("Loading User Fonts...")
+		ipcRenderer.send('local-font-folder', null)
+	})
+
+    ipcRenderer.on('local-font-folder-response', (event, data) => {
+        console.log(data)
+		let fontErrors = []
+		if (data.result == 'success') {
+            let topFontDropdown = document.getElementById("topFont").msDropdown;
+            let bottomFontDropdown = document.getElementById("bottomFont").msDropdown
+
+			for (result of data.fonts) {
+				if (result.status == "ok") {
+					fontList.push(result.fontName)
+					var thumb = null;
+					const name = result.fontName
+					const value = result.fontPath
+					opentype.load(result.fontPath, (err,font) => {
+						if (err || !font) {
+							console.log(err)
+							return;
+						}
+						
+						var thumbText = font.getPath("ABC 123", 0, 0, 96)
+						var outPath = thumbText.toPathData(5)
+
+						thumbText = new fabric.Path(outPath, {
+							left: 0,
+							originX: 'center',
+							originY: 'center',
+							centeredScaling: true,
+							centeredRotation: true,
+							fill: 'black',
+							height: '80px'
+						})
+
+						thumb = thumbText.toDataURL()
+
+						if (findIndexByText(topFontDropdown, name) == -1) {
+							topFontDropdown.add({text:name, value:value, image:thumb},0)
+							if (value == prefs.preferredNameFont) { topFontDropdown.selectedIndex = 0 }
+
+							bottomFontDropdown.add({text:name, value:value, image:thumb},0)
+							if (value == prefs.preferredNumberFont) { bottomFontDropdown.selectedIndex = 0 }
+						}
+
+						sortFontDropdowns()
+					})
+				} else {
+					fontErrors.push(result.fontName)
+				}
+			}
+		}
+		//hideOverlay()
+		if (fontErrors.length > 0) {
+			var message = "The following fonts failed to import, and have been removed from your user fonts folder:\r\n\r\n"
+			for (font of fontErrors) {
+				message += font+"\r\n"
+			}
+			alert(message)
+		}
+	})
+
     function rotateStitches(angle) {
         const s = logoCreator.getObjects('group').find(o => o.id == "stitches")
         const r = logoCreator.getObjects('group').find(o => o.id == "roundelStitches")
@@ -2880,6 +2946,10 @@
     $("#uploadImage").on("click",function(e) {
         ipcRenderer.send('upload-image', null)
     })
+
+    $("#openFontFolder").on("click",function(e) {
+		ipcRenderer.send('open-font-folder', null)
+	})
 
     function dropFile(file, tab) {
         console.log(file)

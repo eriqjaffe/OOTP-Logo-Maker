@@ -8,6 +8,7 @@ const Store = require("electron-store")
 const hasbin = require('hasbin');
 const fontname = require('fontname')
 const ColorThief = require('colorthief');
+const font2base64 = require("node-font2base64")
 
 const isMac = process.platform === 'darwin'
 
@@ -17,7 +18,6 @@ const userFontsFolder = path.join(app.getPath('userData'),"fonts")
 if (!fs.existsSync(userFontsFolder)) {
     fs.mkdirSync(userFontsFolder);
 }
-
 
 const imInstalled = hasbin.sync('magick');
 
@@ -113,7 +113,7 @@ ipcMain.on('upload-font', (event, arg) => {
 					"fontData": fontPath.href,
 					"fontPath": filePath
 				};
-				//fs.copyFileSync(result.filePaths[0], filePath)
+				fs.copyFileSync(result.filePaths[0], filePath)
 				event.sender.send('add-font-response', json)
 			} catch (err) {
 				json = {
@@ -156,7 +156,7 @@ ipcMain.on('drop-font', (event, arg) => {
 			"fontData": fontPath.href,
 			"fontPath": filePath
 		};
-		// const fs = require('fs')fs.copyFileSync(req.query.file, filePath)
+		fs.copyFileSync(req.query.file, filePath)
 		event.sender.send('add-font-response', json)
 	} catch (err) {
 		json = {
@@ -197,6 +197,54 @@ ipcMain.on('save-logo', (event, arg) => {
         event.sender.send('save-logo-response', null)
     });
 })
+
+ipcMain.on('local-font-folder', (event, arg) => {
+	const jsonObj = {}
+	const jsonArr = []
+
+	filenames = fs.readdirSync(userFontsFolder);
+	for (i=0; i<filenames.length; i++) {
+        console.log(filenames)
+		if (path.extname(filenames[i]).toLowerCase() == ".ttf" || path.extname(filenames[i]).toLowerCase() == ".otf") {
+			const filePath = path.join(userFontsFolder,filenames[i])
+			try {
+				const fontMeta = fontname.parse(fs.readFileSync(filePath))[0];
+				var ext = getExtension(filePath)
+				const dataUrl = font2base64.encodeToDataUrlSync(filePath)
+				var fontPath = url.pathToFileURL(filePath)
+				var json = {
+					"status": "ok",
+					"fontName": fontMeta.fullName,
+					"fontStyle": fontMeta.fontSubfamily,
+					"familyName": fontMeta.fontFamily,
+					"fontFormat": ext,
+					"fontMimetype": 'font/' + ext,
+					"fontData": fontPath.href,
+					"fontBase64": dataUrl,
+					"fontPath": filePath,
+				};
+				jsonArr.push(json)
+			} catch (err) {
+				const json = {
+					"status": "error",
+					"fontName": path.basename(filePath),
+					"fontPath": filePath,
+					"message": err
+				}
+				jsonArr.push(json)
+				//fs.unlinkSync(filePath)
+			}
+		}
+	}
+	jsonObj.result = "success"
+	jsonObj.fonts = jsonArr
+	event.sender.send('local-font-folder-response', jsonObj)
+})
+
+ipcMain.on('open-font-folder', (event, arg) => {
+	shell.openPath(userFontsFolder)
+})
+
 
 function createWindow () {
     const mainWindow = new BrowserWindow({
