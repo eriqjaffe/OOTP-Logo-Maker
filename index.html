@@ -2832,10 +2832,12 @@
 
 						if (findIndexByText(topFontDropdown, name) == -1) {
 							topFontDropdown.add({text:name, value:value, image:thumb},0)
-							if (value == prefs.preferredNameFont) { topFontDropdown.selectedIndex = 0 }
+                            topFontDropdown.selectedIndex = 0
+							//if (value == prefs.preferredNameFont) { topFontDropdown.selectedIndex = 0 }
 
 							bottomFontDropdown.add({text:name, value:value, image:thumb},0)
-							if (value == prefs.preferredNumberFont) { bottomFontDropdown.selectedIndex = 0 }
+                            bottomFontDropdown.selectedIndex = 0
+							//if (value == prefs.preferredNumberFont) { bottomFontDropdown.selectedIndex = 0 }
 						}
 
 						sortFontDropdowns()
