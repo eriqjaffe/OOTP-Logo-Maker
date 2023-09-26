@@ -48,7 +48,7 @@
             <div style="width: 1100px; margin:0 auto;">
                 <div class="section group" style="position:relative;">
                     <div class="col span_1_of_2" style="float:left;">
-                        <canvas id="tempCanvas" width="500" height="500" style="display:none;"></canvas>
+                        <canvas id="tempCanvas" width="500" height="500" style="display:none;""></canvas>
                         <div id="canvasContainer" style="width:500px; height:575px;">
                             <div id="editorContainer">
 						        <canvas id="infoCanvas" width="500" height="500" style="position:absolute; top:50; float:left; z-index:1; pointer-events:none;"></canvas>
@@ -197,8 +197,8 @@
                                                 <input type="number" class="topTextClass" id="topTextSize" value="40" min="0" max="359" onkeypress="return isNumberKey(event)">
                                                 <label>&nbsp;Spacing:&nbsp;</label>
                                                 <input type="number" class="topTextClass" id="topTextSpacing" value="0" style="width:40px;" onkeypress="return isNumberKey(event)">
-                                                <label>&nbsp;Baseline:&nbsp;</label>
-                                                <input type="number" class="topTextClass" id="topTextDeltaY" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">
+                                                <!--<label>&nbsp;Baseline:&nbsp;</label>
+                                                <input type="number" class="topTextClass" id="topTextDeltaY" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">-->
                                             </td>
                                         </tr>
                                         <tr class="color_tr">
@@ -299,8 +299,8 @@
                                                 <input type="number" class="bottomTextClass" id="bottomTextSize" value="40" min="0" max="359" onkeypress="return isNumberKey(event)">
                                                 <label>&nbsp;Spacing:&nbsp;</label>
                                                 <input type="number" class="bottomTextClass" id="bottomTextSpacing" value="0" style="width:40px;" onkeypress="return isNumberKey(event)">
-                                                <label>&nbsp;Baseline:&nbsp;</label>
-                                                <input type="number" class="bottomTextClass" id="bottomTextDeltaY" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">
+                                                <!--<label>&nbsp;Baseline:&nbsp;</label>
+                                                <input type="number" class="bottomTextClass" id="bottomTextDeltaY" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">-->
                                             </td>
                                         </tr>
                                         <tr class="color_tr">
@@ -451,27 +451,6 @@
                                                     
                                                 </td>
                                             </tr>
-                                            <!--<tr>
-                                                <td><center>
-                                                    <input type="button" id="makeCenterIceLogo" class="button" value="Make Center Ice Logo">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><center>
-                                                    <input type="button" class="button makeAd" data-adLoc="1" value="&nbsp;Ad Location 1&nbsp;">
-                                                    <input type="button" class="button makeAd" data-adLoc="2" value="&nbsp;Ad Location 2&nbsp;">
-                                                    <input type="button" class="button makeAd" data-adLoc="3" value="&nbsp;Ad Location 3&nbsp;">
-                                                    <input type="button" class="button makeAd" data-adLoc="4" value="&nbsp;Ad Location 4&nbsp;">
-                                                </center></td>
-                                            </tr>
-                                            <tr>
-                                                <td><center>
-                                                    <input type="button" class="button makeAd" data-adLoc="5" value="&nbsp;Ad Location 5&nbsp;">
-                                                    <input type="button" class="button makeAd" data-adLoc="6" value="&nbsp;Ad Location 6&nbsp;">
-                                                    <input type="button" class="button makeAd" data-adLoc="7" value="&nbsp;Ad Location 7&nbsp;">
-                                                    <input type="button" class="button makeAd" data-adLoc="8" value="&nbsp;Ad Location 8&nbsp;">
-                                                </center></td>
-                                            </tr>-->
                                             <tr>
                                                 <td><center>
                                                     <input type="button" id="colorSquare" class="colorSquare" value="Click To Choose Color" style="margin-right:10px;"><span id="chosenCoordinates" style="margin-right:5px;"></span>
@@ -482,6 +461,7 @@
                                             </tr>
                                             <tr>
                                                 <td><center>
+                                                    <input type="button" class="button" id="cropImage" value="Crop To Shape">
                                                     <input type="button" class="button" id="border" value="Remove Border">
                                                     <input type="button" class="button removeColor" id="removeColorRange" value="Remove Section" data-x="0" data-y="0">
                                                     <input type="button" class="button removeColor" id="removeAllColor" value="Remove All" data-x="0" data-y="0">
@@ -503,13 +483,9 @@
                             </div>
                             <div style="text-align:center; margin-top:5px;">
                                 <input type="button" class="button" id="straightenObject" value="Reset Object Rotation" style="display:none;">
-                                <!--<input type="button" class="button" id="saveCap" value="Save Ballcap">-->
                                 <input type="button" class="button" id="save" value="Save Logo">
-                                <input type="button" class="button" id="loadCap" value="Load Ballcap">
-                                <!--<input type="button" class="button" id="imgur" value="Upload To Imgur" style="display:none;">-->
                                 <input type="button" class="button" id="toggleGuides" value="Hide Guides">
-                                <input type="button" class="button" id="clearTexture" value="Clear Custom Texture" style="display:none;">
-                                <input type="button" class="button" id="aboutCapmaker" value="About Cap Maker">
+                                <input type="button" class="button" id="aboutLogoMaker" value="About Logo Maker">
                                 <input type="button" id="testFloodFill" class="button" value="Test Flood Fill">
                                 <input type="button" class="button" id="openFontFolder" value="Open User Fonts Folder">
                             </div>
@@ -539,21 +515,7 @@
     </body>
     <script>
 
-    $("#testFloodFill").on("click",function(e) {
-        var img = logoCreator.getObjects("image")[0]
-        console.log(img)
-        var canvas = document.getElementById('tempCanvas');
-        var context = canvas.getContext('2d');
-        var image = new Image();
-        image.onload = function() {
-            context.drawImage(image, img.top/2, img.left/2);
-            context.fillStyle = "rgba(255,255,0,1.0)";
-            context.fillFlood(250, 250, 75);
-        };
-        image.src = img.toDataURL()
-        
-       // logoCreator.renderAll()
-    })
+
 
     let yearRange = ""
 
@@ -1062,8 +1024,8 @@
     })
 
     $("#topTextDeltaY").on("change", function(e) {
-        const r = logoCreator.getObjects('text').find(o => o.id = 'roundelTextTop')
-        r.set('deltaY', parseInt($(this).val()))
+        const r = logoCreator.getObjects('text').find(o => o.id = 'homePlateText')
+        r.set('deltaY',50)
         logoCreator.renderAll()
     })
 
@@ -1297,6 +1259,16 @@
             absolutePositioned: true
         })
 
+        circleInnerClip = new fabric.Circle({
+            radius: 132,
+			top: 250,
+			left: 250,
+			originX: 'center',
+            originY: 'center',
+            id: 'circleInnerClip',
+            absolutePositioned: true
+        })
+
         homePlateClip = new fabric.Path("m 100.00017,99.99967 v 150 l 150.00002,150 149.99999,-150 v -150 H 250.00019 Z",{
             id: 'homePlateClip',
             absolutePositioned: true
@@ -1313,10 +1285,33 @@
             absolutePositioned: true
         })
 
+        squareInnerClip = new fabric.Rect({
+            id: 'squareInnerClip',
+            height: 262,
+            width: 262,
+            originX: 'center',
+            originY: 'center',
+            top: 250,
+            left: 250,
+            absolutePositioned: true
+        })
+
         roundedSquareClip = new fabric.Rect({
             id: 'roundedSquareClip',
             height: 300,
             width: 300,
+            originX: 'center',
+            originY: 'center',
+            top: 250,
+            left: 250,
+            rx: 10,
+            absolutePositioned: true
+        })
+
+        roundedSquareInnerClip = new fabric.Rect({
+            id: 'roundedSquareClip',
+            height: 262,
+            width: 262,
             originX: 'center',
             originY: 'center',
             top: 250,
@@ -2380,6 +2375,10 @@
             logoCreator.getObjects().forEach(function (o) {
                 if (o.type != "image") {
                     o.set("visible",false)
+                } else {
+                    if (o.clipPath != undefined || o.clipPath != null) {
+                        o.set({clipPath: squareClip})
+                    }
                 }
             })
             logoCreator.renderAll()
@@ -2395,6 +2394,7 @@
         const c = logoCreator.getObjects('group').find(o => o.id == "circleStitches")
         const p = logoCreator.getObjects('group').find(o => o.id == 'pattern')
         const d = logoCreator.getObjects('group').find(o => o.id == "decor")
+        const i = logoCreator.getObjects('image')
         const visible = $("#stitchesCheck").is(":checked")
         const patternVisible = $("#patternCheck").is(":checked")
         const cf = logoCreator.getObjects().find(o => o.id == 'circleFill')
@@ -2466,6 +2466,11 @@
                 $("#decorSelect").attr("disabled",false)
                 $("#roundelSpan").css("display","inline-block")
                 $("#otherSpan").css("display","none")
+                for (img of i) {
+                    if (img.clipPath != undefined || img.clipPath != null) {
+                        img.set({clipPath: roundelClip})
+                    }
+                }
                 break;
             case "circle":
                 s.set({
@@ -2499,6 +2504,11 @@
                 rf.set({
                     visible: false
                 })
+                for (img of i) {
+                    if (img.clipPath != undefined || img.clipPath != null) {
+                        img.set({clipPath: circleInnerClip})
+                    }
+                }
                 $("#roundelDecorSelector").spectrum('disable')
                 $("#decorSelect").attr("disabled",true)
                 $("#roundelSpan").css("display","none")
@@ -2536,6 +2546,11 @@
                 rf.set({
                     visible: false
                 })
+                for (img of i) {
+                    if (img.clipPath != undefined || img.clipPath != null) {
+                        img.set({clipPath: homePlateClip})
+                    }
+                }
                 $("#roundelDecorSelector").spectrum('disable')
                 $("#decorSelect").attr("disabled",true)
                 $("#roundelSpan").css("display","none")
@@ -2573,6 +2588,11 @@
                 rf.set({
                     visible: false
                 })
+                for (img of i) {
+                    if (img.clipPath != undefined || img.clipPath != null) {
+                        img.set({clipPath: squareInnerClip})
+                    }
+                }
                 $("#roundelDecorSelector").spectrum('disable')
                 $("#decorSelect").attr("disabled",true)
                 $("#roundelSpan").css("display","none")
@@ -2610,6 +2630,11 @@
                 rf.set({
                     visible: true
                 })
+                for (img of i) {
+                    if (img.clipPath != undefined || img.clipPath != null) {
+                        img.set({clipPath: roundedSquareInnerClip})
+                    }
+                }
                 $("#roundelDecorSelector").spectrum('disable')
                 $("#decorSelect").attr("disabled",true)
                 $("#roundelSpan").css("display","none")
@@ -2939,6 +2964,36 @@
 			$("#colorSquare").val(hex);	
 		});
 	})
+
+    $("#cropImage").on("click",function(e) {
+        let o = logoCreator.getActiveObject()
+        let cp = ""
+        switch ($("#logoShapeSelect").val()) {
+            case "roundel":
+                cp = roundelClip
+                break;
+            case "circle":
+                cp = circleClip
+                break;
+            case "square":
+                cp = squareClip
+                break;
+            case "homePlate":
+                cp = homePlateClip
+                break;
+            case "roundedSquare":
+                cp = roundedSquareClip
+                break;
+        }
+        if ($(this).val() == "Crop To Shape") {
+            $(this).val("Overflow Shape")
+            o.set({ clipPath: cp })
+        } else {
+            $(this).val("Crop To Shape")
+            o.set({ clipPath: null })
+        }
+        logoCreator.renderAll()
+    })
 
     $("#localFont").on("click",function(e) {
         ipcRenderer.send('upload-font', null)
