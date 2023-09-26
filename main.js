@@ -9,6 +9,7 @@ const hasbin = require('hasbin');
 const fontname = require('fontname')
 const ColorThief = require('colorthief');
 const font2base64 = require("node-font2base64")
+const chokidar = require("chokidar")
 
 const isMac = process.platform === 'darwin'
 
@@ -18,6 +19,19 @@ const userFontsFolder = path.join(app.getPath('userData'),"fonts")
 if (!fs.existsSync(userFontsFolder)) {
     fs.mkdirSync(userFontsFolder);
 }
+
+if (!fs.existsSync(userFontsFolder+"/README.txt")) {
+	var writeStream = fs.createWriteStream(userFontsFolder+"/README.txt");
+	writeStream.write("TTF and OTF fonts dropped into this folder will automatically be imported into the Logo Maker!\r\n\r\nFonts removed from this folder will still be available in the Logo Maker until you quit the app, and they will not reload after that.")
+	writeStream.end()
+}
+
+const watcher = chokidar.watch(userFontsFolder, {
+	ignored: /(^|[\/\\])\../, // ignore dotfiles
+	persistent: true
+});
+
+watcher.on('ready', () => {})
 
 const imInstalled = hasbin.sync('magick');
 
@@ -204,8 +218,7 @@ ipcMain.on('local-font-folder', (event, arg) => {
 
 	filenames = fs.readdirSync(userFontsFolder);
 	for (i=0; i<filenames.length; i++) {
-        console.log(filenames)
-		if (path.extname(filenames[i]).toLowerCase() == ".ttf" || path.extname(filenames[i]).toLowerCase() == ".otf") {
+        if (path.extname(filenames[i]).toLowerCase() == ".ttf" || path.extname(filenames[i]).toLowerCase() == ".otf") {
 			const filePath = path.join(userFontsFolder,filenames[i])
 			try {
 				const fontMeta = fontname.parse(fs.readFileSync(filePath))[0];
@@ -256,6 +269,10 @@ function createWindow () {
           contextIsolation: false
       }
     })
+
+    watcher.on('add', (path, stats) => {
+		mainWindow.webContents.send('updateFonts','click')
+	})
     
     const template = [
       ...(isMac ? [{

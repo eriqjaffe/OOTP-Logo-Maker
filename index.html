@@ -2080,8 +2080,6 @@
             logoCreator.add(roundedSquareTextTop)
 
             topTextObjects.push(roundelTextTop, circleTextTop, homePlateText, squareTextTop, roundedSquareTextTop)
-
-            console.log(topTextObjects)
         }).catch(function(e) {
             console.log(e)
             alert('font loading failed ' + data.familyName);
@@ -2791,24 +2789,23 @@
     })
 
     $("#localFontFolder").on("click",function() {
-        console.log('started looking for fonts')
-		//showOverlay("Loading User Fonts...")
+        //showOverlay("Loading User Fonts...")
 		ipcRenderer.send('local-font-folder', null)
 	})
 
     ipcRenderer.on('local-font-folder-response', (event, data) => {
-        console.log(data)
-		let fontErrors = []
+        let fontErrors = []
 		if (data.result == 'success') {
             let topFontDropdown = document.getElementById("topFont").msDropdown;
             let bottomFontDropdown = document.getElementById("bottomFont").msDropdown
 
 			for (result of data.fonts) {
-				if (result.status == "ok") {
+                if (result.status == "ok") {
+                    $("head").prepend("<style>@font-face {\n   font-family: '"+result.familyName+"';\n   src: url('"+result.fontData+"') format('truetype');\n}\n."+data.familyName+" { font-family: '"+result.familyName+"';}\n</style>");
 					fontList.push(result.fontName)
 					var thumb = null;
 					const name = result.fontName
-					const value = result.fontPath
+					const value = result.familyName
 					opentype.load(result.fontPath, (err,font) => {
 						if (err || !font) {
 							console.log(err)
@@ -2832,11 +2829,11 @@
 
 						if (findIndexByText(topFontDropdown, name) == -1) {
 							topFontDropdown.add({text:name, value:value, image:thumb},0)
-                            topFontDropdown.selectedIndex = 0
+                            
 							//if (value == prefs.preferredNameFont) { topFontDropdown.selectedIndex = 0 }
 
 							bottomFontDropdown.add({text:name, value:value, image:thumb},0)
-                            bottomFontDropdown.selectedIndex = 0
+                            
 							//if (value == prefs.preferredNumberFont) { bottomFontDropdown.selectedIndex = 0 }
 						}
 
@@ -2846,6 +2843,8 @@
 					fontErrors.push(result.fontName)
 				}
 			}
+            topFontDropdown.selectedIndex = 0
+            bottomFontDropdown.selectedIndex = 0
 		}
 		//hideOverlay()
 		if (fontErrors.length > 0) {
@@ -3217,7 +3216,6 @@
                        + $("#teamBGColor").spectrum("get").toHex().toLowerCase()
                        + "_"
                        + $("#teamTextColor").spectrum("get").toHex().toLowerCase()
-        console.log(outputName)
         return outputName
     }
 
