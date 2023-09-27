@@ -442,7 +442,7 @@ ipcMain.on('remove-all-color', (event, arg) => {
 			json.status = 'error'
 			json.message = err
 			console.log(err);
-			event.sender.send('remove-all-color-response', json)
+			event.sender.send('imagemagick-response', json)
 		} else {
 			image.write(tempDir+"/temp.png", (err) => {
 				try {
@@ -453,7 +453,7 @@ ipcMain.on('remove-all-color', (event, arg) => {
 								json.status = 'error'
 								json.message = err
 								console.log(err);
-								event.sender.send('remove-all-color-response', json)
+								event.sender.send('imagemagick-response', json)
 							} else {
 								image.getBase64(Jimp.AUTO, (err, ret) => {
 									json.status = 'success'
@@ -467,7 +467,7 @@ ipcMain.on('remove-all-color', (event, arg) => {
 									json.pScaleY = pScaleY
 									json.pictureName = pictureName
 									json.colorSquare = colorSquare
-									event.sender.send('remove-all-color-response', json)
+									event.sender.send('imagemagick-response', json)
 								})
 							}
 						})
@@ -476,7 +476,7 @@ ipcMain.on('remove-all-color', (event, arg) => {
 					json.status = 'error'
 					json.message = "An error occurred - please make sure ImageMagick is installed"
 					console.log(err);
-					event.sender.send('remove-all-color-response', json)
+					event.sender.send('imagemagick-response', json)
 				}
 				
 			})

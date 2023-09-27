@@ -466,10 +466,15 @@
                                                 <td><center>
                                                     <input type="button" class="button" id="cropImage" value="Crop To Shape">
                                                     <!--<input type="button" class="button" id="border" value="Remove Border">-->
-                                                    <input type="button" class="button removeColor" id="makeTransparent" value="Remove Background" data-x="0" data-y="0">
+                                                    <input type="button" class="button removeColor" id="makeTransparent" value="Make Background Transparent" data-x="0" data-y="0">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><center>
                                                     <input type="button" class="button removeColor" id="removeColorRange" value="Remove Color Section" data-x="0" data-y="0">
+                                                    <input type="button" class="button removeColor" id="removeAllColor" value="Remove Color From Image" data-x="0" data-y="0">
                                                     <input type="button" class="button replaceColor" id="replaceColorRange" value="Replace Color Section" data-x="0" data-y="0">
-                                                    <input type="button" class="button replaceColor" id="replaceAllColor" value="Replace All Of Color" data-x="0" data-y="0">
+                                                    <input type="button" class="button replaceColor" id="replaceAllColor" value="Replace Color From Image" data-x="0" data-y="0">
                                                 </td>
                                             </tr>
                                         </table>
@@ -2991,11 +2996,42 @@
 		}
 	})
 
+    $("#removeAllColor").on("click",function(e) {
+		var canvas = logoCreator
+        var canvasName = "logoCreator"
+        var fuzz = parseInt($("#colorFuzz").val());
+        var color = $("#colorSquare").val();
+        var colorSquare = "#colorSquare"
+		var x = $(this).data("x");
+		var y = $(this).data("y");
+		var action = $(this).attr("id");
+		
+		if (canvas.getActiveObject()) {
+			var object = canvas.getActiveObject()
+			var idx = canvas.getObjects().indexOf(object)
+			if (object.get('type') == "image") {
+				//showOverlay("Processing Image...")
+				var pictureName = object.get('name');
+				var pLeft = object.get('left')
+				var pTop = object.get('top')
+				var pScaleX = object.get('scaleX')
+				var pScaleY = object.get('scaleY')
+				var pX = x / pScaleX
+				var pY = y / pScaleY
+				$(colorSquare).removeClass("colorSquareActive").removeClass("colorSquareSelected");
+				var theImage = object._originalElement.currentSrc;
+				theImage = theImage.substr(theImage.indexOf(',') + 1).toString();
+				ipcRenderer.send('remove-all-color', {imgdata: theImage, x: pX, y: pY, color: color, action: action, fuzz: fuzz, filename: pictureName, canvas: canvasName, pLeft: pLeft, pTop: pTop, pScaleX: pScaleX, pScaleY: pScaleY, pictureName: pictureName, colorSquare: colorSquare, color: color})			
+				return false;
+			}
+		}
+	})
+
 	ipcRenderer.on('imagemagick-response', (event, response) => {
         console.log(response)
 		if (response.status != "success") {
 			alert(response.message)
-			hideOverlay()
+			//hideOverlay()
 		} else {
 			let canvas = logoCreator
 			let data = response.data
