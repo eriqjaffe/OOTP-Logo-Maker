@@ -256,7 +256,7 @@ ipcMain.on('replace-color', (event, arg) => {
 		if (err) {
 			json.result = "error"
 			json.message = err
-			event.sender.send('replace-color-response', json)
+			event.sender.send('imagemagick-response', json)
 		} else {
 			image.write(tempDir+"/temp.png");
       if (action.slice(-17) == "ReplaceColorRange") {
@@ -270,7 +270,7 @@ ipcMain.on('replace-color', (event, arg) => {
 						if (err) {
 							json.result = "error"
 							json.message = err
-							event.sender.send('replace-color-response', json)
+							event.sender.send('imagemagick-response', json)
 						} else {
 							image.getBase64(Jimp.AUTO, (err, ret) => {
 								json.result = "success"
@@ -285,7 +285,7 @@ ipcMain.on('replace-color', (event, arg) => {
 								json.newColorSquare = newColorSquare
 								json.pScaleX = pScaleX
 								json.pScaleY = pScaleY
-								event.sender.send('replace-color-response', json)
+								event.sender.send('imagemagick-response', json)
 							})
 						}
 					})

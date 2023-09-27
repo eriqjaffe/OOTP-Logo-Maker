@@ -776,6 +776,20 @@
 		}
 	})
 
+    $("#replacementColor").spectrum({
+		type: "color",
+		showAlpha: false,
+		showInput: true,
+		preferredFormat: "hex",
+		showInitial: true,
+		showPalette: true,
+		showButtons: true,
+		color: "#FF0000",
+		beforeShow: function(color) {
+			//$(this).spectrum("option", "palette", commonPalette)
+		}
+	})
+
     $(".textSelector").each(function() {
         const el = $(this).attr('id')
 		var color = $(this).attr('id');
@@ -3025,6 +3039,53 @@
 				return false;
 			}
 		}
+	})
+
+    $(".replaceColor").on("click",function(e) {
+		$("#replaceColorSubmit").data("action",$(this).attr("id"))
+        $("#replaceColorSubmit").data("x",$(this).data("x"))
+        $("#replaceColorSubmit").data("y",$(this).data("y"))
+        var color = $("#colorSquare").val();
+        if ($("#replaceColorDiv").css("display") == "none") {
+            $("#replaceColorDiv").slideToggle();
+        }
+	})
+
+    $("#replaceColorSubmit").on("click",function(e) {
+        var canvas = logoCreator
+        var canvasName = "logoCreator"
+        var fuzz = parseInt($("#colorFuzz").val());
+        var color = $("#colorSquare").val();
+        var newcolor = $("#replacementColor").spectrum("get").toHexString();
+        var colorSquare = "#colorSquare"
+        var newColorSquare = "#replacemenColor"
+		var action = $(this).data("action");
+		var x = $(this).data("x");
+		var y = $(this).data("y");
+		if (canvas.getActiveObject()) {
+			var object = canvas.getActiveObject()
+			var idx = canvas.getObjects().indexOf(object)
+			if (object.get('type') == "image") {
+				//showOverlay("Processing Image...")
+				var pictureName = object.get('name');
+				$(colorSquare).removeClass("colorSquareActive").removeClass("colorSquareSelected");
+				
+				var theImage = object._originalElement.currentSrc;
+
+				var pLeft = object.get('left')
+				var pTop = object.get('top')
+				var pScaleX = object.get('scaleX')
+				var pScaleY = object.get('scaleY')
+				var pX = x / pScaleX
+				var pY = y / pScaleY
+
+				theImage = theImage.substr(theImage.indexOf(',') + 1).toString();
+				
+				ipcRenderer.send('replace-color', [theImage, pLeft, pTop, pScaleX, pScaleY, action, color, newcolor, fuzz, pictureName, canvasName, x, y, colorSquare, newColorSquare ])
+			
+				return false;
+			}
+		}	
 	})
 
 	ipcRenderer.on('imagemagick-response', (event, response) => {
