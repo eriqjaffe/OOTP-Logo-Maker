@@ -1604,6 +1604,13 @@ image-q@^4.0.0:
   dependencies:
     "@types/node" "16.9.1"
 
+imagemagick-cli@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/imagemagick-cli/-/imagemagick-cli-0.5.0.tgz#907cb841787dd0548b2e9ab7cbc4d0fdb9efc55d"
+  integrity sha512-rlFbd3MrjysdavK0vUnwUxWvuEBHzXaK3LHVqBUIM6u+noKg5Vv2YljVmu78qEkDNIQ1+AS+17f3mgNMIe/Rlw==
+  dependencies:
+    debug "^4.1.1"
+
 inflight@^1.0.4:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/inflight/-/inflight-1.0.6.tgz#49bd6331d7d02d0c09bc910a1075ba8165b56df9"

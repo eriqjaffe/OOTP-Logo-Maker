@@ -462,11 +462,11 @@
                                             <tr>
                                                 <td><center>
                                                     <input type="button" class="button" id="cropImage" value="Crop To Shape">
-                                                    <input type="button" class="button" id="border" value="Remove Border">
-                                                    <input type="button" class="button removeColor" id="removeColorRange" value="Remove Section" data-x="0" data-y="0">
-                                                    <input type="button" class="button removeColor" id="removeAllColor" value="Remove All" data-x="0" data-y="0">
-                                                    <input type="button" class="button replaceColor" id="replaceColorRange" value="Replace Section" data-x="0" data-y="0">
-                                                    <input type="button" class="button replaceColor" id="replaceAllColor" value="Replace All" data-x="0" data-y="0">
+                                                    <!--<input type="button" class="button" id="border" value="Remove Border">-->
+                                                    <input type="button" class="button removeColor" id="makeTransparent" value="Remove Background" data-x="0" data-y="0">
+                                                    <input type="button" class="button removeColor" id="removeColor" value="Remove Color Section" data-x="0" data-y="0">
+                                                    <input type="button" class="button replaceColor" id="replaceColorRange" value="Replace Color Section" data-x="0" data-y="0">
+                                                    <input type="button" class="button replaceColor" id="replaceAllColor" value="Replace All Of Color" data-x="0" data-y="0">
                                                 </td>
                                             </tr>
                                         </table>
@@ -2423,7 +2423,6 @@
         })
     })
 
-
 	$("#logoShapeSelect").on("change",function(e){
 		const selected = $(this).val()
         if (selected == "none") {
@@ -2934,6 +2933,206 @@
 				message += font+"\r\n"
 			}
 			alert(message)
+		}
+	})
+
+    $("#border").on("click",function(e) {
+        let canvas = logoCreator
+        let canvasName = "logoCreator"
+        let fuzz = parseInt($("#colorFuzz").val())
+		let action = $(this).data("action");
+		if (canvas.getActiveObject()) {
+			//showOverlay()
+			var object = canvas.getActiveObject()
+			var idx = canvas.getObjects().indexOf(object)
+			if (object.get('type') == "image") {
+				var imLeft = object.get("left");
+				var imTop = object.get("top");
+				var pictureName = object.get('name');
+				$("#colorSquare").removeClass("colorSquareActive").removeClass("colorSquareSelected");
+				var theImage = object._originalElement.currentSrc;	
+				theImage = theImage.substr(theImage.indexOf(',') + 1).toString();
+				ipcRenderer.send('remove-border', [theImage, 1, 1, "removeBorder", null, null, fuzz, pictureName, canvasName, imLeft, imTop])
+				return false;
+			}
+		}	
+	})
+
+	ipcRenderer.on('imagemagick-response', (event, response) => {
+        console.log(response)
+		if (response.status != "success") {
+			alert(response.message)
+			hideOverlay()
+		} else {
+			let canvas = logoCreator
+			let data = response.data
+			let imLeft = response.pLeft
+			let imTop = response.pTop
+			let pictureName = response.pictureName
+		
+			var object = canvas.getActiveObject()
+			var idx = canvas.getObjects().indexOf(object)
+
+			var imgObj = new Image();
+			imgObj.src = data;
+			imgObj.onload = function () {
+				var image = new fabric.Image(imgObj);
+				image.set({
+					originX: 'center',
+					originY: 'center',
+					left: imLeft,
+					top: imTop,
+					perPixelTargetFind: true,
+					centeredScaling: true,
+					centeredRotation: true,
+					name: pictureName,
+					id: pictureName
+				});
+				
+				image.filters.push(new fabric.Image.filters.Resize({
+					resizeType: 'lanczos', // typo fixed
+					lanczosLobes: 2 // typo fixed
+				}));
+				
+				image.on('object:modified',function() {
+					imLeft = image.get('left')
+					imTop = image.get('top');
+				});
+
+				image.on('selected',function() {
+					$("#fileName").html(image.get('id'));
+					if ($("#trimImageDiv").css("display") == "none") {
+						$("#trimImageDiv").css("display","block");
+						$("#uploadImageDiv").css("display","none");
+						$("#selectedImageDiv").css("display","block");
+					}
+					$("#tipSpan").html("Use Arrow keys to move image 1 pixel.<br>Use Shift + Arrow keys to move image 10 pixels.<br>Use Delete key to remove image.");
+					$(".copypaste").each(function() {
+						$(this).css("display","inline-block")
+					})
+				})
+				
+				canvas.remove(object);
+
+                let imgRatio = image.width / image.height;
+                if (imgRatio <= 1) {
+                    if (image.height > 300) {
+                        image.scaleToHeight(300);
+                    }
+                } else {
+                    if (image.width > 300) {
+                        image.scaleToWidth(300);
+                    }
+                }
+
+				canvas.add(image);
+				image.moveTo(idx);
+				canvas.renderAll();
+				imLeft = image.get('left')
+				imTop = image.get('top');
+			}
+		}
+	})
+
+    $("#makeTransparent").on("click",function(e) {
+        let canvas = logoCreator
+        let canvasName = "logoCreator"
+        let fuzz = parseInt($("#colorFuzz").val())
+        let colorSquare = "#colorSquare"
+		let x = $(this).data("x");
+		let y = $(this).data("y");
+		let action = $(this).attr("id");
+		let color = $("#colorSquare").val();
+		if (canvas.getActiveObject()) {
+			var object = canvas.getActiveObject()
+			var idx = canvas.getObjects().indexOf(object)
+			if (object.get('type') == "image") {
+				//showOverlay("Processing Image...")
+				var pictureName = object.get('name');
+				var pLeft = object.get('left')
+				var pTop = object.get('top')
+				var pScaleX = object.get('scaleX')
+				var pScaleY = object.get('scaleY')
+				var pX = x / pScaleX
+				var pY = y / pScaleY
+				$(colorSquare).removeClass("colorSquareActive").removeClass("colorSquareSelected");
+				var theImage = object._originalElement.currentSrc;
+				theImage = theImage.substr(theImage.indexOf(',') + 1).toString();	
+				ipcRenderer.send('make-transparent', {imgdata: theImage, x: pX, y: pY, color: color, action: action, fuzz: fuzz, filename: pictureName, canvas: canvasName, pLeft: pLeft, pTop: pTop, pScaleX: pScaleX, pScaleY: pScaleY, pictureName: pictureName, colorSquare: colorSquare})		
+				return false;
+			}
+		}
+	})
+
+	ipcRenderer.on('send--response', (event, response) => {
+		if (response.status != "success") {
+			alert(response.message)
+			//hideOverlay()
+		} else {
+			let canvas = logoCreator
+			let data = response.data
+			let x = response.x
+			let y = response.y
+			let pTop = response.pTop
+			let pLeft = response.pLeft
+			let pScaleX = response.pScaleX
+			let pScaleY = response.pScaleY
+			let pictureName = response.pictureName
+			let colorSquare = response.colorSquare
+			let object = canvas.getActiveObject()
+			let idx = canvas.getObjects().indexOf(object)
+			var imgObj = new Image();
+			imgObj.src = data;
+			imgObj.onload = function () {
+				var image = new fabric.Image(imgObj);
+				image.set({
+					originX: 'center',
+					originY: 'center',
+					left: pLeft,
+					top: pTop,
+					scaleX: pScaleX,
+					scaleY: pScaleY,
+					perPixelTargetFind: true,
+					centeredScaling: true,
+					centeredRotation: true,
+					name: pictureName,
+					id: pictureName
+				});
+				
+				image.filters.push(new fabric.Image.filters.Resize({
+					resizeType: 'lanczos', // typo fixed
+					lanczosLobes: 2 // typo fixed
+				}));	
+				
+				image.on('object:modified',function() {
+					imLeft = image.get('left');
+					imTop = image.get('top');
+				});
+
+				image.on('selected',function() {
+					$("#fileName").html(image.get('id'));
+					if ($("#trimImageDiv").css("display") == "none") {
+						$("#trimImageDiv").css("display","block");
+						$("#uploadImageDiv").css("display","none");
+						$("#selectedImageDiv").css("display","block");
+					}
+					$("#tipSpan").html("Use Arrow keys to move image 1 pixel.<br>Use Shift + Arrow keys to move image 10 pixels.<br>Use Delete key to remove image.");
+					$(".copypaste").each(function() {
+						$(this).css("display","inline-block")
+					})
+				})
+				
+				canvas.remove(object);
+				canvas.add(image);
+				image.moveTo(idx);
+				canvas.renderAll();
+				imLeft = image.get('left');
+				imTop = image.get('top');
+				$(colorSquare).val("Select Color");
+				$(colorSquare).css("background","#FFFFFF");
+				$(colorSquare).css("color","#000000");
+				//hideOverlay()
+			}
 		}
 	})
 
