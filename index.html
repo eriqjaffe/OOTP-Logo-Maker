@@ -3039,8 +3039,10 @@
         if ($(this).val() == "Crop To Shape") {
             $(this).val("Overflow Shape")
             o.set({ clipPath: cp })
+            o.moveTo(5)
         } else {
             $(this).val("Crop To Shape")
+            o.bringToFront()
             o.set({ clipPath: null })
         }
         logoCreator.renderAll()
@@ -3184,7 +3186,7 @@
                 logoCreator.add(image);
                 image.set({"left":250,"top":250});
                 image.setCoords();
-                image.moveTo(5)
+                //image.moveTo(5)
                 logoCreator.setActiveObject(image)
                 logoCreator.requestRenderAll()
                 logoCreator.renderAll();
