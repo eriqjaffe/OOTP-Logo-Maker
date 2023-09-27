@@ -1023,12 +1023,6 @@
         logoCreator.renderAll()
     })
 
-    $("#topTextDeltaY").on("change", function(e) {
-        const r = logoCreator.getObjects('text').find(o => o.id = 'homePlateText')
-        r.set('deltaY',50)
-        logoCreator.renderAll()
-    })
-
     $("#bottomTextSize").on("change",function(e) {
         for (o of bottomTextObjects) {
             o.set('fontSize', parseInt($(this).val()))
@@ -1952,6 +1946,25 @@
         logoCreator.add(squareFill)
         logoCreator.add(roundedSquareFill)
         logoCreator.add(decor)
+
+        roundelTextTopPath = new fabric.Path("M 250,155.26758 A 94.733186,94.733186 0 0 1 344.73242,250 94.733186,94.733186 0 0 1 250,344.73242 94.733186,94.733186 0 0 1 155.26758,250 94.733186,94.733186 0 0 1 250,155.26758 Z", {
+            visible: false,
+            selectable:false,
+            evented: false,
+            originX: 'center',
+            originY: 'center',
+            id: 'roundelTextTopPath'
+        })
+
+        circleTextTopPath = new fabric.Path("M 250,128.13672 A 121.86793,121.86793 0 0 1 371.86328,250 121.86793,121.86793 0 0 1 250,371.86328 121.86793,121.86793 0 0 1 128.13672,250 121.86793,121.86793 0 0 1 250,128.13672 Z", {
+            visible: false,
+            selectable:false,
+            evented: false,
+            id: 'circleTextTopPath'
+        })
+
+        logoCreator.add(roundelTextTopPath)
+        logoCreator.add(circleTextTopPath)
 		
         var topfont = new FontFaceObserver($("#topFont").val())
         topfont.load()
@@ -1969,11 +1982,7 @@
                 stroke: 'black',
                 paintFirst: "stroke",
                 strokeWidth: 4,
-                path: new fabric.Path("M 250,155.26758 A 94.733186,94.733186 0 0 1 344.73242,250 94.733186,94.733186 0 0 1 250,344.73242 94.733186,94.733186 0 0 1 155.26758,250 94.733186,94.733186 0 0 1 250,155.26758 Z", {
-                    visible: false,
-                    selectable:false,
-                    evented: false,
-                }),
+                path: roundelTextTopPath,
                 pathAlign: 'descender',
                 borderColor: 'red',
                 cornerColor: 'yellow',
@@ -2003,11 +2012,7 @@
                 stroke: 'black',
                 paintFirst: "stroke",
                 strokeWidth: 4,
-                path: new fabric.Path("M 250,128.13672 A 121.86793,121.86793 0 0 1 371.86328,250 121.86793,121.86793 0 0 1 250,371.86328 121.86793,121.86793 0 0 1 128.13672,250 121.86793,121.86793 0 0 1 250,128.13672 Z", {
-                    visible: false,
-                    selectable:false,
-                    evented: false,
-                }),
+                path: circleTextTopPath,
                 pathAlign: 'ascender',
                 borderColor: 'red',
                 cornerColor: 'yellow',
