@@ -409,6 +409,8 @@
                                                     <option value="polkaDots">Polka Dots</option>
                                                     <option value="intersectingCircles">Intersecting Circles</option>
                                                     <option value="stripes">Stripes</option>
+                                                    <option value="diamondsPattern">Diamonds</option>
+                                                    <option value="diamondsFilled">Diamonds 2</option>
                                                 </select><br><div style="padding-bottom:5px;"></div>
                                                 <label style="padding-right:5px;">Angle:</label>
                                                 <input id="patternRotation" type="number" value="0" min="0" max="359" onkeypress="return isNumberKey(event)" disabled>
@@ -1993,8 +1995,25 @@
 			selectable: false
         })
 
+        diamondsPattern = new fabric.Path(patterns.diamondsPattern, {
+            fill: initialColors["pattern"],
+            id: 'diamondsPattern',
+            originX: "center",
+            originY: "center",
+            visible: false,
+			selectable: false
+        })
 
-        pattern = new fabric.Group([grid, verticalLines, verticalLinesTight, bricks, herringbone, honeycomb, houndstooth, checkerboard, chevron, polkaDots, intersectingCircles, stripes],{
+        diamondsFilled = new fabric.Path(patterns.diamondsFilled, {
+            fill: initialColors["pattern"],
+            id: 'diamondsFilled',
+            originX: "center",
+            originY: "center",
+            visible: false,
+			selectable: false
+        })
+
+        pattern = new fabric.Group([grid, verticalLines, verticalLinesTight, bricks, herringbone, honeycomb, houndstooth, checkerboard, chevron, polkaDots, intersectingCircles, stripes, diamondsPattern, diamondsFilled],{
             id: 'pattern',
             visible: false,
             originX: "center",
