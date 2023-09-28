@@ -23,6 +23,7 @@
         <link href='./scripts/dd.css' rel='stylesheet' type='text/css'>
         <script>
             const { ipcRenderer } = require('electron');
+            const { sort, sortFn, convert } = require('color-sorter')
 
             require('./renderer.js')
 
@@ -3042,6 +3043,7 @@
 	})
 
     $(".replaceColor").on("click",function(e) {
+        console.log($(this).attr("id"))
 		$("#replaceColorSubmit").data("action",$(this).attr("id"))
         $("#replaceColorSubmit").data("x",$(this).data("x"))
         $("#replaceColorSubmit").data("y",$(this).data("y"))
@@ -3089,8 +3091,7 @@
 	})
 
 	ipcRenderer.on('imagemagick-response', (event, response) => {
-        console.log(response)
-		if (response.status != "success") {
+        if (response.status != "success") {
 			alert(response.message)
 			//hideOverlay()
 		} else {
@@ -3106,7 +3107,7 @@
 			var imgObj = new Image();
 			imgObj.src = data;
 			imgObj.onload = function () {
-				var image = new fabric.Image(imgObj);
+                var image = new fabric.Image(imgObj);
 				image.set({
 					originX: 'center',
 					originY: 'center',
@@ -3576,7 +3577,7 @@
                 }
 
                 $(".selector").each(function() {
-                    $(this).spectrum("option", "palette", hexPalette)
+                    $(this).spectrum("option", "palette", sort([...hexPalette]))
                 })
 
             }

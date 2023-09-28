@@ -254,12 +254,12 @@ ipcMain.on('replace-color', (event, arg) => {
 	var buffer = Buffer.from(imgdata.replace(/^data:image\/(png|gif|jpeg);base64,/,''), 'base64');
 	Jimp.read(buffer, (err, image) => {
 		if (err) {
-			json.result = "error"
+			json.status = "error"
 			json.message = err
 			event.sender.send('imagemagick-response', json)
 		} else {
 			image.write(tempDir+"/temp.png");
-      if (action.slice(-17) == "ReplaceColorRange") {
+      if (action == "replaceColorRange") {
 				cmdString = 'magick convert '+tempDir+'/temp.png -fuzz '+fuzz+'% -fill '+newcolor+' -draw "color '+x+','+y+' floodfill" '+tempDir+'/temp.png';		
 			} else {
 				cmdString = 'magick convert '+tempDir+'/temp.png -fuzz '+fuzz+'% -fill '+newcolor+' -opaque '+color+' '+tempDir+'/temp.png';	
@@ -268,12 +268,12 @@ ipcMain.on('replace-color', (event, arg) => {
 				imagemagickCli.exec(cmdString).then(({ stdout, stderr }) => {
 					Jimp.read(tempDir+"/temp.png", (err, image) => {
 						if (err) {
-							json.result = "error"
+							json.status = "error"
 							json.message = err
 							event.sender.send('imagemagick-response', json)
 						} else {
 							image.getBase64(Jimp.AUTO, (err, ret) => {
-								json.result = "success"
+								json.status = "success"
 								json.data = ret
 								json.pTop = pTop
 								json.pLeft = pLeft
