@@ -306,7 +306,7 @@
                                             <td style="text-align:right;">
                                                 <!--<input id="textRotation" type="number" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">-->
                                                 <input type="range" class="range" id="textRotation" value="0" min="-180" max="180" style="margin-left:5px; margin-right:5px;"> 
-                                                <input id="textRotationAmount" type="number" value="0" min="-180" max="180" onkeypress="return isNumberKey(event)">
+                                                <input id="textRotationAmount" type="number" value="0" min="-180" max="180" onkeypress="return isNumberOrMinusKey(event)">
                                             </td>
                                         </tr>
                                         <tr class="color_tr">
@@ -462,7 +462,7 @@
                                                     <input type="button" id="colorSquare" class="colorSquare" value="Click To Choose Color" style="margin-right:10px;"><span id="chosenCoordinates" style="margin-right:5px;"></span>
                                                     Fuzz %:
                                                     <input type="range" class="range" id="colorFuzz" value="40" min="1" max="100" style="margin-left:5px; margin-right:5px;"> 
-                                                    <span id="fuzzAmount">40</span>%
+                                                    <input id="fuzzAmount" type="number" value="40" min="1" max="100" onkeypress="return isNumberKey(event)">
                                                 </td>
                                             </tr>
                                             <tr>
@@ -1111,29 +1111,59 @@
     })
 
     $("#textRotationAmount").on("change",function(e) {
+        let angle = 0
         if ($(this).val().length < 1) {
+            angle = 0
+        }
+        if ($(this).val() < -180) { 
+            angle = -180
+        }
+        if ($(this).val() > 180) { 
+            angle = 180
+        }
+        $(this).val(angle)
+        $("#textRotation").val(angle)
+        logoCreator.getObjects('text').forEach(function(o) {
+            switch (o.id) {
+                case "roundelTextTop":
+                    o.set("angle", (angle + 180) % 360)
+                    break;
+                case "roundelTextBottom":
+                    o.set("angle", angle)
+                    break;
+                case "circleTextTop":
+                    o.set("angle", (angle + 180) % 360)
+                    break;
+                case "circleTextBottom":
+                    o.set("angle", angle)
+                    break;
+            }
+        })
+        const d = logoCreator.getObjects('group').find(o => o.id == "decor")
+        d.set("angle",angle)
+        logoCreator.renderAll()
+    })
+
+    $(document).on('input', '#colorFuzz', function() {
+        $("#fuzzAmount").val(parseInt($(this).val()))
+    })
+
+    $("#fuzzAmount").on("input",function(e) {
+        $("#colorFuzz").val(parseInt($(this).val()))
+    })
+
+    $("#fuzzAmount").on("change",function(e) {
+        if ($(this).val().length < 1) { 
             $(this).val(0)
-            $("#textRotation").val(0)
-            const angle = 0
-            logoCreator.getObjects('text').forEach(function(o) {
-                switch (o.id) {
-                    case "roundelTextTop":
-                        o.set("angle", (angle + 180) % 360)
-                        break;
-                    case "roundelTextBottom":
-                        o.set("angle", angle)
-                        break;
-                    case "circleTextTop":
-                        o.set("angle", (angle + 180) % 360)
-                        break;
-                    case "circleTextBottom":
-                        o.set("angle", angle)
-                        break;
-                }
-            })
-            const d = logoCreator.getObjects('group').find(o => o.id == "decor")
-            d.set("angle",angle)
-            logoCreator.renderAll()
+            $("#colorFuzz").val(0)
+        }
+        if ($(this).val() < 1) { 
+            $(this).val(1)
+            $("#colorFuzz").val(1)
+        }
+        if ($(this).val() > 100) { 
+            $(this).val(100)
+            $("#colorFuzz").val(100)
         }
     })
 
@@ -3643,12 +3673,19 @@
 		return ext[ext.length - 1];
 	}
 
-    function isNumberKey(event) {
+    function isNumberOrMinusKey(event) {
         const keyCode = event.keyCode || event.which;
         if ((keyCode >= 48 && keyCode <= 57) || keyCode === 45) {
             return true;
         }
         return false;
+    }
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
     }
 
     function rgb2hex(r,g,b) {
