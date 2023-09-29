@@ -448,6 +448,7 @@ legend {
 .colorSquare {
 	font-family: 'Sofia Sans Extra Condensed', sans-serif;
 	border: 1px solid #CCCCCC;
+    background: #F0F0F0
 	-moz-border-radius: 3px;  
 	border-radius: 3px;  
 	-webkit-border-radius: 20px;
@@ -461,25 +462,21 @@ legend {
 }
 
 .colorSquareActive {
-	border: 2px solid #FF0000;!important;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
-
-    -webkit-box-shadow: 0px 0px 4px #FF0000;
-    -moz-box-shadow: 0px 0px 4px #FF0000;
+	border: 2px solid #FF0000;
+	-moz-border-radius: 3px;  
+	border-radius: 3px;  
+	-webkit-border-radius: 20px;
+	width: 85px;
     box-shadow: 0px 0px 4px #FF0000;
 }
 
 .colorSquareSelected {
-	border: 2px solid #4CBB17;!important;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
-
-    -webkit-box-shadow: 0px 0px 4px #4CBB17;
-    -moz-box-shadow: 0px 0px 4px #4CBB17;
-    box-shadow: 0px 0px 4px #4CBB17;
+	border: 2px solid #0078D7;
+	-moz-border-radius: 3px;  
+	border-radius: 3px;  
+	-webkit-border-radius: 20px;
+	width: 85px;
+    box-shadow: 0px 0px 4px #0078D7;
 }
 
 .linkActive {

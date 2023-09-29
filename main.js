@@ -49,6 +49,7 @@ ipcMain.on('drop-image', (event, arg) => {
                     event.sender.send('add-image-response', json)
                 } else {
                     image.getBase64(Jimp.AUTO, (err, ret) => {
+						json.path = arg
                         json.filename = path.basename(arg)
                         json.image = ret
                         json.palette = palette
@@ -84,6 +85,7 @@ ipcMain.on('upload-image', (event, arg) => {
                         event.sender.send('add-image-response', json)
                     } else {
                         image.getBase64(Jimp.AUTO, (err, ret) => {
+							json.path = result.filePaths[0]
                             json.filename = path.basename(result.filePaths[0])
                             json.image = ret
                             json.palette = palette
@@ -195,6 +197,7 @@ ipcMain.on('remove-border', (event, arg) => {
 	let canvas = arg[8]
 	let imgLeft = arg[9]
 	let imgTop = arg[10]
+	let path = arg[11]
 	let json = {}
 	let buffer = Buffer.from(imgdata.replace(/^data:image\/(png|gif|jpeg);base64,/,''), 'base64');
 	
@@ -219,6 +222,7 @@ ipcMain.on('remove-border', (event, arg) => {
 								json.imgTop = imgTop
 								json.imgLeft = imgLeft
 								json.pictureName = pictureName
+								json.path = path
 								event.sender.send('imagemagick-response', json)
 							})
 						}
@@ -250,6 +254,7 @@ ipcMain.on('replace-color', (event, arg) => {
 	let y = arg[12]
 	let colorSquare = arg[13]
 	let newColorSquare = arg[14]
+	let path = arg[15]
 	let json = {}
 	var buffer = Buffer.from(imgdata.replace(/^data:image\/(png|gif|jpeg);base64,/,''), 'base64');
 	Jimp.read(buffer, (err, image) => {
@@ -285,6 +290,7 @@ ipcMain.on('replace-color', (event, arg) => {
 								json.newColorSquare = newColorSquare
 								json.pScaleX = pScaleX
 								json.pScaleY = pScaleY
+								json.path = path
 								event.sender.send('imagemagick-response', json)
 							})
 						}
@@ -312,6 +318,7 @@ ipcMain.on('make-transparent', (event, arg) => {
 	let colorSquare = arg.colorSquare
 	let fuzz = parseInt(arg.fuzz);
 	let canvas = arg.canvas
+	let path = arg.path
 	let json = {}
 	Jimp.read(buffer, (err, image) => {
 		if (err) {
@@ -346,6 +353,7 @@ ipcMain.on('make-transparent', (event, arg) => {
                                         json.pScaleY = pScaleY
                                         json.pictureName = pictureName
                                         json.colorSquare = colorSquare
+										json.path = path
                                         event.sender.send('imagemagick-response', json)
                                     })
                                 }
@@ -375,6 +383,7 @@ ipcMain.on('remove-color-range', (event, arg) => {
 	let colorSquare = arg.colorSquare
 	let fuzz = parseInt(arg.fuzz);
 	let canvas = arg.canvas
+	let path = arg.path
 	let json = {}
 	Jimp.read(buffer, (err, image) => {
 		if (err) {
@@ -406,6 +415,7 @@ ipcMain.on('remove-color-range', (event, arg) => {
 									json.pScaleY = pScaleY
 									json.pictureName = pictureName
 									json.colorSquare = colorSquare
+									json.path = path
 									event.sender.send('imagemagick-response', json)
 								})
 							}
@@ -436,6 +446,7 @@ ipcMain.on('remove-all-color', (event, arg) => {
 	let fuzz = parseInt(arg.fuzz);
 	let canvas = arg.canvas
 	let color = arg.color
+	let path = arg.path
 	let json = {}
 	Jimp.read(buffer, (err, image) => {
 		if (err) {
@@ -467,6 +478,7 @@ ipcMain.on('remove-all-color', (event, arg) => {
 									json.pScaleY = pScaleY
 									json.pictureName = pictureName
 									json.colorSquare = colorSquare
+									json.path = path
 									event.sender.send('imagemagick-response', json)
 								})
 							}

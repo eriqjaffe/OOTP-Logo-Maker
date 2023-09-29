@@ -472,6 +472,7 @@
                                                     <input type="button" class="button" id="cropImage" value="Crop To Shape">
                                                     <!--<input type="button" class="button" id="border" value="Remove Border">-->
                                                     <input type="button" class="button removeColor" id="makeTransparent" value="Make Background Transparent" data-x="0" data-y="0">
+                                                    <input type="button" class="button" id="resetImage" value="Reset Image" data-x="0" data-y="0">
                                                 </td>
                                             </tr>
                                             <tr>
@@ -3074,11 +3075,12 @@
 			if (object.get('type') == "image") {
 				var imLeft = object.get("left");
 				var imTop = object.get("top");
+                var path = object.get('path')
 				var pictureName = object.get('name');
-				$("#colorSquare").removeClass("colorSquareActive").removeClass("colorSquareSelected");
+				$("#colorSquare").removeClass("colorSquare").removeClass("colorSquareSelected");
 				var theImage = object._originalElement.currentSrc;	
 				theImage = theImage.substr(theImage.indexOf(',') + 1).toString();
-				ipcRenderer.send('remove-border', [theImage, 1, 1, "removeBorder", null, null, fuzz, pictureName, canvasName, imLeft, imTop])
+				ipcRenderer.send('remove-border', [theImage, 1, 1, "removeBorder", null, null, fuzz, pictureName, canvasName, imLeft, imTop, path])
 				return false;
 			}
 		}	
@@ -3105,10 +3107,11 @@
 				var pScaleY = object.get('scaleY')
 				var pX = x / pScaleX
 				var pY = y / pScaleY
-				$(colorSquare).removeClass("colorSquareActive").removeClass("colorSquareSelected");
+                var path = object.get('path')
+				$(colorSquare).removeClass("colorSquare").removeClass("colorSquareSelected");
 				var theImage = object._originalElement.currentSrc;
 				theImage = theImage.substr(theImage.indexOf(',') + 1).toString();	
-				ipcRenderer.send('remove-color-range', {imgdata: theImage, x: pX, y: pY, color: color, action: action, fuzz: fuzz, filename: pictureName, canvas: canvasName, pLeft: pLeft, pTop: pTop, pScaleX: pScaleX, pScaleY: pScaleY, pictureName: pictureName, colorSquare: colorSquare})		
+				ipcRenderer.send('remove-color-range', {imgdata: theImage, x: pX, y: pY, color: color, action: action, fuzz: fuzz, filename: pictureName, canvas: canvasName, pLeft: pLeft, pTop: pTop, pScaleX: pScaleX, pScaleY: pScaleY, pictureName: pictureName, colorSquare: colorSquare, path: path})		
 				return false;
 			}
 		}
@@ -3136,10 +3139,11 @@
 				var pScaleY = object.get('scaleY')
 				var pX = x / pScaleX
 				var pY = y / pScaleY
-				$(colorSquare).removeClass("colorSquareActive").removeClass("colorSquareSelected");
+                var path = object.get('path')
+				$(colorSquare).removeClass("colorSquare").removeClass("colorSquareSelected");
 				var theImage = object._originalElement.currentSrc;
 				theImage = theImage.substr(theImage.indexOf(',') + 1).toString();
-				ipcRenderer.send('remove-all-color', {imgdata: theImage, x: pX, y: pY, color: color, action: action, fuzz: fuzz, filename: pictureName, canvas: canvasName, pLeft: pLeft, pTop: pTop, pScaleX: pScaleX, pScaleY: pScaleY, pictureName: pictureName, colorSquare: colorSquare, color: color})			
+				ipcRenderer.send('remove-all-color', {imgdata: theImage, x: pX, y: pY, color: color, action: action, fuzz: fuzz, filename: pictureName, canvas: canvasName, pLeft: pLeft, pTop: pTop, pScaleX: pScaleX, pScaleY: pScaleY, pictureName: pictureName, colorSquare: colorSquare, color: color, path: path})			
 				return false;
 			}
 		}
@@ -3173,7 +3177,7 @@
 			if (object.get('type') == "image") {
 				//showOverlay("Processing Image...")
 				var pictureName = object.get('name');
-				$(colorSquare).removeClass("colorSquareActive").removeClass("colorSquareSelected");
+				$(colorSquare).removeClass("colorSquare").removeClass("colorSquareSelected");
 				
 				var theImage = object._originalElement.currentSrc;
 
@@ -3183,10 +3187,11 @@
 				var pScaleY = object.get('scaleY')
 				var pX = x / pScaleX
 				var pY = y / pScaleY
+                var path = object.get('path')
 
 				theImage = theImage.substr(theImage.indexOf(',') + 1).toString();
 				
-				ipcRenderer.send('replace-color', [theImage, pLeft, pTop, pScaleX, pScaleY, action, color, newcolor, fuzz, pictureName, canvasName, x, y, colorSquare, newColorSquare ])
+				ipcRenderer.send('replace-color', [theImage, pLeft, pTop, pScaleX, pScaleY, action, color, newcolor, fuzz, pictureName, canvasName, x, y, colorSquare, newColorSquare, path ])
 			
 				return false;
 			}
@@ -3203,6 +3208,7 @@
 			let imLeft = response.pLeft
 			let imTop = response.pTop
 			let pictureName = response.pictureName
+            let path = response.path
 		
 			var object = canvas.getActiveObject()
 			var idx = canvas.getObjects().indexOf(object)
@@ -3220,7 +3226,8 @@
 					centeredScaling: true,
 					centeredRotation: true,
 					name: pictureName,
-					id: pictureName
+					id: pictureName,
+                    path: path
 				});
 				
 				image.filters.push(new fabric.Image.filters.Resize({
@@ -3289,86 +3296,26 @@
 				var pScaleY = object.get('scaleY')
 				var pX = x / pScaleX
 				var pY = y / pScaleY
-				$(colorSquare).removeClass("colorSquareActive").removeClass("colorSquareSelected");
+                var path = object.get('path')
+				$(colorSquare).removeClass("colorSquare").removeClass("colorSquareSelected");
 				var theImage = object._originalElement.currentSrc;
 				theImage = theImage.substr(theImage.indexOf(',') + 1).toString();	
-				ipcRenderer.send('make-transparent', {imgdata: theImage, x: pX, y: pY, color: color, action: action, fuzz: fuzz, filename: pictureName, canvas: canvasName, pLeft: pLeft, pTop: pTop, pScaleX: pScaleX, pScaleY: pScaleY, pictureName: pictureName, colorSquare: colorSquare})		
+				ipcRenderer.send('make-transparent', {imgdata: theImage, x: pX, y: pY, color: color, action: action, fuzz: fuzz, filename: pictureName, canvas: canvasName, pLeft: pLeft, pTop: pTop, pScaleX: pScaleX, pScaleY: pScaleY, pictureName: pictureName, colorSquare: colorSquare, path: path})		
 				return false;
 			}
 		}
 	})
 
-	ipcRenderer.on('send--response', (event, response) => {
-		if (response.status != "success") {
-			alert(response.message)
-			//hideOverlay()
-		} else {
-			let canvas = logoCreator
-			let data = response.data
-			let x = response.x
-			let y = response.y
-			let pTop = response.pTop
-			let pLeft = response.pLeft
-			let pScaleX = response.pScaleX
-			let pScaleY = response.pScaleY
-			let pictureName = response.pictureName
-			let colorSquare = response.colorSquare
-			let object = canvas.getActiveObject()
-			let idx = canvas.getObjects().indexOf(object)
-			var imgObj = new Image();
-			imgObj.src = data;
-			imgObj.onload = function () {
-				var image = new fabric.Image(imgObj);
-				image.set({
-					originX: 'center',
-					originY: 'center',
-					left: pLeft,
-					top: pTop,
-					scaleX: pScaleX,
-					scaleY: pScaleY,
-					perPixelTargetFind: true,
-					centeredScaling: true,
-					centeredRotation: true,
-					name: pictureName,
-					id: pictureName
-				});
-				
-				image.filters.push(new fabric.Image.filters.Resize({
-					resizeType: 'lanczos', // typo fixed
-					lanczosLobes: 2 // typo fixed
-				}));	
-				
-				image.on('object:modified',function() {
-					imLeft = image.get('left');
-					imTop = image.get('top');
-				});
-
-				image.on('selected',function() {
-					$("#fileName").html(image.get('id'));
-					if ($("#trimImageDiv").css("display") == "none") {
-						$("#trimImageDiv").css("display","block");
-						$("#uploadImageDiv").css("display","none");
-						$("#selectedImageDiv").css("display","block");
-					}
-					$("#tipSpan").html("Use Arrow keys to move image 1 pixel.<br>Use Shift + Arrow keys to move image 10 pixels.<br>Use Delete key to remove image.");
-					$(".copypaste").each(function() {
-						$(this).css("display","inline-block")
-					})
-				})
-				
-				canvas.remove(object);
-				canvas.add(image);
-				image.moveTo(idx);
-				canvas.renderAll();
-				imLeft = image.get('left');
-				imTop = image.get('top');
-				$(colorSquare).val("Select Color");
-				$(colorSquare).css("background","#FFFFFF");
-				$(colorSquare).css("color","#000000");
-				//hideOverlay()
+    $("#resetImage").on("click",function(e) {
+        if (logoCreator.getActiveObject()) {
+			var object = logoCreator.getActiveObject()
+			var idx = logoCreator.getObjects().indexOf(object)
+			if (object.get('type') == "image") {
+                logoCreator.remove(object)
+                dropFile(object.get('path'), 0)
 			}
-		}
-	})
+        }
+    })
 
     function rotateStitches(angle) {
         const s = logoCreator.getObjects('group').find(o => o.id == "stitches")
@@ -3399,6 +3346,20 @@
         $("#trimImageDiv").css("display","none");
         $("#uploadImageDiv").css("display","block");
         $("#selectedImageDiv").css("display","none");
+        $("#replaceColorDiv").css("display","none")
+        $("#colorSquare").val("Click to Choose Color");	
+        $("#colorSquare").removeClass("colorSquareSelected").addClass("colorSquare");
+        $("#colorSquare").css("background","#F0F0F0");
+        $("#colorSquare").css("color",idealTextColor("#F0F0F0"));
+        $(".removeColor").each(function(e) {
+            $(this).data("x",0);
+            $(this).data("y",0);
+        })
+        $(".replaceColor").each(function(e) {
+            $(this).data("x",0);
+            $(this).data("y",0);
+        })
+        $("#chosenCoordinates").html("");
     })
 
     logoCreator.on('selection:updated', function(e) {
@@ -3436,7 +3397,7 @@
 
     $("#colorSquare").on("click",function(e) {
         logoCreator.renderAll();
-		$(this).removeClass("colorSquareSelected").addClass("colorSquareActive");
+		$(this).removeClass("colorSquareSelected").addClass("colorSquare");
 		var object = logoCreator.getActiveObject();
 		logoCreator.hoverCursor='url(./images/eyedropper.cur),default';
 		logoCreator.on('mouse:move', function(e) {	
@@ -3518,7 +3479,7 @@
 		activeCanvas = logoCreator;
 		if (logoCreator.hoverCursor != "move") {
 			var ctx = logoCreator.contextContainer;
-			$("#colorSquare").removeClass("colorSquareActive").addClass("colorSquareSelected");
+			$("#colorSquare").removeClass("colorSquare").addClass("colorSquareSelected");
 			logoCreator.hoverCursor='move';
 			logoCreator.off('mouse:move');
 			var object = logoCreator.getActiveObject();
@@ -3543,8 +3504,7 @@
 	})
 
     function dropFile(file, tab) {
-        console.log(file)
-		if ($.inArray(getExtension(file).toLowerCase(), validFontTypes) > -1) {
+        if ($.inArray(getExtension(file).toLowerCase(), validFontTypes) > -1) {
             ipcRenderer.send('drop-font', file)
         } else {
             if ($.inArray(getExtension(file).toLowerCase(), validImageTypes) > -1) {
@@ -3634,6 +3594,7 @@
                     centeredRotation: true,
                     name: data.filename,
                     id: data.filename,
+                    path: data.path
                 });
                 image.filters.push(new fabric.Image.filters.Resize({
                     resizeType: 'lanczos', // typo fixed
