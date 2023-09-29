@@ -190,14 +190,13 @@ ipcMain.on('drop-font', (event, arg) => {
 })
 
 ipcMain.on('remove-border', (event, arg) => {
-	//[theImage, 1, 1, "removeBorder", null, null, fuzz, pictureName]
-	let imgdata = arg[0]
-	let fuzz = parseInt(arg[6]);
-	let pictureName = arg[7]
-	let canvas = arg[8]
-	let imgLeft = arg[9]
-	let imgTop = arg[10]
-	let path = arg[11]
+	let imgdata = arg.imgdata
+	let fuzz = parseInt(arg.fuzz)
+	let pictureName = arg.pictureName
+	let canvas = arg.canvas
+	let imgLeft = arg.imgLeft
+	let imgTop = arg.imgTop
+	let path = arg.path
 	let json = {}
 	let buffer = Buffer.from(imgdata.replace(/^data:image\/(png|gif|jpeg);base64,/,''), 'base64');
 	
@@ -217,10 +216,10 @@ ipcMain.on('remove-border', (event, arg) => {
 						} else {
 							image.getBase64(Jimp.AUTO, (err, ret) => {
 								json.status = 'success'
-								json.image = ret
+								json.data = ret
 								json.canvas = canvas
-								json.imgTop = imgTop
-								json.imgLeft = imgLeft
+								json.pTop = imgTop
+								json.pLeft = imgLeft
 								json.pictureName = pictureName
 								json.path = path
 								event.sender.send('imagemagick-response', json)
@@ -239,22 +238,22 @@ ipcMain.on('remove-border', (event, arg) => {
 })
 
 ipcMain.on('replace-color', (event, arg) => {
-	let imgdata = arg[0]
-	let pLeft = arg[1]
-	let pTop = arg[2]
-	let pScaleX = arg[3]
-	let pScaleY = arg[4]
-	let action = arg[5]
-	let color = arg[6]
-	let newcolor = arg[7]
-	let fuzz = arg[8]
-	let pictureName = arg[9]
-	let canvas = arg[10]
-	let x = arg[11]
-	let y = arg[12]
-	let colorSquare = arg[13]
-	let newColorSquare = arg[14]
-	let path = arg[15]
+	let imgdata = arg.imgdata
+	let pLeft = arg.pLeft
+	let pTop = arg.pTop
+	let pScaleX = arg.pScaleX
+	let pScaleY = arg.pScaleY
+	let action = arg.action
+	let color = arg.color
+	let newcolor = arg.newcolor
+	let fuzz = arg.fuzz
+	let pictureName = arg.pictureName
+	let canvas = arg.canvas
+	let x = arg.x
+	let y = arg.y
+	let colorSquare = arg.colorSquare
+	let newColorSquare = arg.newColorSquare
+	let path = arg.path
 	let json = {}
 	var buffer = Buffer.from(imgdata.replace(/^data:image\/(png|gif|jpeg);base64,/,''), 'base64');
 	Jimp.read(buffer, (err, image) => {

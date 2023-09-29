@@ -3079,8 +3079,8 @@
 				var pictureName = object.get('name');
 				$("#colorSquare").removeClass("colorSquare").removeClass("colorSquareSelected");
 				var theImage = object._originalElement.currentSrc;	
-				theImage = theImage.substr(theImage.indexOf(',') + 1).toString();
-				ipcRenderer.send('remove-border', [theImage, 1, 1, "removeBorder", null, null, fuzz, pictureName, canvasName, imLeft, imTop, path])
+                theImage = theImage.substr(theImage.indexOf(',') + 1).toString();
+				ipcRenderer.send('remove-border', {imgdata: theImage, fuzz: fuzz, pictureName: pictureName, canvas: canvasName, imgLeft: imLeft, imgTop: imTop, path: path})
 				return false;
 			}
 		}	
@@ -3190,8 +3190,8 @@
                 var path = object.get('path')
 
 				theImage = theImage.substr(theImage.indexOf(',') + 1).toString();
-				
-				ipcRenderer.send('replace-color', [theImage, pLeft, pTop, pScaleX, pScaleY, action, color, newcolor, fuzz, pictureName, canvasName, x, y, colorSquare, newColorSquare, path ])
+
+                ipcRenderer.send('replace-color', {imgdata: theImage, pLeft: pLeft, pTop: pTop, pScaleX: pScaleX, pScaleY: pScaleY, action: action, color: color, newcolor: newcolor, fuzz: fuzz, pictureName: pictureName, canvas: canvasName, x: x, y: y, colorSquare: colorSquare, newColorSquare: newColorSquare, path: path})
 			
 				return false;
 			}
