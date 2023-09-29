@@ -218,8 +218,6 @@ ipcMain.on('add-stroke', (event, arg) => {
 				+swap -alpha off -compose copy_opacity -composite \
 				-trim +repage \
 				"+tempDir+"/temp.png"
-				//imagemagickCli.exec('magick convert -trim -fuzz '+fuzz+'% '+tempDir+'/temp.png '+tempDir+'/temp.png').then(({ stdout, stderr }) => {
-				console.log(strCommand)
 				imagemagickCli.exec(strCommand).then(({ stdout, stderr }) => {
 					Jimp.read(tempDir+"/temp.png", (err, image) => {
 						if (err) {
