@@ -189,6 +189,69 @@ ipcMain.on('drop-font', (event, arg) => {
 	}
 })
 
+ipcMain.on('add-stroke', (event, arg) => {
+	//{imgdata: theImage, left: left, top: top, scaleX: scaleX, path: path, pictureName: pictureName, color: color, width: width}
+	let imgdata = arg.imgdata
+	let left = arg.left
+	let top = arg.top
+	let scaleX = arg.scaleX
+	let scaleY = arg.scaleY
+	let path = arg.path
+	let pictureName = arg.pictureName
+	let color = arg.color
+	let width = arg.width
+	let buffer = Buffer.from(imgdata.replace(/^data:image\/(png|gif|jpeg);base64,/,''), 'base64');
+	let json = {}
+	
+	Jimp.read(buffer, (err, image) => {
+		if (err) {
+			console.log(err);
+		} else {
+			try {
+				image.write(tempDir+"/temp.png");
+				let strCommand = "magick convert "+tempDir+"/temp.png \
+				-bordercolor none -border "+width*3+" \
+				\( -clone 0 -alpha extract -morphology dilate disk:"+width+" \) \
+				\( -clone 1 -fuzz 30% -fill #"+color+" -opaque white -fill none -opaque black \) \
+				\( -clone 2,0 -compose over -composite \) \
+				-delete 0,2 \
+				+swap -alpha off -compose copy_opacity -composite \
+				-trim +repage \
+				"+tempDir+"/temp.png"
+				//imagemagickCli.exec('magick convert -trim -fuzz '+fuzz+'% '+tempDir+'/temp.png '+tempDir+'/temp.png').then(({ stdout, stderr }) => {
+				console.log(strCommand)
+				imagemagickCli.exec(strCommand).then(({ stdout, stderr }) => {
+					Jimp.read(tempDir+"/temp.png", (err, image) => {
+						if (err) {
+							json.status = 'error'
+							json.message = err
+							console.log(err);
+							event.sender.send('imagemagick-response', json)
+						} else {
+							image.getBase64(Jimp.AUTO, (err, ret) => {
+								json.status = 'success'
+								json.data = ret
+								json.pTop = top
+								json.pLeft = left
+								json.pictureName = pictureName
+								json.path = path
+								json.pScaleX = scaleX
+								json.pScaleY = scaleY
+								event.sender.send('imagemagick-response', json)
+							})
+						}
+					})
+				})
+			} catch (error) {
+				json.status = 'error'
+				json.message = "An error occurred - please make sure ImageMagick is installed"
+				console.log(error);
+				event.sender.send('imagemagick-response', json)
+			}
+		}
+	})
+})
+
 ipcMain.on('remove-border', (event, arg) => {
 	let imgdata = arg.imgdata
 	let fuzz = parseInt(arg.fuzz)
@@ -676,9 +739,15 @@ function createWindow () {
               }
           },
           {
+              label: 'About Fabric.js',
+              click: async () => {
+              await shell.openExternal('http://fabricjs.com/')
+              }
+          },
+          {
               label: 'View project on GitHub',
               click: async () => {
-              await shell.openExternal('https://github.com/eriqjaffe/OOTP-Font-Maker')
+              await shell.openExternal('https://github.com/eriqjaffe/OOTP-Logo-Maker')
               }
           }
           ]

@@ -472,6 +472,7 @@
                                                     <input type="button" class="button" id="cropImage" value="Crop To Shape">
                                                     <!--<input type="button" class="button" id="border" value="Remove Border">-->
                                                     <input type="button" class="button removeColor" id="makeTransparent" value="Make Background Transparent" data-x="0" data-y="0">
+                                                    <input type="button" class="button" id="addStroke" value="Add Stroke">
                                                     <input type="button" class="button" id="resetImage" value="Reset Image" data-x="0" data-y="0">
                                                 </td>
                                             </tr>
@@ -491,6 +492,16 @@
                                         Select Replacement Color:
                                         <input class="colorSelector" type="text" id="replacementColor" value="#FF0000">
                                         <input type="button" class="button" id="replaceColorSubmit" value="Replace Color" data-x="0" data-y="0" data-action="null">
+                                        </tr></table>
+                                    </div>
+                                    <div id="borderColorDiv" style="display:none;">
+                                        <table style="width:478px;"><tr>
+                                        <td><center>
+                                        Stroke Color:
+                                        <input class="colorSelector" type="text" id="strokeColor" value="#FFFFFF">
+                                        <span style="padding-left:10px;">Stroke Width:</span>
+                                        <input type="number" id="strokeWidth" value="5" min="0" max="20" onkeypress="return isNumberKey(event)">
+                                        <input type="button" style="padding-left:10px;" class="button" id="strokeSubmit" value="Draw Stroke">
                                         </tr></table>
                                     </div>
                                 </div>
@@ -791,6 +802,20 @@
 		showPalette: true,
 		showButtons: true,
 		color: "#FF0000",
+		beforeShow: function(color) {
+			//$(this).spectrum("option", "palette", commonPalette)
+		}
+	})
+
+    $("#strokeColor").spectrum({
+		type: "color",
+		showAlpha: false,
+		showInput: true,
+		preferredFormat: "hex",
+		showInitial: true,
+		showPalette: true,
+		showButtons: true,
+		color: "#FFFFFF",
 		beforeShow: function(color) {
 			//$(this).spectrum("option", "palette", commonPalette)
 		}
@@ -3086,6 +3111,28 @@
 		}	
 	})
 
+    $("#strokeSubmit").on("click", function(e) {
+        if (logoCreator.getActiveObject()) {
+			//showOverlay()
+			let object = logoCreator.getActiveObject()
+			let idx = logoCreator.getObjects().indexOf(object)
+			if (object.get('type') == "image") {
+				let left = object.get("left");
+				let top = object.get("top");
+                let scaleX = object.get('scaleX')
+				let scaleY = object.get('scaleY')
+                let path = object.get('path')
+				let pictureName = object.get('name');
+				let theImage = object._originalElement.currentSrc;
+                let color = $("#strokeColor").spectrum("get").toHex().toLowerCase()
+                let width = $("#strokeWidth").val()
+                theImage = theImage.substr(theImage.indexOf(',') + 1).toString();
+				ipcRenderer.send('add-stroke', {imgdata: theImage, left: left, top: top, scaleX: scaleX, path: path, pictureName: pictureName, color: color, width: width})
+				return false;
+			}
+		}	
+    })
+
     $("#removeColorRange").on("click",function(e) {
 		var canvas = logoCreator
         var canvasName = "logoCreator"
@@ -3159,6 +3206,12 @@
             $("#replaceColorDiv").slideToggle();
         }
 	})
+
+    $("#addStroke").on("click",function(e) {
+        if ($("#borderColorDiv").css("display") == "none") {
+            $("#borderColorDiv").slideToggle();
+        }
+    })
 
     $("#replaceColorSubmit").on("click",function(e) {
         var canvas = logoCreator
@@ -3347,6 +3400,7 @@
         $("#uploadImageDiv").css("display","block");
         $("#selectedImageDiv").css("display","none");
         $("#replaceColorDiv").css("display","none")
+        $("#borderColorDiv").css("display","none")
         $("#colorSquare").val("Click to Choose Color");	
         $("#colorSquare").removeClass("colorSquareSelected").addClass("colorSquare");
         $("#colorSquare").css("background","#F0F0F0");
