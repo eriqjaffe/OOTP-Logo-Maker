@@ -655,7 +655,7 @@ function createWindow () {
           submenu: [
           {
               click: () => mainWindow.webContents.send('about','click'),
-                  label: 'About the OOTP Font Maker',
+                  label: 'About the OOTP Logo Maker',
           },
           {
               label: 'About OOTP Baseball',

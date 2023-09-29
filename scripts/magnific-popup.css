@@ -399,11 +399,11 @@ img.mfp-img {
   border-radius: 20px;  
   -webkit-border-radius: 20px;
 	/*padding: 5px 0px 10px 0px;*/
-  border: 2px solid #C6011F;
+  border: 2px solid #c3dff4;
   padding: 20px;
   width: auto;
   max-width: 700px;
-  height: 525px;
+  height: 375px;
   margin: 20px auto;
 }
 

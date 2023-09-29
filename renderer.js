@@ -11,3 +11,7 @@ ipcRenderer.on('import-image', (event, data) => {
 ipcRenderer.on('updateFonts', (event, data) => {
     $("#localFontFolder").trigger("click")
 })
+
+ipcRenderer.on('about', (event, data) => {
+    $("#aboutLogoMaker").trigger("click")
+});
