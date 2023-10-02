@@ -226,6 +226,18 @@ tr.imagemagick {
 	width: 100%;
 }
 
+tr.noim {
+    display: none;
+    width: 100%;
+    text-align: center;
+    font-style: italic
+}
+
+tr.noim td {
+    width: 478px;
+    text-align: center;
+}
+
 #canvasContainer {
 	-moz-background-clip: padding;
 	-webkit-background-clip: padding;

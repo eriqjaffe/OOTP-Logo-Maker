@@ -24,10 +24,13 @@
         <script>
             const { ipcRenderer } = require('electron');
             const { sort, sortFn, convert } = require('color-sorter')
-
+            const hasbin = require('hasbin');
+            
             require('./renderer.js')
 
             const params = new URLSearchParams(window.location.search)
+
+            const im = (params.get('im') == "true") ? true : false
 
             const initialColors = {topTextColor:"#ffffff", topTextStrokeColor:"#000000", bottomTextColor:"#ffffff", bottomTextStrokeColor:"#000000", teamBGColor:"#0C2340", teamTextColor: "#ffffff", stitches: "#e82a50", roundelOuterStroke: "#ffffff", roundelInnerStroke: "red", roundelOuterCircle: "blue", roundelCenterStroke: "green", roundelInnerCircle: "#ffffff", OuterStroke: 'red', CenterStroke: 'green', InnerStroke: 'blue', Fill: 'yellow', pattern: "#e82a50"}
 
@@ -445,6 +448,9 @@
                                                 <input type="button" class="button" id="uploadImage" value="Upload An Image">
                                             </td>
                                         </tr>
+                                        <tr class="noim">
+                                            <td>ImageMagick was not detected, some options will not be available.  Please make sure ImageMagick is installed and on the system path.  ImageMagick can be downloaded <a class="imlink" href="https://imagemagick.org/script/download.php" target="_blank">here</a>.</td>
+                                        </tr>
                                     </table>
                                     </div>
                                     <div id="selectedImageDiv" style="display:none;">
@@ -459,7 +465,7 @@
                                                     
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <tr class="im">
                                                 <td><center>
                                                     <input type="button" id="colorSquare" class="colorSquare" value="Click To Choose Color" style="margin-right:10px;"><span id="chosenCoordinates" style="margin-right:5px;"></span>
                                                     Fuzz %:
@@ -471,18 +477,21 @@
                                                 <td><center>
                                                     <input type="button" class="button" id="cropImage" value="Crop To Shape">
                                                     <!--<input type="button" class="button" id="border" value="Remove Border">-->
-                                                    <input type="button" class="button removeColor" id="makeTransparent" value="Make Background Transparent" data-x="0" data-y="0">
-                                                    <input type="button" class="button" id="addStroke" value="Add Stroke">
+                                                    <input type="button" class="button im removeColor" id="makeTransparent" value="Make Background Transparent" data-x="0" data-y="0">
+                                                    <input type="button" class="button im" id="addStroke" value="Add Stroke">
                                                     <input type="button" class="button" id="resetImage" value="Reset Image" data-x="0" data-y="0">
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <tr class="im">
                                                 <td><center>
-                                                    <input type="button" class="button removeColor" id="removeColorRange" value="Remove Color Section" data-x="0" data-y="0">
-                                                    <input type="button" class="button removeColor" id="removeAllColor" value="Remove Color From Image" data-x="0" data-y="0">
-                                                    <input type="button" class="button replaceColor" id="replaceColorRange" value="Replace Color Section" data-x="0" data-y="0">
-                                                    <input type="button" class="button replaceColor" id="replaceAllColor" value="Replace Color From Image" data-x="0" data-y="0">
+                                                    <input type="button" class="button removeColor im" id="removeColorRange" value="Remove Color Section" data-x="0" data-y="0">
+                                                    <input type="button" class="button removeColor im" id="removeAllColor" value="Remove Color From Image" data-x="0" data-y="0">
+                                                    <input type="button" class="button replaceColor im" id="replaceColorRange" value="Replace Color Section" data-x="0" data-y="0">
+                                                    <input type="button" class="button replaceColor im" id="replaceAllColor" value="Replace Color From Image" data-x="0" data-y="0">
                                                 </td>
+                                            </tr>
+                                            <tr class="noim">
+                                                <td>ImageMagick was not detected, some options will not be available.  Please make sure ImageMagick is installed and on the system path.  ImageMagick can be downloaded <a class="imlink" href="https://imagemagick.org/script/download.php" target="_blank">here</a>.</a></td>
                                             </tr>
                                         </table>
                                     </div>
@@ -545,6 +554,47 @@
     let yearRange = ""
 
     $(document).ready(function() {
+
+        hasbin('magick', function (result) {
+            if (result != false) {
+                $(".im").each(function() {
+                    $(this).css("display","none")
+                })
+                $(".noim").each(function() {
+                    $(this).css("display","inline-block")
+                })
+            } else {
+                $(".im").each(function() {
+                    $(this).css("display","inline-block")
+                })
+                $(".noim").each(function() {
+                    $(this).css("display","none")
+                })
+            }
+        })
+
+        switch (process.platform) {
+            case "win32":
+                $('.imlink').each(function () {
+                    $(this).attr("href","https://imagemagick.org/script/download.php#windows")
+                })
+                break;
+            case "darwin":
+                $('.imlink').each(function () {
+                    $(this).attr("href","https://imagemagick.org/script/download.php#macosx")
+                })
+                break;
+            case "linux":
+                $('.imlink').each(function () {
+                    $(this).attr("href","https://imagemagick.org/script/download.php#linux")
+                })
+                break;
+            default:
+                $('.imlink').each(function () {
+                    $(this).attr("href","https://imagemagick.org/script/download.php")
+                })
+                break;
+        }
 
         $("#exampleText").val($("#cityName").val()+" "+$("#nickName").val())
 

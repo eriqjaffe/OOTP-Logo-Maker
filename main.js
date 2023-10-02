@@ -6,7 +6,6 @@ const url = require('url');
 const increment = require('add-filename-increment');
 const Jimp = require('jimp')
 const Store = require("electron-store")
-const hasbin = require('hasbin');
 const fontname = require('fontname')
 const ColorThief = require('colorthief');
 const font2base64 = require("node-font2base64")
@@ -35,8 +34,6 @@ const watcher = chokidar.watch(userFontsFolder, {
 });
 
 watcher.on('ready', () => {})
-
-const imInstalled = hasbin.sync('magick');
 
 ipcMain.on('drop-image', (event, arg) => {
     let json = {}
@@ -757,7 +754,7 @@ function createWindow () {
   
     //mainWindow.loadURL(`file://${__dirname}/index.html?port=${server.address().port}&preferredColorFormat=${preferredColorFormat}&preferredTexture=${preferredTexture}`);
 
-    mainWindow.loadURL(`file://${__dirname}/index.html?`)
+    mainWindow.loadURL(`file://${__dirname}/index.html`)
 
     //mainWindow.loadURL(`file://${__dirname}/index.html`)
   
