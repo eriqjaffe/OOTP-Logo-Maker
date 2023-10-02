@@ -542,7 +542,7 @@
                     <div class="question">How did you do this?</div><br>
                     <div class="answer">The Logo Maker is built using <a href="https://nodejs.org/en/about/" target="_blank">Node.js</a> and <a href="https://www.electronjs.org/" target="_blank">Electron</a>.  So it's written entirely in HTML and JavaScript like pretty much any website.  It also leverages the <a href="http://fabricjs.com/" target="_blank">Fabric.js</a> library for all of the graphical stuff.</div></br>
                     <div class="question">Who is responsible for this thing?</div>
-                    <div class="answer">That would be me.  My name is Eriq Jaffe, and I've been playing OOTP Baseball since 2004.  Feel free to <a href="mailto:eriqjaffe@gmail.com">shoot me an email</a> with any questions or comments.  You can also view the source code for this on <a href="https://github.com/eriqjaffe/OOTP-Logo-Maker" target="_blank">GitHub</a>.<br><br>I'd also like to give a shout out to Conrad Burry, who created some of the default fonts.</div><br>
+                    <div class="answer">That would be me.  My name is Eriq Jaffe, and I've been playing OOTP Baseball since 2004.  Feel free to <a href="mailto:eriqjaffe@gmail.com">shoot me an email</a> with any questions or comments.  You can also view the source code for this on <a href="https://github.com/eriqjaffe/OOTP-Logo-Maker" target="_blank">GitHub</a>.<br><br>The "Crossed Bats" image used in the app icon is by <a href=" https://www.vectorportal.com" target="_blank" >Vectorportal.com</a>,  <a class="external text" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY</a><br><br>I'd also like to give a shout out to Conrad Burry, who created some of the default fonts.</div><br>
                 </div>
             </div>
         </div>
@@ -556,7 +556,7 @@
     $(document).ready(function() {
 
         hasbin('magick', function (result) {
-            if (result != false) {
+            if (result != true) {
                 $(".im").each(function() {
                     $(this).css("display","none")
                 })
