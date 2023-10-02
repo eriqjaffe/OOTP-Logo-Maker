@@ -632,7 +632,7 @@ function createWindow () {
     const mainWindow = new BrowserWindow({
       width: 1280,
       height: 780,
-      icon: (__dirname + '/images/icon.png'),
+      icon: (__dirname + '/images/icon.ico'),
       webPreferences: {
           nodeIntegration: true,
           contextIsolation: false
