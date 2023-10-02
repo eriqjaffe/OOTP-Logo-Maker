@@ -474,25 +474,33 @@
                                                             action="UP"
                                                             d="M50,14 54,22 46,22Z"
                                                             fill="rgba(0,0,0,0.8)"
-                                                            id="path4579" />
+                                                            id="path4579"
+                                                            parent="upButton"
+                                                            pointer-events= "none" />
                                                         <path
                                                             class="dirArrow"
                                                             action="DOWN"
                                                             d="M50,86 54,78 46,78Z"
                                                             fill="rgba(0,0,0,0.8)"
-                                                            id="path4581" />
+                                                            id="path4581" 
+                                                            parent="downButton"
+                                                            pointer-events= "none" />
                                                         <path
                                                             class="dirArrow"   
                                                             action="LEFT"  
                                                             d="M14,50 22,54 22,46Z"
                                                             fill="rgba(0,0,0,0.8)"
-                                                            id="path4583" />
+                                                            id="path4583"
+                                                            parent="leftButton"
+                                                            pointer-events= "none" />
                                                         <path
                                                             class="dirArrow"
                                                             action="RIGHT"
                                                             d="M86,50 78,54 78,46Z"
                                                             fill="rgba(0,0,0,0.8)"
-                                                            id="path4585" />
+                                                            id="path4585"
+                                                            parent="rightButton"
+                                                            pointer-events= "none" />
                                                     </svg>
                                                 </div>
                                             </td>
@@ -3653,7 +3661,7 @@
 
     $(".dirButton").on("mouseover", function(e) {
         if ($(this).closest('div').css("opacity") == 1) {
-            $(this).css("fill","red")
+            $(this).css("fill","#7E90A9")
         }
         
     })
@@ -3664,7 +3672,7 @@
         }
     })
 
-    $(".dirButton, .dirArrow").on("click", function(e) {
+    $(".dirButton").on("click", function(e) {
         e.preventDefault()
         if ($(this).closest('div').css("opacity") == 1) {
             let dir = ""
@@ -3692,13 +3700,52 @@
         }
     })
 
+    $(".dirButton").on("mousedown",function(e) {
+        if ($(this).closest('div').css("opacity") == 1) {
+            $(this).css("fill","#344F73")
+        }
+    })
+
+    $(".dirButton").on("mouseup",function(e) {
+        if ($(this).closest('div').css("opacity") == 1) {
+            $(this).css("fill","#cccccc")
+        }
+    })
+
+    $("#circle4577").on("mouseover", function(e) {
+        if ($(this).closest('div').css("opacity") == 1) {
+            $(this).css("fill","#7E90A9")
+        }
+        
+    })
+
+    $("#circle4577").on("mouseout", function(e) {
+        if ($(this).closest('div').css("opacity") == 1) {
+            $(this).css("fill","#cccccc")
+        }
+    })
+    
     $("#circle4577").on("click",function(e) {
         e.preventDefault()
-        let g = logoCreator.getObjects('group').find(o => o.id == "pattern")
-        g.set("top", 250)
-        g.set("left", 250)
-        g.setCoords();
-        logoCreator.renderAll();
+        if ($(this).closest('div').css("opacity") == 1) {
+            let g = logoCreator.getObjects('group').find(o => o.id == "pattern")
+            g.set("top", 250)
+            g.set("left", 250)
+            g.setCoords();
+            logoCreator.renderAll();
+        }
+    })
+    
+    $("#circle4577").on("mousedown",function(e) {
+        if ($(this).closest('div').css("opacity") == 1) {
+            $(this).css("fill","#344F73")
+        }
+    })
+
+    $("#circle4577").on("mouseup",function(e) {
+        if ($(this).closest('div').css("opacity") == 1) {
+            $(this).css("fill","#cccccc")
+        }
     })
 
     logoCreator.on('mouse:move', function(e) {
