@@ -45,6 +45,7 @@
 
             let colorX = ""
             let colorY = ""
+            let movementDelta = 1
         </script>
     </head>
     <body>
@@ -397,7 +398,8 @@
                                             <td class="checkCell">
                                                 <input type="checkbox" id="patternCheck" class="toggleAll">
                                             </td>
-                                            <td>
+                                            <td valign="middle">
+                                                <div style="float:left;">
                                                 <label>Pattern:&nbsp;</label>
                                                 <select id="patternSelect" disabled>
                                                     <option value="grid">Grid</option>
@@ -419,6 +421,80 @@
                                                 <input id="patternRotation" type="number" value="0" min="0" max="359" onkeypress="return isNumberKey(event)" disabled>
                                                 <label style="padding-left:5px; padding-right:5px;">Scale:</label>
                                                 <input id="patternScale" type="number" value="0" min="-100" max="100" onkeypress="return isNumberKey(event)" disabled>
+                                                </div>
+                                                <div id="joystick" style="width:50px; height:50px; float:right; opacity:50%;">
+                                                    <svg width="100%" height="100%" viewBox="0 0 100 100">
+                                                        <circle
+                                                            cx="50"
+                                                            cy="50"
+                                                            r="47"
+                                                            fill="#e1e1e1"
+                                                            stroke="black"
+                                                            stroke-width="1.5px"
+                                                            id="circle4573" />
+                                                        <path
+                                                            class="dirButton"
+                                                            style="fill:#e1e1e1;fill-opacity:1;stroke-width:1.05778122"
+                                                            d="M 50.00098,3.4580077 A 46.542374,46.542374 0 0 0 17.4502,16.743164 L 49.99902,49.293945 82.52246,16.768554 A 46.542374,46.542374 0 0 0 50.00098,3.4580077 Z"
+                                                            id="upButton",
+                                                            action='UP' />
+                                                        <path
+                                                            class="dirButton"
+                                                            style="fill:#e1e1e1;fill-opacity:1;stroke-width:1.05778122"
+                                                            d="M 83.25684,17.450195 50.70606,50.000976 83.23145,82.524414 A 46.542374,46.542374 0 0 0 96.54199,50.000976 46.542374,46.542374 0 0 0 83.25684,17.450195 Z"
+                                                            id="path4714" 
+                                                            action="RIGHT" />
+                                                        <path
+                                                            class="dirButton"
+                                                            style="fill:#e1e1e1;fill-opacity:1;stroke-width:1.05778122"
+                                                            d="M 16.76856,17.475585 A 46.542374,46.542374 0 0 0 3.45801,50.000976 46.542374,46.542374 0 0 0 16.74316,82.549804 L 49.29199,50.000976 Z"
+                                                            id="path4712",
+                                                            action="LEFT" />
+                                                        <path
+                                                            class="dirButton"
+                                                            style="fill:#e1e1e1;fill-opacity:1;stroke-width:1.05778122"
+                                                            d="M 49.99902,50.708007 17.47559,83.231445 A 46.542374,46.542374 0 0 0 50.00098,96.541992 46.542374,46.542374 0 0 0 82.54785,83.256836 Z"
+                                                            id="circle4690",
+                                                            action="DOWN" />
+                                                        <path
+                                                            style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-orientation:mixed;dominant-baseline:auto;baseline-shift:baseline;text-anchor:start;white-space:normal;shape-padding:0;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+                                                            d="m 17.45117,16.74414 a 46.542374,46.542374 0 0 0 -0.68164,0.732422 L 49.29297,49.999999 16.74414,82.546875 a 46.542374,46.542374 0 0 0 0.73242,0.68164 L 50,50.707031 82.54882,83.255859 a 46.542374,46.542374 0 0 0 0.68165,-0.732422 L 50.70703,49.999999 83.25586,17.449218 a 46.542374,46.542374 0 0 0 -0.73243,-0.68164 L 50,49.291015 Z"
+                                                            id="path4677"
+                                                            inkscape:connector-curvature="0" />
+                                                        <circle
+                                                            cx="50"
+                                                            cy="50"
+                                                            r="20""
+                                                            id="circle4577"
+                                                            stroke-width="1px"
+                                                            stroke="black"
+                                                            fill="#cccccc" />
+                                                        <path
+                                                            class="dirArrow"
+                                                            action="UP"
+                                                            d="M50,14 54,22 46,22Z"
+                                                            fill="rgba(0,0,0,0.8)"
+                                                            id="path4579" />
+                                                        <path
+                                                            class="dirArrow"
+                                                            action="DOWN"
+                                                            d="M50,86 54,78 46,78Z"
+                                                            fill="rgba(0,0,0,0.8)"
+                                                            id="path4581" />
+                                                        <path
+                                                            class="dirArrow"   
+                                                            action="LEFT"  
+                                                            d="M14,50 22,54 22,46Z"
+                                                            fill="rgba(0,0,0,0.8)"
+                                                            id="path4583" />
+                                                        <path
+                                                            class="dirArrow"
+                                                            action="RIGHT"
+                                                            d="M86,50 78,54 78,46Z"
+                                                            fill="rgba(0,0,0,0.8)"
+                                                            id="path4585" />
+                                                    </svg>
+                                                </div>
                                             </td>
                                             <td style="text-align:right;">
                                                 <input class="patternSelector selector" type="text" id="patternSelector">
@@ -626,12 +702,16 @@
         logoCreator.renderAll()
     })
 
+    $(document).keyup(function(e) {
+        movementDelta = 1
+    })
+
     $(document).keydown(function(e) {   
 		var obj = logoCreator.getActiveObject();
 		if (e.shiftKey) {
-			var movementDelta = 10;
+			movementDelta = 10;
 		} else {
-			var movementDelta = 1;
+			movementDelta = 1;
 		}
 		switch (e.keyCode) {
 			case 107: // plus
@@ -2971,6 +3051,7 @@
 
     $("#patternCheck").on("change",function(e) {
         const checked = $(this).is(":checked")
+        $("#joystick").css("opacity", checked ? "100%" : "50%")
         $("#patternSelect").prop('disabled',checked ? false : true);
         $("#patternRotation").prop('disabled',checked ? false : true);
         $("#patternScale").prop('disabled',checked ? false : true);
@@ -3569,6 +3650,56 @@
 			type: 'inline'
 		}
 	});
+
+    $(".dirButton").on("mouseover", function(e) {
+        if ($(this).closest('div').css("opacity") == 1) {
+            $(this).css("fill","red")
+        }
+        
+    })
+
+    $(".dirButton").on("mouseout", function(e) {
+        if ($(this).closest('div').css("opacity") == 1) {
+            $(this).css("fill","#e1e1e1")
+        }
+    })
+
+    $(".dirButton, .dirArrow").on("click", function(e) {
+        e.preventDefault()
+        if ($(this).closest('div').css("opacity") == 1) {
+            let dir = ""
+            let g = logoCreator.getObjects('group').find(o => o.id == "pattern")
+            switch ($(this).attr("action")) {
+                case "UP":
+                    var a = g.get('top') - movementDelta;
+                    g.set('top', a);
+                    break;
+                case "DOWN":
+                    var a = g.get('top') + movementDelta;
+                    g.set('top', a);
+                    break;
+                case "LEFT":
+                    var a = g.get('left') - movementDelta;
+                    g.set('left', a);
+                    break;
+                case "RIGHT":
+                    var a = g.get('left') + movementDelta;
+                    g.set('left', a);
+                    break;
+            }
+            g.setCoords();
+            logoCreator.renderAll();
+        }
+    })
+
+    $("#circle4577").on("click",function(e) {
+        e.preventDefault()
+        let g = logoCreator.getObjects('group').find(o => o.id == "pattern")
+        g.set("top", 250)
+        g.set("left", 250)
+        g.setCoords();
+        logoCreator.renderAll();
+    })
 
     logoCreator.on('mouse:move', function(e) {
 		if (logoCreator.hoverCursor != "move") {
