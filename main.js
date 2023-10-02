@@ -73,6 +73,7 @@ ipcMain.on('upload-image', (event, arg) => {
 	}
     dialog.showOpenDialog(null, options).then(result => {
         if (!result.canceled) {
+			store.set("uploadImagePath", path.dirname(result.filePaths[0]))
             ColorThief.getPalette(result.filePaths[0], 8)
             .then(palette => { 
                 Jimp.read(result.filePaths[0], (err, image) => {
@@ -571,6 +572,7 @@ ipcMain.on('save-logo', (event, arg) => {
 					image.write(result.filePath);
 				}
 			})
+			store.set("downloadPath", path.dirname(result.filePath))
             event.sender.send('save-logo-response', null)
         } else {
             event.sender.send('save-logo-response', null)
