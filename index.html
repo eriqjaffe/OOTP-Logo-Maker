@@ -14,7 +14,6 @@
         <script type="text/javascript" src="./scripts/skeletabs.js"></script>
         <script type="text/javascript" src="./scripts/fontfaceobserver.js"></script>
         <script type="text/javascript" src="./scripts/dd.min.js"></script>
-        <script type="text/javascript" src="./scripts/floodfill.min.js"></script>
         <script type="text/javascript" src="./patterns.js"></script>
         <script type="text/javascript" src="./scripts/tooltipster.bundle.min.js"></script>
         <link href='./scripts/logomaker.css' rel='stylesheet' type='text/css'>
@@ -419,6 +418,10 @@
                                                     <option value="stripes">Stripes</option>
                                                     <option value="diamondsPattern">Diamonds</option>
                                                     <option value="diamondsFilled">Diamonds 2</option>
+                                                    <option value="wave1">Wave</option>
+                                                    <option value="plus">Plus</option>
+                                                    <option value="gingham">Gingham</option>
+                                                    <option value="argyle">Argyle</option>
                                                 </select><br><div style="padding-bottom:5px;"></div>
                                                 <label style="padding-right:5px;">Angle:</label>
                                                 <input id="patternRotation" type="number" value="0" min="0" max="359" onkeypress="return isNumberKey(event)" disabled>
@@ -500,11 +503,12 @@
                                                     <!--<input type="button" class="button" id="border" value="Remove Border">-->
                                                     <input type="button" class="button im removeColor" id="makeTransparent" value="Make Background Transparent" data-x="0" data-y="0">
                                                     <input type="button" class="button im" id="addStroke" value="Add Stroke">
+                                                    <input type="button" class="button" id="straightenImage" value="Reset Image Rotation">
                                                     <input type="button" class="button" id="resetImage" value="Reset Image" data-x="0" data-y="0">
                                                 </td>
                                             </tr>
                                             <tr class="im">
-                                                <td><center>
+                                                <td style="width:478px;"><center>
                                                     <input type="button" class="button removeColor im" id="removeColorRange" value="Remove Color Section" data-x="0" data-y="0">
                                                     <input type="button" class="button removeColor im" id="removeAllColor" value="Remove Color From Image" data-x="0" data-y="0">
                                                     <input type="button" class="button replaceColor im" id="replaceColorRange" value="Replace Color Section" data-x="0" data-y="0">
@@ -537,11 +541,9 @@
                                 </div>
                             </div>
                             <div style="text-align:center; margin-top:5px;">
-                                <input type="button" class="button" id="straightenObject" value="Reset Object Rotation" style="display:none;">
                                 <input type="button" class="button" id="save" value="Save Logo">
                                 <input type="button" class="button" id="toggleGuides" value="Hide Guides">
                                 <input type="button" class="button" id="aboutLogoMaker" value="About Logo Maker">
-                                <input type="button" id="testFloodFill" class="button" value="Test Flood Fill">
                                 <input type="button" class="button" id="openFontFolder" value="Open User Fonts Folder">
                             </div>
                         </div>
@@ -2145,7 +2147,43 @@
 			selectable: false
         })
 
-        pattern = new fabric.Group([grid, verticalLines, verticalLinesTight, bricks, herringbone, honeycomb, houndstooth, checkerboard, chevron, polkaDots, intersectingCircles, stripes, diamondsPattern, diamondsFilled],{
+        wave1 = new fabric.Path(patterns.wave1, {
+            fill: initialColors["pattern"],
+            id: 'wave1',
+            originX: "center",
+            originY: "center",
+            visible: false,
+			selectable: false
+        })
+
+        plus = new fabric.Path(patterns.plus, {
+            fill: initialColors["pattern"],
+            id: 'plus',
+            originX: "center",
+            originY: "center",
+            visible: false,
+			selectable: false
+        })
+
+        gingham = new fabric.Path(patterns.gingham, {
+            fill: initialColors["pattern"],
+            id: 'gingham',
+            originX: "center",
+            originY: "center",
+            visible: false,
+			selectable: false
+        })
+
+        argyle = new fabric.Path(patterns.argyle, {
+            fill: initialColors["pattern"],
+            id: 'argyle',
+            originX: "center",
+            originY: "center",
+            visible: false,
+			selectable: false
+        })
+
+        pattern = new fabric.Group([grid, verticalLines, verticalLinesTight, bricks, herringbone, honeycomb, houndstooth, checkerboard, chevron, polkaDots, intersectingCircles, stripes, diamondsPattern, diamondsFilled, wave1, plus, gingham, argyle],{
             id: 'pattern',
             visible: false,
             originX: "center",
@@ -3478,6 +3516,17 @@
         }
     })
 
+    $("#straightenImage").on("click",function(e) {
+        if (logoCreator.getActiveObject()) {
+            var object = logoCreator.getActiveObject()
+			var idx = logoCreator.getObjects().indexOf(object)
+			if (object.get('type') == "image") {
+                object.set("angle", 0)
+			}
+            logoCreator.renderAll()
+        }
+    })
+
     function rotateStitches(angle) {
         const s = logoCreator.getObjects('group').find(o => o.id == "stitches")
         const r = logoCreator.getObjects('group').find(o => o.id == "roundelStitches")
@@ -3489,7 +3538,6 @@
     }
 
     logoCreator.on('selection:created', function(e) {
-		$("#straightenObject").css("display","inline-block");
 		var obj = e.selected[0];
 		if (obj.type == 'image') {
 			$("#fileName").html(obj.get('name'));
@@ -3525,8 +3573,7 @@
     })
 
     logoCreator.on('selection:updated', function(e) {
-        $("#straightenObject").css("display","inline-block");
-		var obj = e.selected[0];
+        var obj = e.selected[0];
 		if (obj.type == 'image') {
 			$("#fileName").html(obj.get('name'));
 			if ($("#trimImageDiv").css("display") == "none") {
