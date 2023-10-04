@@ -14,7 +14,6 @@
         <script type="text/javascript" src="./scripts/skeletabs.js"></script>
         <script type="text/javascript" src="./scripts/fontfaceobserver.js"></script>
         <script type="text/javascript" src="./scripts/dd.min.js"></script>
-        <script type="text/javascript" src="./patterns.js"></script>
         <script type="text/javascript" src="./scripts/tooltipster.bundle.min.js"></script>
         <link href='./scripts/logomaker.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/spectrum.css' rel='stylesheet' type='text/css'>
@@ -673,10 +672,10 @@
 			}
 		});
 
-        var p = logoCreator.getObjects('group').find(o => o.id == 'pattern')
+        /* var p = logoCreator.getObjects('group').find(o => o.id == 'pattern')
         p.getObjects().forEach(function (o) {
             o.set("visible",o.id == $("#patternSelect").val())
-        })
+        }) */
         logoCreator.renderAll()
     })
 
@@ -1086,8 +1085,9 @@
     function changePatternColor(color) {
         const clr = (color == null) ? 'transparent' : color.toHexString()
         const g = logoCreator.getObjects('group').find(o => o.id == "pattern")
-        g.getObjects('path').forEach(function(o) {
-            o.set("fill",clr)
+        g.getObjects('image').forEach(function(o) {
+            o.filters[0]['color'] = clr;
+            o.applyFilters()
         })
         logoCreator.renderAll()
     }
@@ -2022,7 +2022,7 @@
 			selectable: false
         })
 
-        grid = new fabric.Path(patterns.grid,{
+        /* grid = new fabric.Path(patterns.grid,{
             fill: initialColors["pattern"],
             id: 'grid',
             originX: "center",
@@ -2181,9 +2181,9 @@
             originY: "center",
             visible: false,
 			selectable: false
-        })
+        })  */
 
-        pattern = new fabric.Group([grid, verticalLines, verticalLinesTight, bricks, herringbone, honeycomb, houndstooth, checkerboard, chevron, polkaDots, intersectingCircles, stripes, diamondsPattern, diamondsFilled, wave1, plus, gingham, argyle],{
+        pattern = new fabric.Group([],{
             id: 'pattern',
             visible: false,
             originX: "center",
@@ -2724,6 +2724,7 @@
         if (selected == "none") {
             // just hide everything but images and exit function
             logoCreator.getObjects().forEach(function (o) {
+                console.log(o.id, o.type)
                 if (o.type != "image") {
                     o.set("visible",false)
                 } else {
@@ -2732,6 +2733,7 @@
                     }
                 }
             })
+            
             logoCreator.renderAll()
             $(".toggleAll").each(function(o) {
                 $(this).prop( "checked", false );
@@ -2743,7 +2745,7 @@
         const s = logoCreator.getObjects('group').find(o => o.id == "stitches")
         const r = logoCreator.getObjects('group').find(o => o.id == "roundelStitches")
         const c = logoCreator.getObjects('group').find(o => o.id == "circleStitches")
-        const p = logoCreator.getObjects('group').find(o => o.id == 'pattern')
+        const p = logoCreator.getObjects('image').find(o => o.id == 'pattern')
         const d = logoCreator.getObjects('group').find(o => o.id == "decor")
         const i = logoCreator.getObjects('image')
         const visible = $("#stitchesCheck").is(":checked")
@@ -3073,7 +3075,54 @@
             $(this).spectrum(checked ? 'enable' : 'disable');
         })
         $(".tipster").tooltipster(checked ? 'enable' : 'disable');
-        const p = logoCreator.getObjects('group').find(o => o.id == "pattern")
+        let group = logoCreator.getObjects('group').find(o => o.id == "pattern")
+        var objects = group.getObjects();
+		for (x in objects) {
+			group.remove(objects[x]);
+		}
+        if (checked) {
+            let color = $("#patternSelector").spectrum("get").toHex().toLowerCase()
+            
+            let pattern = new fabric.Image.fromURL('./images/patterns/'+$("#patternSelect").val()+'.png', function(oImg) {
+                oImg.set({
+                    id: 'pattern',
+                    visible: true,
+                })
+                oImg.filters.push(new fabric.Image.filters.BlendColor({
+                    color: color,
+                    mode: 'tint',
+                    alpha: 1.0
+                }))
+                oImg.applyFilters()
+                switch ($("#logoShapeSelect").val()) {
+                    case "roundel":
+                        oImg.set("clipPath",roundelClip)
+                        break;
+                    case "circle":
+                        oImg.set("clipPath",circleClip)
+                        break;
+                    case "square":
+                        oImg.set("clipPath",squareClip)
+                        break;
+                    case "homePlate":
+                        oImg.set("clipPath",homePlateClip)
+                        break;
+                    case "roundedSquare":
+                        oImg.set("clipPath",roundedSquareClip)
+                        break;
+                }
+                group.addWithUpdate(oImg)
+                var objects = group.getObjects();
+                for (x in objects) {
+                    console.log(objects[x])
+                }
+                group.set("visible",checked)
+                logoCreator.renderAll()
+            })
+        }
+        
+        
+/*         const p = logoCreator.getObjects('group').find(o => o.id == "pattern")
         p.set("visible",$(this).is(":checked"))
         switch ($("#logoShapeSelect").val()) {
             case "roundel":
@@ -3091,8 +3140,8 @@
             case "roundedSquare":
                 p.set("clipPath",roundedSquareClip)
                 break;
-        }
-        logoCreator.renderAll()
+        } */
+        
     })
 
     $("#patternScale").on("change",function(e) {
@@ -3647,7 +3696,7 @@
         if ($(this).val() == "Crop To Shape") {
             $(this).val("Overflow Shape")
             o.set({ clipPath: cp })
-            o.moveTo(5)
+            o.moveTo(6)
         } else {
             $(this).val("Crop To Shape")
             o.bringToFront()
