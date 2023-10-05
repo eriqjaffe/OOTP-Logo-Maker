@@ -403,28 +403,28 @@
                                                 <div style="float:left;">
                                                 <label>Pattern:&nbsp;</label>
                                                 <select id="patternSelect" disabled>
-                                                    <option value="grid">Grid</option>
-                                                    <option value="verticalLines" selected>Pinstripes</option>
-                                                    <option value="bricks">Bricks</option>
-                                                    <option value="herringbone">Herringbone</option>
-                                                    <option value="honeycomb">Honeycomb</option>
-                                                    <option value="houndstooth">Houndstooth</option>
-                                                    <option value="checkerboard">Checkerboard</option>
-                                                    <option value="chevron">Chevron</option>
-                                                    <option value="polkaDots">Polka Dots</option>
-                                                    <option value="intersectingCircles">Intersecting Circles</option>
-                                                    <option value="stripes">Stripes</option>
-                                                    <option value="diamondsPattern">Diamonds</option>
-                                                    <option value="diamondsFilled">Diamonds 2</option>
-                                                    <option value="wave1">Wave</option>
-                                                    <option value="plus">Plus</option>
-                                                    <option value="gingham">Gingham</option>
-                                                    <option value="argyle">Argyle</option>
-                                                    <option value="scales">Scales</option>
-                                                    <option value="stars">Stars</option>
-                                                    <option value="zigzag">Zig Zag</option>
-                                                    <option value="dashes">Dashes</option>
-                                                    <option value="confetti">Confetti</option>
+                                                    <option value="./images/patterns/argyle.png">Argyle</option>
+                                                    <option value="./images/patterns/bricks.png">Bricks</option>
+                                                    <option value="./images/patterns/checkerboard.png">Checkerboard</option>
+                                                    <option value="./images/patterns/chevron.png">Chevron</option>
+                                                    <option value="./images/patterns/confetti.png">Confetti</option>
+                                                    <option value="./images/patterns/dashes.png">Dashes</option>
+                                                    <option value="./images/patterns/diamondsFilled.png">Diamonds 2</option>
+                                                    <option value="./images/patterns/diamondsPattern.png">Diamonds</option>
+                                                    <option value="./images/patterns/gingham.png">Gingham</option>
+                                                    <option value="./images/patterns/grid.png">Grid</option>
+                                                    <option value="./images/patterns/herringbone.png">Herringbone</option>
+                                                    <option value="./images/patterns/honeycomb.png">Honeycomb</option>
+                                                    <option value="./images/patterns/houndstooth.png">Houndstooth</option>
+                                                    <option value="./images/patterns/intersectingCircles.png">Intersecting Circles</option>
+                                                    <option value="./images/patterns/verticalLines.png" selected>Pinstripes</option>
+                                                    <option value="./images/patterns/plus.png">Plus</option>
+                                                    <option value="./images/patterns/polkaDots.png">Polka Dots</option>
+                                                    <option value="./images/patterns/scales.png">Scales</option>
+                                                    <option value="./images/patterns/stars.png">Stars</option>
+                                                    <option value="./images/patterns/stripes.png">Stripes</option>
+                                                    <option value="./images/patterns/wave1.png">Wave</option>
+                                                    <option value="./images/patterns/zigzag.png">Zig Zag</option>
                                                 </select><br><div style="padding-bottom:5px;"></div>
                                                 <label style="padding-right:5px;">Angle:</label>
                                                 <input id="patternRotation" type="number" value="0" min="0" max="359" onkeypress="return isNumberKey(event)" disabled>
@@ -446,6 +446,7 @@
                                                         <path class="dirArrow" action="RIGHT" d="M86,50 78,54 78,46Z" fill="rgba(0,0,0,0.8)" id="path4585" parent="rightButton" pointer-events= "none" />
                                                     </svg>
                                                 </div>
+                                                <input type="button" id="addPattern" value="Add A Pattern" style="margin-top:5px;" disabled>
                                             </td>
                                             <td style="text-align:right;">
                                                 <input class="patternSelector selector" type="text" id="patternSelector">
@@ -548,6 +549,7 @@
                                 <input type="button" class="button" id="toggleGuides" value="Hide Guides">
                                 <input type="button" class="button" id="aboutLogoMaker" value="About Logo Maker">
                                 <input type="button" class="button" id="openFontFolder" value="Open User Fonts Folder">
+                                <input type="button" class="button" id="openPatternFolder" value="Open User Patterns Folder">
                             </div>
                         </div>
                     </div>
@@ -571,6 +573,7 @@
                     <div class="answer">That would be me.  My name is Eriq Jaffe, and I've been playing OOTP Baseball since 2004.  Feel free to <a href="mailto:eriqjaffe@gmail.com">shoot me an email</a> with any questions or comments.  You can also view the source code for this on <a href="https://github.com/eriqjaffe/OOTP-Logo-Maker" target="_blank">GitHub</a>.<br><br>The "Crossed Bats" image used in the app icon is by <a href=" https://www.vectorportal.com" target="_blank" >Vectorportal.com</a>,  <a class="external text" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY</a><br><br>I'd also like to give a shout out to Conrad Burry, who created some of the default fonts.</div><br>
                 </div>
             </div>
+            <input type="button" class="button" id="localPatternFolder" value="Refresh User Patterns" style="display:none;">
         </div>
     </body>
     <script>
@@ -655,12 +658,14 @@
 
         $("#exampleText").val($("#cityName").val()+" "+$("#nickName").val())
 
-        sortFontDropdowns()
-        
         let topFontDropdown = new MsDropdown(document.getElementById("topFont"), {visibleRows: 6})
         let bottomFontDropdown = new MsDropdown(document.getElementById("bottomFont"), {visibleRows: 6})
 
         $("#localFontFolder").trigger("click")
+
+        $("#localPatternFolder").trigger("click")
+
+        sortFontDropdowns()
         
         $(".accordion .accord-header").click(function() {
 			if($(this).next("div").is(":visible")){
@@ -3061,7 +3066,7 @@
     })
 
     $("#patternSelect").on("change",function(e) {
-        setPattern()
+        setPattern($("#patternSelect").val())
     })
 
     $("#patternCheck").on("change",function(e) {
@@ -3070,38 +3075,18 @@
         $("#patternSelect").prop('disabled',checked ? false : true);
         $("#patternRotation").prop('disabled',checked ? false : true);
         $("#patternScale").prop('disabled',checked ? false : true);
+        $("#addPattern").prop('disabled',checked ? false : true);
         $(".patternSelector").each(function() {
             $(this).spectrum(checked ? 'enable' : 'disable');
         })
         $(".tipster").tooltipster(checked ? 'enable' : 'disable');
         if (checked) {
-            setPattern()
+            setPattern($("#patternSelect").val())
         } else {
-            group.set("visible", checked)
+            let group = logoCreator.getObjects('group').find(o => o.id == "pattern")
+            group.set("visible", false)
             logoCreator.renderAll()
         }
-        
-        
-/*         const p = logoCreator.getObjects('group').find(o => o.id == "pattern")
-        p.set("visible",$(this).is(":checked"))
-        switch ($("#logoShapeSelect").val()) {
-            case "roundel":
-                p.set("clipPath",roundelClip)
-                break;
-            case "circle":
-                p.set("clipPath",circleClip)
-                break;
-            case "square":
-                p.set("clipPath",squareClip)
-                break;
-            case "homePlate":
-                p.set("clipPath",homePlateClip)
-                break;
-            case "roundedSquare":
-                p.set("clipPath",roundedSquareClip)
-                break;
-        } */
-        
     })
 
     $("#patternScale").on("change",function(e) {
@@ -3109,6 +3094,21 @@
         p.set("scaleX", 1+($(this).val()/100))
         p.set("scaleY", 1+($(this).val()/100))
         logoCreator.renderAll()
+    })
+
+    $("#addPattern").on("click", function(e) {
+        ipcRenderer.send("add-pattern", null)
+    })
+
+    ipcRenderer.on('add-pattern-response', (event, response) => {
+        console.log(response)
+        $('#patternSelect').append($('<option>', { 
+            value: response.filename,
+            text : response.name 
+        }));
+        sortFontDropdowns()
+        $("#patternSelect").val(response.filename)
+        setPattern(response.filename)
     })
 
 	$("#cityName").on("keyup change", function(e) {
@@ -3180,6 +3180,10 @@
 		ipcRenderer.send('local-font-folder', null)
 	})
 
+    $("#localPatternFolder").on("click",function() {
+        ipcRenderer.send('local-pattern-folder', null)
+    })
+
     ipcRenderer.on('local-font-folder-response', (event, data) => {
         let fontErrors = []
 		if (data.result == 'success') {
@@ -3242,6 +3246,16 @@
 			alert(message)
 		}
 	})
+
+    ipcRenderer.on('local-pattern-folder-response', (event, data) => {
+        $.each(data, function (i, item) {
+            $('#patternSelect').append($('<option>', { 
+                value: item.fileName,
+                text : item.displayName 
+            }));
+        });
+        sortFontDropdowns()
+    })
 
     $("#border").on("click",function(e) {
         let canvas = logoCreator
@@ -3674,7 +3688,11 @@
     })
 
     $("#openFontFolder").on("click",function(e) {
-		ipcRenderer.send('open-font-folder', null)
+		ipcRenderer.send('open-folder', "fonts")
+	})
+
+    $("#openPatternFolder").on("click",function(e) {
+		ipcRenderer.send('open-folder', "patterns")
 	})
 
     $("#aboutLogoMaker").magnificPopup({
@@ -3951,7 +3969,7 @@
         }
     }
 
-    function setPattern() {
+    function setPattern(file) {
         let group = logoCreator.getObjects('group').find(o => o.id == "pattern")
         let color = $("#patternSelector").spectrum("get").toHex().toLowerCase()
 
@@ -3960,10 +3978,14 @@
 			group.remove(objects[x]);
 		}
             
-        let pattern = new fabric.Image.fromURL('./images/patterns/'+$("#patternSelect").val()+'.png', function(oImg) {
+        let pattern = new fabric.Image.fromURL(file, function(oImg) {
             oImg.set({
                 id: 'pattern',
                 visible: true,
+                originX: 'center',
+                originY: 'center',
+                left: 250,
+                top: 250
             })
             oImg.filters.push(new fabric.Image.filters.BlendColor({
                 color: color,
