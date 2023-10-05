@@ -405,7 +405,6 @@
                                                 <select id="patternSelect" disabled>
                                                     <option value="grid">Grid</option>
                                                     <option value="verticalLines" selected>Pinstripes</option>
-                                                    <option value="verticalLinesTight">Narrow Pinstripes</option>
                                                     <option value="bricks">Bricks</option>
                                                     <option value="herringbone">Herringbone</option>
                                                     <option value="honeycomb">Honeycomb</option>
@@ -421,6 +420,11 @@
                                                     <option value="plus">Plus</option>
                                                     <option value="gingham">Gingham</option>
                                                     <option value="argyle">Argyle</option>
+                                                    <option value="scales">Scales</option>
+                                                    <option value="stars">Stars</option>
+                                                    <option value="zigzag">Zig Zag</option>
+                                                    <option value="dashes">Dashes</option>
+                                                    <option value="confetti">Confetti</option>
                                                 </select><br><div style="padding-bottom:5px;"></div>
                                                 <label style="padding-right:5px;">Angle:</label>
                                                 <input id="patternRotation" type="number" value="0" min="0" max="359" onkeypress="return isNumberKey(event)" disabled>
@@ -3057,12 +3061,7 @@
     })
 
     $("#patternSelect").on("change",function(e) {
-        const pattern = $(this).val()
-        const p = logoCreator.getObjects('group').find(o => o.id == "pattern")  
-        p.getObjects().forEach(function (o) {
-            o.set("visible",o.id == pattern)
-        })
-        logoCreator.renderAll()
+        setPattern()
     })
 
     $("#patternCheck").on("change",function(e) {
@@ -3075,50 +3074,11 @@
             $(this).spectrum(checked ? 'enable' : 'disable');
         })
         $(".tipster").tooltipster(checked ? 'enable' : 'disable');
-        let group = logoCreator.getObjects('group').find(o => o.id == "pattern")
-        var objects = group.getObjects();
-		for (x in objects) {
-			group.remove(objects[x]);
-		}
         if (checked) {
-            let color = $("#patternSelector").spectrum("get").toHex().toLowerCase()
-            
-            let pattern = new fabric.Image.fromURL('./images/patterns/'+$("#patternSelect").val()+'.png', function(oImg) {
-                oImg.set({
-                    id: 'pattern',
-                    visible: true,
-                })
-                oImg.filters.push(new fabric.Image.filters.BlendColor({
-                    color: color,
-                    mode: 'tint',
-                    alpha: 1.0
-                }))
-                oImg.applyFilters()
-                switch ($("#logoShapeSelect").val()) {
-                    case "roundel":
-                        oImg.set("clipPath",roundelClip)
-                        break;
-                    case "circle":
-                        oImg.set("clipPath",circleClip)
-                        break;
-                    case "square":
-                        oImg.set("clipPath",squareClip)
-                        break;
-                    case "homePlate":
-                        oImg.set("clipPath",homePlateClip)
-                        break;
-                    case "roundedSquare":
-                        oImg.set("clipPath",roundedSquareClip)
-                        break;
-                }
-                group.addWithUpdate(oImg)
-                var objects = group.getObjects();
-                for (x in objects) {
-                    console.log(objects[x])
-                }
-                group.set("visible",checked)
-                logoCreator.renderAll()
-            })
+            setPattern()
+        } else {
+            group.set("visible", checked)
+            logoCreator.renderAll()
         }
         
         
@@ -3989,6 +3949,49 @@
 
             }
         }
+    }
+
+    function setPattern() {
+        let group = logoCreator.getObjects('group').find(o => o.id == "pattern")
+        let color = $("#patternSelector").spectrum("get").toHex().toLowerCase()
+
+        let objects = group.getObjects();
+		for (x in objects) {
+			group.remove(objects[x]);
+		}
+            
+        let pattern = new fabric.Image.fromURL('./images/patterns/'+$("#patternSelect").val()+'.png', function(oImg) {
+            oImg.set({
+                id: 'pattern',
+                visible: true,
+            })
+            oImg.filters.push(new fabric.Image.filters.BlendColor({
+                color: color,
+                mode: 'tint',
+                alpha: 1.0
+            }))
+            oImg.applyFilters()
+            switch ($("#logoShapeSelect").val()) {
+                case "roundel":
+                    oImg.set("clipPath",roundelClip)
+                    break;
+                case "circle":
+                    oImg.set("clipPath",circleClip)
+                    break;
+                case "square":
+                    oImg.set("clipPath",squareClip)
+                    break;
+                case "homePlate":
+                    oImg.set("clipPath",homePlateClip)
+                    break;
+                case "roundedSquare":
+                    oImg.set("clipPath",roundedSquareClip)
+                    break;
+            }
+            group.addWithUpdate(oImg)
+            group.set("visible",true)
+            logoCreator.renderAll()
+        })
     }
 
     function getExtension(filename) {
