@@ -11,21 +11,33 @@ const ColorThief = require('colorthief');
 const font2base64 = require("node-font2base64")
 const chokidar = require("chokidar")
 const imagemagickCli = require('imagemagick-cli')
+const prompt = require('electron-prompt');
 
 const isMac = process.platform === 'darwin'
 const tempDir = os.tmpdir()
 
 const store = new Store();
 const userFontsFolder = path.join(app.getPath('userData'),"fonts")
+const userPatternsFolder = path.join(app.getPath('userData'),"patterns")
 
 if (!fs.existsSync(userFontsFolder)) {
     fs.mkdirSync(userFontsFolder);
+}
+
+if (!fs.existsSync(userPatternsFolder)) {
+    fs.mkdirSync(userPatternsFolder);
 }
 
 if (!fs.existsSync(userFontsFolder+"/README.txt")) {
 	var writeStream = fs.createWriteStream(userFontsFolder+"/README.txt");
 	writeStream.write("TTF and OTF fonts dropped into this folder will automatically be imported into the Logo Maker!\r\n\r\nFonts removed from this folder will still be available in the Logo Maker until you quit the app, and they will not reload after that.")
 	writeStream.end()
+}
+
+if (!fs.existsSync(userPatternsFolder+"/README.txt")) {
+	var writeStream2 = fs.createWriteStream(userPatternsFolder+"/README.txt");
+	writeStream2.write("Patterns must be in PNG format.\r\n\r\nPatterns should be transparent - any opaque pixels will appear as the same color in the app.")
+	writeStream2.end()
 }
 
 const watcher = chokidar.watch(userFontsFolder, {
@@ -583,6 +595,20 @@ ipcMain.on('save-logo', (event, arg) => {
     });
 })
 
+ipcMain.on('local-pattern-folder', (event, arg) => {
+	filenames = fs.readdirSync(userPatternsFolder)
+	let jsonArr = []
+	for (i=0; i<filenames.length; i++) {
+        if (path.extname(filenames[i]).toLowerCase() == ".json") {
+			//let filePath = path.join(userFontsFolder,filenames[i])
+			let txt = fs.readFileSync(path.join(userPatternsFolder,filenames[i]))
+			let jsonObj = JSON.parse(txt)
+			jsonArr.push(jsonObj)
+		}
+	}
+	event.sender.send('local-pattern-folder-response', jsonArr)
+})
+
 ipcMain.on('local-font-folder', (event, arg) => {
 	const jsonObj = {}
 	const jsonArr = []
@@ -625,15 +651,85 @@ ipcMain.on('local-font-folder', (event, arg) => {
 	event.sender.send('local-font-folder-response', jsonObj)
 })
 
-ipcMain.on('open-font-folder', (event, arg) => {
-	shell.openPath(userFontsFolder)
+ipcMain.on('open-folder', (event, arg) => {
+	switch (arg) {
+		case "fonts":
+			shell.openPath(userFontsFolder)
+			break;
+		case "patterns":
+			shell.openPath(userPatternsFolder)
+			break;
+	}
+})
+
+ipcMain.on('add-pattern', (event, arg) => {
+	let json = {}
+    const options = {
+		defaultPath: store.get("uploadImagePath", app.getPath('pictures')),
+		properties: ['openFile'],
+		filters: [
+			{ name: 'PNG files', extensions: ['png'] }
+		]
+	}
+    dialog.showOpenDialog(null, options).then(result => {
+        if (!result.canceled) {
+			store.set("uploadImagePath", path.dirname(result.filePaths[0]))
+			let filePath = path.join(userPatternsFolder,path.basename(result.filePaths[0]))
+			Jimp.read(result.filePaths[0], (err, image) => {
+				if (err) {
+					json.filename = "error not an image"
+					json.image = "error not an image"
+					event.sender.send('add-pattern-response', json)
+				} else {
+					prompt({
+						title: 'Add A Pattern',
+						label: 'Please enter a display name:',
+						value: '',
+						inputAttrs: {
+							type: 'text',
+							required: 'true'
+						},
+						type: 'input'
+					})
+					.then((r) => {
+						if(r === null) {
+							console.log('user cancelled');
+						} else {
+							let wsJ = {}
+							wsJ.displayName = r
+							wsJ.fileName = filePath
+							let writeStream = fs.createWriteStream(userPatternsFolder+"/"+path.basename(result.filePaths[0])+".json");
+							writeStream.write(JSON.stringify(wsJ))
+							writeStream.end()
+							fs.copyFileSync(result.filePaths[0], filePath)
+							image.getBase64(Jimp.AUTO, (err, ret) => {
+								json.path = result.filePaths[0]
+								json.filename = filePath
+								json.image = ret
+								json.name = r
+								event.sender.send('add-pattern-response', json)
+							})
+						}
+					})
+					.catch(console.error);
+				}
+			})
+            .catch(err => { json.filename = "error not an image"
+                json.image = "error not an image"
+                event.sender.send('add-pattern-response', err) 
+            })
+        } else {
+            res.end()
+			  console.log("cancelled")
+        }
+    })
 })
 
 
 function createWindow () {
     const mainWindow = new BrowserWindow({
       width: 1280,
-      height: 780,
+      height: 800,
       icon: (__dirname + '/images/icon.ico'),
       webPreferences: {
           nodeIntegration: true,
