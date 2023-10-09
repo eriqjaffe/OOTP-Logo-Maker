@@ -3,6 +3,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Sofia+Sans+Extra+Condensed&family=Sofia+Sans+Semi+Condensed&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Passion+One&family=Staatliches&display=swap');
 
+::-webkit-scrollbar {
+    display: none;
+}
+
 body {
 	font-family: 'Sofia Sans Extra Condensed', sans-serif;
 	font-size: 1em;
