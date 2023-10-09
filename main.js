@@ -729,7 +729,7 @@ ipcMain.on('add-pattern', (event, arg) => {
 function createWindow () {
     const mainWindow = new BrowserWindow({
       width: 1280,
-      height: 975,
+      height: 800,
       icon: (__dirname + '/images/icon.ico'),
       webPreferences: {
           nodeIntegration: true,
