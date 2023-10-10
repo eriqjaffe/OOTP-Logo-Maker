@@ -37,6 +37,9 @@
         "dmg"
       ]
     },
+    "dmg": {
+      "writeUpdateInfo": false
+    },
     "win": {
       "target": [
         "nsis",
@@ -57,7 +60,8 @@
       "include": "build/installer.nsh",
       "uninstallDisplayName": "${productName} ${version}",
       "installerIcon": "build/icon.ico",
-      "uninstallerIcon": "build/icon.ico"
+      "uninstallerIcon": "build/icon.ico",
+      "differentialPackage": false
     },
     "linux": {
       "target": [
