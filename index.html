@@ -15,6 +15,7 @@
         <script type="text/javascript" src="./scripts/fontfaceobserver.js"></script>
         <script type="text/javascript" src="./scripts/dd.min.js"></script>
         <script type="text/javascript" src="./scripts/tooltipster.bundle.min.js"></script>
+        <script type="text/javascript" src="./scripts/sweetalert2.all.min.js"></script>
         <link href='./scripts/logomaker.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/spectrum.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/skeletabs.css' rel='stylesheet' type='text/css'>
@@ -3098,15 +3099,61 @@
         ipcRenderer.send("add-pattern", null)
     })
 
+    function getUserInput() {
+        return Swal.fire({
+            title: 'Enter a name for the pattern:',
+            input: 'text',
+            inputAttributes: {
+                autocapitalize: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Submit',
+            showLoaderOnConfirm: true,
+            preConfirm: (inputValue) => {
+                let haystack = []
+
+                $("#patternSelect> option").each(function() {
+                    haystack.push(this.text.toLowerCase());
+                });
+
+                inputValue = inputValue.trim();
+                const isValid = !(haystack.includes(inputValue.toLowerCase()));
+                if (!isValid) {
+                    Swal.showValidationMessage('There is already a pattern with that name.');
+                }
+                return isValid ? inputValue : false;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                return result.value;
+            } else {
+                throw new Error('Input canceled.');
+            }
+        });
+    }
+
+    // Example usage
+
+    async function setPatternName(filename) {
+        try {
+            const validInput = await getUserInput();
+            //console.log(validInput, filename)
+            // console.log("Valid input:", validInput);
+            $('#patternSelect').append($('<option>', { 
+                value: filename,
+                text : validInput 
+            }));
+            sortFontDropdowns()
+            $("#patternSelect").val(filename)
+            setPattern(filename)
+            ipcRenderer.send('write-pattern-definition', {displayName: validInput, fileName: filename})
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
     ipcRenderer.on('add-pattern-response', (event, response) => {
-        console.log(response)
-        $('#patternSelect').append($('<option>', { 
-            value: response.filename,
-            text : response.name 
-        }));
-        sortFontDropdowns()
-        $("#patternSelect").val(response.filename)
-        setPattern(response.filename)
+        setPatternName(response.filename)
     })
 
 	$("#cityName").on("keyup change", function(e) {

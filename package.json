@@ -21,7 +21,6 @@
     "chokidar": "^3.5.3",
     "color-sorter": "^6.0.0",
     "colorthief": "^2.4.0",
-    "electron-prompt": "^1.7.0",
     "electron-store": "^8.1.0",
     "fontname": "^1.0.1",
     "hasbin": "^1.2.3",
