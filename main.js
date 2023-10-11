@@ -11,7 +11,6 @@ const ColorThief = require('colorthief');
 const font2base64 = require("node-font2base64")
 const chokidar = require("chokidar")
 const imagemagickCli = require('imagemagick-cli')
-const prompt = require('electron-prompt');
 
 const isMac = process.platform === 'darwin'
 const tempDir = os.tmpdir()
@@ -681,37 +680,14 @@ ipcMain.on('add-pattern', (event, arg) => {
 					json.image = "error not an image"
 					event.sender.send('add-pattern-response', json)
 				} else {
-					prompt({
-						title: 'Add A Pattern',
-						label: 'Please enter a display name:',
-						value: '',
-						inputAttrs: {
-							type: 'text',
-							required: 'true'
-						},
-						type: 'input'
+					fs.copyFileSync(result.filePaths[0], filePath)
+					image.getBase64(Jimp.AUTO, (err, ret) => {
+						json.path = result.filePaths[0]
+						json.filename = filePath
+						json.image = ret
+						//json.name = r
+						event.sender.send('add-pattern-response', json)
 					})
-					.then((r) => {
-						if(r === null) {
-							console.log('user cancelled');
-						} else {
-							let wsJ = {}
-							wsJ.displayName = r
-							wsJ.fileName = filePath
-							let writeStream = fs.createWriteStream(userPatternsFolder+"/"+path.basename(result.filePaths[0])+".json");
-							writeStream.write(JSON.stringify(wsJ))
-							writeStream.end()
-							fs.copyFileSync(result.filePaths[0], filePath)
-							image.getBase64(Jimp.AUTO, (err, ret) => {
-								json.path = result.filePaths[0]
-								json.filename = filePath
-								json.image = ret
-								json.name = r
-								event.sender.send('add-pattern-response', json)
-							})
-						}
-					})
-					.catch(console.error);
 				}
 			})
             .catch(err => { json.filename = "error not an image"
@@ -725,6 +701,17 @@ ipcMain.on('add-pattern', (event, arg) => {
     })
 })
 
+ipcMain.on('write-pattern-definition', (event, arg) => {
+	let json = {}
+	let displayName = arg.displayName;
+	let fileName = arg.fileName;
+	let filePath = path.join(userPatternsFolder,path.basename(fileName))
+	json.displayName = displayName
+	json.fileName = filePath
+	let writeStream = fs.createWriteStream(userPatternsFolder+"/"+path.basename(fileName)+".json");
+	writeStream.write(JSON.stringify(json))
+	writeStream.end()
+})
 
 function createWindow () {
     const mainWindow = new BrowserWindow({
