@@ -3813,16 +3813,22 @@
     }
 
     function setBottomTextDelta() {
-        let g = logoCreator.getObjects().find(o => o.id == "roundelTextBottom")
+        let r = logoCreator.getObjects().find(o => o.id == "roundelTextBottom")
+        let c = logoCreator.getObjects().find(o => o.id == "circleTextBottom")
+        let s = logoCreator.getObjects().find(o => o.id == "squareTextBottom")
+        let rs = logoCreator.getObjects().find(o => o.id == "roundedSquareTextBottom")
         let amt = parseInt($("#bottomTextDeltaY").val())
-        let len = g.text.length
+        let len = $("#nickName").val().length
         let style = {}
         let chars = {}
         for (i=0; i<len; i++) {
             chars[i] = {deltaY: (amt*-1)}
         }
         style[0] = chars
-        g.set("styles", style)
+        r.set("styles", style)
+        c.set("styles", style)
+        s.set("styles", style)
+        rs.set("styles", style)
         logoCreator.renderAll()
     }
 
