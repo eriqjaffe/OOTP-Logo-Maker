@@ -98,7 +98,7 @@ td {
 	text-align:center;
 	width:60%;
 	margin:0 auto;
-	background:#103959;
+	background:#174207;
 	-moz-border-radius:20px;  
 	border-radius: 20px;  
 	-webkit-border-radius: 20px;
@@ -123,14 +123,14 @@ td {
 	-moz-border-radius: 5px 5px 0 0;
 	-webkit-border-radius: 5px 5px 0 0;
 	border-radius: 5px 5px 0 0;
- 	background: #103959;
+ 	background: #174207;
 }
 
 .locked-active-header {
 	-moz-border-radius: 5px 5px 0 0;
 	-webkit-border-radius: 5px 5px 0 0;
 	border-radius: 5px 5px 0 0;
-	background: #103959;
+	background: #174207;
 	color: #FFFFFF;
 	background-repeat: no-repeat;
 	background-position: right 50%;
@@ -156,14 +156,14 @@ td {
 	-moz-border-radius: 5px 5px 0 0;
 	-webkit-border-radius: 5px 5px 0 0;
 	border-radius: 5px 5px 0 0;
-	background: url(../images/active-header.gif) #103959;
+	background: url(../images/active-header.gif) #174207;
 	color: #FFFFFF;
 	background-repeat: no-repeat;
 	background-position: right 50%;
 }
 
 .active-header:hover {
-	background: url(../images/active-header.gif) #3C6686;
+	background: url(../images/active-header.gif) #457E30;
 	background-repeat: no-repeat;
 	background-position: right 50%;
 }
@@ -223,7 +223,7 @@ img.dd-option-image, img.dd-selected-image {
 }
 
 a.dd-option:hover{ 
-    background:#c3dff4; 
+    background:#BADDAD; 
 }
 
 tr.imagemagick {
@@ -392,7 +392,7 @@ fieldset {
 }
 
 legend {
-	background: #103959;
+	background: #174207;
 	color: #000000;
 	-moz-border-radius:5px;  
 	border-radius: 5px;  
@@ -474,7 +474,7 @@ legend {
 }
 
 .colorSquare:hover {
-	border: 1px solid #0078D7;
+	border: 1px solid #2C6617;
 }
 
 .colorSquareActive {
@@ -487,12 +487,12 @@ legend {
 }
 
 .colorSquareSelected {
-	border: 2px solid #0078D7;
+	border: 2px solid #2C6617;
 	-moz-border-radius: 3px;  
 	border-radius: 3px;  
 	-webkit-border-radius: 20px;
 	width: 85px;
-    box-shadow: 0px 0px 4px #0078D7;
+    box-shadow: 0px 0px 4px #2C6617;
 }
 
 .linkActive {
