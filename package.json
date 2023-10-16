@@ -21,13 +21,54 @@
     "chokidar": "^3.5.3",
     "color-sorter": "^6.0.0",
     "colorthief": "^2.4.0",
-    "electron-builder": "^24.6.4",
-    "electron-prompt": "^1.7.0",
     "electron-store": "^8.1.0",
     "fontname": "^1.0.1",
     "hasbin": "^1.2.3",
     "imagemagick-cli": "^0.5.0",
     "jimp": "^0.22.8",
     "node-font2base64": "^0.9.2"
+  },
+  "build": {
+    "appId": "com.ootputilities.uniformmaker",
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": [
+        "dmg"
+      ]
+    },
+    "dmg": {
+      "writeUpdateInfo": false
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "portable": {
+      "artifactName": "${productName}_${version}_portable.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "allowElevation": true,
+      "artifactName": "${productName} ${version} setup.${ext}",
+      "menuCategory": "OOTP Utilities",
+      "shortcutName": "${productName}",
+      "include": "build/installer.nsh",
+      "uninstallDisplayName": "${productName} ${version}",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "differentialPackage": false
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "rpm",
+        "tar.gz"
+      ]
+    },
+    "deb": {}
   }
 }
