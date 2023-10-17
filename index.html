@@ -15,7 +15,7 @@
         <script type="text/javascript" src="./scripts/fontfaceobserver.js"></script>
         <script type="text/javascript" src="./scripts/dd.min.js"></script>
         <script type="text/javascript" src="./scripts/tooltipster.bundle.min.js"></script>
-        <script type="text/javascript" src="./scripts/sweetalert2.all.min.js"></script>
+        <script type="text/javascript" src="./scripts/sweetalert2.min.js"></script>
         <link href='./scripts/logomaker.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/spectrum.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/skeletabs.css' rel='stylesheet' type='text/css'>
@@ -23,6 +23,7 @@
         <link href='./scripts/dd.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/tooltipster.bundle.min.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/tooltipster-sideTip-light.min.css' rel='stylesheet' type='text/css'>
+        <link href='./scripts/sweetalert2.css' rel='stylesheet' type='text/css'>
         <script>
             const { ipcRenderer } = require('electron');
             const { sort, sortFn, convert } = require('color-sorter')
@@ -449,7 +450,7 @@
                                                         <path class="dirArrow" action="RIGHT" d="M86,50 78,54 78,46Z" fill="rgba(0,0,0,0.8)" id="path4585" parent="rightButton" pointer-events= "none" />
                                                     </svg>
                                                 </div>
-                                                <input type="button" id="addPattern" value="Add A Pattern" style="margin-top:5px;" disabled>
+                                                <input type="button" class="button" id="addPattern" value="Add A Pattern" style="margin-top:5px;" disabled>
                                             </td>
                                             <td style="text-align:right;">
                                                 <input class="patternSelector selector" type="text" id="patternSelector">
