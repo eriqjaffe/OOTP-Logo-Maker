@@ -15,7 +15,7 @@
         <script type="text/javascript" src="./scripts/fontfaceobserver.js"></script>
         <script type="text/javascript" src="./scripts/dd.min.js"></script>
         <script type="text/javascript" src="./scripts/tooltipster.bundle.min.js"></script>
-        <script type="text/javascript" src="./scripts/sweetalert2.all.min.js"></script>
+        <script type="text/javascript" src="./scripts/sweetalert2.min.js"></script>
         <link href='./scripts/logomaker.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/spectrum.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/skeletabs.css' rel='stylesheet' type='text/css'>
@@ -23,6 +23,7 @@
         <link href='./scripts/dd.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/tooltipster.bundle.min.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/tooltipster-sideTip-light.min.css' rel='stylesheet' type='text/css'>
+        <link href='./scripts/sweetalert2.css' rel='stylesheet' type='text/css'>
         <script>
             const { ipcRenderer } = require('electron');
             const { sort, sortFn, convert } = require('color-sorter')
@@ -48,6 +49,8 @@
             let colorX = ""
             let colorY = ""
             let movementDelta = 1
+
+            let textVis = { top: true, bottom: true }
         </script>
     </head>
     <body>
@@ -196,10 +199,10 @@
                                             <td colspan="3" style="text-align:center;">
                                                 <label>Size:&nbsp;</label>
                                                 <input type="number" class="topTextClass" id="topTextSize" value="40" min="0" max="359" onkeypress="return isNumberKey(event)">
-                                                <label>&nbsp;Spacing:&nbsp;</label>
-                                                <input type="number" class="topTextClass" id="topTextSpacing" value="0" style="width:40px;" onkeypress="return isNumberKey(event)">
-                                                <!--<label>&nbsp;Baseline:&nbsp;</label>
-                                                <input type="number" class="topTextClass" id="topTextDeltaY" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">-->
+                                                <label>&nbsp;&nbsp;&nbsp;&nbsp;Spacing:&nbsp;</label>
+                                                <input type="number" class="topTextClass" id="topTextSpacing" value="0" style="width:40px;" onkeypress="return isNumberOrMinusKey(event)">
+                                                <label>&nbsp;&nbsp;&nbsp;&nbsp;Baseline:&nbsp;</label>
+                                                <input type="number" class="topTextClass" id="topTextDeltaY" value="0" min="-100" max="100" onkeypress="return isNumberOrMinusKey(event)">
                                             </td>
                                         </tr>
                                         <tr class="color_tr">
@@ -298,10 +301,10 @@
                                             <td colspan="3" style="text-align:center;">
                                                 <label>Size:&nbsp;</label>
                                                 <input type="number" class="bottomTextClass" id="bottomTextSize" value="40" min="0" max="359" onkeypress="return isNumberKey(event)">
-                                                <label>&nbsp;Spacing:&nbsp;</label>
-                                                <input type="number" class="bottomTextClass" id="bottomTextSpacing" value="0" style="width:40px;" onkeypress="return isNumberKey(event)">
-                                                <!--<label>&nbsp;Baseline:&nbsp;</label>
-                                                <input type="number" class="bottomTextClass" id="bottomTextDeltaY" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">-->
+                                                <label>&nbsp;&nbsp;&nbsp;&nbsp;Spacing:&nbsp;</label>
+                                                <input type="number" class="bottomTextClass" id="bottomTextSpacing" value="0" style="width:40px;" onkeypress="return isNumberOrMinusKey(event)">
+                                                <label>&nbsp;&nbsp;&nbsp;&nbsp;Baseline:&nbsp;</label>
+                                                <input type="number" class="bottomTextClass" id="bottomTextDeltaY" value="0" min="-100" max="100" onkeypress="return isNumberOrMinusKey(event)">
                                             </td>
                                         </tr>
                                         <tr class="color_tr">
@@ -311,7 +314,7 @@
                                             </td>
                                             <td style="text-align:right;">
                                                 <!--<input id="textRotation" type="number" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">-->
-                                                <input type="range" class="range" id="textRotation" value="0" min="-180" max="180" style="margin-left:5px; margin-right:5px;"> 
+                                                <input type="range" class="range" id="textRotation" value="0" min="-180" max="180" style="margin-left:5px; margin-right:5px;">
                                                 <input id="textRotationAmount" type="number" value="0" min="-180" max="180" onkeypress="return isNumberOrMinusKey(event)">
                                             </td>
                                         </tr>
@@ -447,7 +450,7 @@
                                                         <path class="dirArrow" action="RIGHT" d="M86,50 78,54 78,46Z" fill="rgba(0,0,0,0.8)" id="path4585" parent="rightButton" pointer-events= "none" />
                                                     </svg>
                                                 </div>
-                                                <input type="button" id="addPattern" value="Add A Pattern" style="margin-top:5px;" disabled>
+                                                <input type="button" class="button" id="addPattern" value="Add A Pattern" style="margin-top:5px;" disabled>
                                             </td>
                                             <td style="text-align:right;">
                                                 <input class="patternSelector selector" type="text" id="patternSelector">
@@ -561,7 +564,7 @@
             </div>
             <div id="FAQ" class="cm-white-popup mfp-hide">
                 <div style="width:100%; text-align:center;">	
-                    <span class="header" style="color:#103959!important;">About The OOTP Logo Maker</span>
+                    <span class="header" style="color:#174207!important;">About The OOTP Logo Maker</span>
                 </div>
                 <div id="faqContainer" style="width:100%; height:90%; overflow:auto;">
                     <div class="question" style="margin-top:10px!important;">So what is this thing?</div><br>
@@ -655,7 +658,7 @@
 
         $(".tipster").tooltipster('disable');
 
-        $("#exampleText").val($("#cityName").val()+" "+$("#nickName").val())
+        $("#exampleText").val($("#cityName").val().toUpperCase()+" "+$("#nickName").val().toUpperCase())
 
         let topFontDropdown = new MsDropdown(document.getElementById("topFont"), {visibleRows: 6})
         let bottomFontDropdown = new MsDropdown(document.getElementById("bottomFont"), {visibleRows: 6})
@@ -1104,28 +1107,28 @@
         const clr = (color == null) ? 'transparent' : color.toHexString()
         switch (el) {
             case "topTextColor":
-                logoCreator.getObjects("text").forEach(function (o) {
+                logoCreator.getObjects("i-text").forEach(function (o) {
                     if (o.id == 'roundelTextTop' || o.id == 'circleTextTop') {
                         o.set("fill",clr)
                     }
                 })
                 break;
             case "bottomTextColor":
-                logoCreator.getObjects("text").forEach(function (o) {
+                logoCreator.getObjects("i-text").forEach(function (o) {
                     if (o.id == 'roundelTextBottom' || o.id == 'circleTextBottom') {
                         o.set("fill",clr)
                     }
                 })
                 break;
             case "topTextStrokeColor":
-                logoCreator.getObjects("text").forEach(function (o) {
+                logoCreator.getObjects("i-text").forEach(function (o) {
                     if (o.id == 'roundelTextTop' || o.id == 'circleTextTop') {
                         o.set("stroke",clr)
                     }
                 })
                 break;
             case "bottomTextStrokeColor":
-                logoCreator.getObjects("text").forEach(function (o) {
+                logoCreator.getObjects("i-text").forEach(function (o) {
                     if (o.id == 'roundelTextBottom' || o.id == 'circleTextBottom') {
                         o.set("stroke",clr)
                     }
@@ -1178,61 +1181,37 @@
         logoCreator.renderAll()
     }
 
-    $("#topTextSize").on("change",function(e) {
+    $("#topTextSize").on("input",function(e) {
         for (o of topTextObjects) {
             o.set('fontSize', parseInt($(this).val()))
         }
         logoCreator.renderAll()
     })
 
-    $("#topTextSpacing").on("change",function(e) {
+    $("#topTextSpacing").on("input",function(e) {
         for (o of topTextObjects) {
             o.set('charSpacing', parseInt(($(this).val() * 10)))
         }
         logoCreator.renderAll()
     })
 
-    $("#bottomTextSize").on("change",function(e) {
+    $("#bottomTextSize").on("input",function(e) {
         for (o of bottomTextObjects) {
             o.set('fontSize', parseInt($(this).val()))
         }
         logoCreator.renderAll()
     })
 
-    $("#bottomTextSpacing").on("change",function(e) {
+    $("#bottomTextSpacing").on("input",function(e) {
         for (o of bottomTextObjects) {
             o.set('charSpacing', parseInt(($(this).val() * 10)))
         }
-        logoCreator.renderAll()
-    })
-
-    $(document).on('input', '#textRotation', function() {
-        const angle = parseInt($(this).val())
-        logoCreator.getObjects('text').forEach(function(o) {
-            switch (o.id) {
-                case "roundelTextTop":
-                    o.set("angle", (angle + 180) % 360)
-                    break;
-                case "roundelTextBottom":
-                    o.set("angle", angle)
-                    break;
-				case "circleTextTop":
-                    o.set("angle", (angle + 180) % 360)
-                    break;
-                case "circleTextBottom":
-                    o.set("angle", angle)
-                    break;
-            }
-        })
-        $("#textRotationAmount").val(angle)
-        const d = logoCreator.getObjects('group').find(o => o.id == "decor")
-        d.set("angle",angle)
         logoCreator.renderAll()
     })
 
     $("#textRotationAmount").on("input",function(e) {
         const angle = parseInt($(this).val())
-        logoCreator.getObjects('text').forEach(function(o) {
+        logoCreator.getObjects('i-text').forEach(function(o) {
             switch (o.id) {
                 case "roundelTextTop":
                     o.set("angle", (angle + 180) % 360)
@@ -1254,20 +1233,9 @@
         logoCreator.renderAll()
     })
 
-    $("#textRotationAmount").on("change",function(e) {
-        let angle = 0
-        if ($(this).val().length < 1) {
-            angle = 0
-        }
-        if ($(this).val() < -180) { 
-            angle = -180
-        }
-        if ($(this).val() > 180) { 
-            angle = 180
-        }
-        $(this).val(angle)
-        $("#textRotation").val(angle)
-        logoCreator.getObjects('text').forEach(function(o) {
+    $("#textRotation").on("input",function(e) {
+        const angle = parseInt($(this).val())
+        logoCreator.getObjects('i-text').forEach(function(o) {
             switch (o.id) {
                 case "roundelTextTop":
                     o.set("angle", (angle + 180) % 360)
@@ -1275,7 +1243,7 @@
                 case "roundelTextBottom":
                     o.set("angle", angle)
                     break;
-                case "circleTextTop":
+				case "circleTextTop":
                     o.set("angle", (angle + 180) % 360)
                     break;
                 case "circleTextBottom":
@@ -1283,6 +1251,7 @@
                     break;
             }
         })
+        $("#textRotationAmount").val(parseInt($(this).val()))
         const d = logoCreator.getObjects('group').find(o => o.id == "decor")
         d.set("angle",angle)
         logoCreator.renderAll()
@@ -1311,7 +1280,7 @@
         }
     })
 
-    $("#stitchRotation").on("change",function(e) {
+    $("#stitchRotation").on("input",function(e) {
         const s = logoCreator.getObjects('group').find(o => o.id == "stitches")
         const r = logoCreator.getObjects('group').find(o => o.id == "roundelStitches")
         const c = logoCreator.getObjects('group').find(o => o.id == "circleStitches")      
@@ -1321,7 +1290,7 @@
         logoCreator.renderAll()
     })
 
-    $("#patternRotation").on("change",function(e) {     
+    $("#patternRotation").on("input",function(e) {     
         logoCreator.getObjects('group').find(o => o.id == "pattern").set("angle", parseInt($(this).val()))
         logoCreator.renderAll()
     })
@@ -2274,7 +2243,7 @@
         topfont.load()
         .then(function() {
         // when font is loaded, use it.
-            roundelTextTop = new fabric.Text($("#cityName").val(),{
+            roundelTextTop = new fabric.IText($("#cityName").val(),{
                 visible: true,
                 fontFamily: $("#topFont").val(),
                 fontSize: 40,
@@ -2303,7 +2272,7 @@
                 charSpacing: 0
             })
 
-            circleTextTop = new fabric.Text($("#cityName").val(),{
+            circleTextTop = new fabric.IText($("#cityName").val(),{
                 visible: false,
                 fontFamily: $("#topFont").val(),
                 fontSize: 30,
@@ -2333,7 +2302,7 @@
                 charSpacing: 0
             })
 
-            homePlateText = new fabric.Text($("#cityName").val()+" "+$("#nickName").val(),{
+            homePlateText = new fabric.IText($("#cityName").val()+" "+$("#nickName").val(),{
                 visible: false,
                 fontFamily: $("#topFont").val(),
                 fontSize: 25,
@@ -2364,7 +2333,7 @@
                 charSpacing: 0
             })
 
-            squareTextTop = new fabric.Text($("#cityName").val(),{
+            squareTextTop = new fabric.IText($("#cityName").val(),{
                 visible: false,
                 fontFamily: $("#topFont").val(),
                 fontSize: 35,
@@ -2395,7 +2364,7 @@
                 charSpacing: 0
             })
 
-            roundedSquareTextTop = new fabric.Text($("#cityName").val(),{
+            roundedSquareTextTop = new fabric.IText($("#cityName").val(),{
                 visible: false,
                 fontFamily: $("#topFont").val(),
                 fontSize: 35,
@@ -2433,7 +2402,7 @@
             logoCreator.add(homePlateText)
             logoCreator.add(squareTextTop)
             logoCreator.add(roundedSquareTextTop)
-
+            
             topTextObjects.push(roundelTextTop, circleTextTop, homePlateText, squareTextTop, roundedSquareTextTop)
         }).catch(function(e) {
             console.log(e)
@@ -2444,7 +2413,7 @@
         bottomFont.load()
         .then(function() {
         // when font is loaded, use it.
-            roundelTextBottom = new fabric.Text($("#nickName").val(),{
+            roundelTextBottom = new fabric.IText($("#nickName").val(),{
                 visible: true,
                 fontFamily: $("#bottomFont").val(),
                 fontSize: 40,
@@ -2477,7 +2446,7 @@
                 charSpacing: 0
             })
 
-            circleTextBottom = new fabric.Text($("#nickName").val(),{
+            circleTextBottom = new fabric.IText($("#nickName").val(),{
                 visible: false,
                 fontFamily: $("#bottomFont").val(),
                 fontSize: 30,
@@ -2511,7 +2480,7 @@
                 charSpacing: 0
             })
 
-            squareTextBottom = new fabric.Text($("#nickName").val(),{
+            squareTextBottom = new fabric.IText($("#nickName").val(),{
                 visible: false,
                 fontFamily: $("#bottomFont").val(),
                 fontSize: 35,
@@ -2542,7 +2511,7 @@
                 charSpacing: 0
             })
 
-            roundedSquareTextBottom = new fabric.Text($("#nickName").val(),{
+            roundedSquareTextBottom = new fabric.IText($("#nickName").val(),{
                 visible: false,
                 fontFamily: $("#bottomFont").val(),
                 fontSize: 35,
@@ -2609,7 +2578,7 @@
         var font = new FontFaceObserver("mplus")
         font.load()
         .then(function() {
-            var infoText = new fabric.Text(outputName(), {
+            var infoText = new fabric.IText(outputName(), {
                 id: 'infoText',
                 fontFamily: "mplus",
                 fontSize: 25,
@@ -2631,6 +2600,7 @@
     
     $("#topTextCheck").on("change",function(e) {
         const checked = $(this).is(":checked")
+        textVis.top = checked
         $(".topTextClass").each(function(o) {
             $(this).prop('disabled',checked ? false : true);
         })
@@ -2653,7 +2623,7 @@
                     circleTextTop.set('visible',true)
                     break;
                 case "homePlate":
-                    homePlateTextTop.set('visible',true)
+                    homePlateText.set('visible',true)
                     break;
                 case "square":
                     squareTextTop.set('visible',true)
@@ -2683,6 +2653,7 @@
 
     $("#bottomTextCheck").on("change",function(e) {
         const checked = $(this).is(":checked")
+        textVis.bottom = checked
         $(".bottomTextClass").each(function(o) {
             $(this).prop('disabled',checked ? false : true);
         })
@@ -2732,7 +2703,6 @@
         if (selected == "none") {
             // just hide everything but images and exit function
             logoCreator.getObjects().forEach(function (o) {
-                console.log(o.id, o.type)
                 if (o.type != "image") {
                     o.set("visible",false)
                 } else {
@@ -2743,6 +2713,12 @@
             })
             
             logoCreator.renderAll()
+
+            textVis.top = $("#topTextCheck").is(":checked")
+            textVis.bottom = $("#bottomTextCheck").is(":checked")
+
+            console.log(textVis)
+
             $(".toggleAll").each(function(o) {
                 $(this).prop( "checked", false );
                 $(this).trigger("change")
@@ -2771,12 +2747,11 @@
 			}
 		})
         if (selected == 'homePlate') {
-            console.log("OK HOME PLATE")
-            logoCreator.getObjects('text').forEach(function(o) {
+            logoCreator.getObjects('i-text').forEach(function(o) {
                 o.set('visible',(o.id == 'homePlateText'))
             })
         } else {
-            logoCreator.getObjects('text').forEach(function(o) {
+            logoCreator.getObjects('i-text').forEach(function(o) {
                 if (o.id.startsWith(selected)) {
                     if (o.id.includes("Top")) {
                         o.set("visible",$("#topTextCheck").is(":checked"))
@@ -2804,10 +2779,12 @@
                     visible: false,
                     clipPath: circleClip,
                 })
-                p.set({
-                    visible: patternVisible,
-                    clipPath: roundelClip,
-                })
+                if (p != undefined) {
+                    p.set({
+                        visible: patternVisible,
+                        clipPath: roundelClip,
+                    })
+                }
                 d.set({
                     visible: true
                 })
@@ -2846,10 +2823,12 @@
                     visible: visible,
                     clipPath: circleClip,
                 })
-                p.set({
-                    visible: patternVisible,
-                    clipPath: circleClip,
-                })
+                if (p != undefined) {
+                    p.set({
+                        visible: patternVisible,
+                        clipPath: circleClip,
+                    })
+                }
                 d.set({
                     visible: false
                 })
@@ -2888,10 +2867,12 @@
                     visible: false,
                     clipPath: circleClip,
                 })
-                p.set({
-                    visible: patternVisible,
-                    clipPath: homePlateClip,
-                })
+                if (p != undefined) {
+                    p.set({
+                        visible: patternVisible,
+                        clipPath: homePlateClip,
+                    })
+                }
                 d.set({
                     visible: false
                 })
@@ -2930,10 +2911,12 @@
                     visible: false,
                     clipPath: circleClip,
                 })
-                p.set({
-                    visible: patternVisible,
-                    clipPath: squareClip,
-                })
+                if (p != undefined) {
+                    p.set({
+                        visible: patternVisible,
+                        clipPath: squareClip,
+                    })
+                }
                 d.set({
                     visible: false
                 })
@@ -2978,10 +2961,12 @@
                 cf.set({
                     visible: false
                 })
-                p.set({
-                    visible: patternVisible,
-                    clipPath: roundedSquareClip ,
-                })
+                if (p != undefined) {
+                    p.set({
+                        visible: patternVisible,
+                        clipPath: roundedSquareClip,
+                    })
+                }
                 hf.set({
                     visible: false
                 })
@@ -3005,6 +2990,10 @@
         if (overlay) {
             $("#overlaySelect").trigger("change")
         }
+
+        $("#topTextCheck").prop("checked", textVis.top).trigger("change");
+        $("#bottomTextCheck").prop("checked", textVis.top).trigger("change");
+        
 		logoCreator.renderAll()
 	})
 
@@ -3088,7 +3077,7 @@
         }
     })
 
-    $("#patternScale").on("change",function(e) {
+    $("#patternScale").on("input",function(e) {
         let p = logoCreator.getObjects('group').find(o => o.id == 'pattern')
         p.set("scaleX", 1+($(this).val()/100))
         p.set("scaleY", 1+($(this).val()/100))
@@ -3159,14 +3148,15 @@
 	$("#cityName").on("keyup change", function(e) {
 		const text = $(this).val()
         const info = infoCanvas.getObjects().find(o => o.id == 'infoText')
-		logoCreator.getObjects('text').forEach(function(o) {
+		logoCreator.getObjects('i-text').forEach(function(o) {
 			if (o.id.includes("Top")) {
 				o.set("text", text)
 			}	
 		})
-        var tx = logoCreator.getObjects('text').find(o => o.id == 'homePlateText')
+        var tx = logoCreator.getObjects('i-text').find(o => o.id == 'homePlateText')
         tx.set("text", text + " " + $("#nickName").val())
-        $("#exampleText").val($("#cityName").val()+" "+$("#nickName").val())
+        $("#exampleText").val($("#cityName").val().toUpperCase()+" "+$("#nickName").val().toUpperCase())
+        setTopTextDelta()
 		logoCreator.renderAll()
         
         info.set("text",outputName())
@@ -3176,14 +3166,15 @@
 	$("#nickName").on("keyup change", function(e) {
 		const text = $(this).val()
         const info = infoCanvas.getObjects().find(o => o.id == 'infoText')
-		logoCreator.getObjects('text').forEach(function(o) {
+		logoCreator.getObjects('i-text').forEach(function(o) {
 			if (o.id.includes("Bottom")) {
 				o.set("text", text)
 			}	
 		})
-        var tx = logoCreator.getObjects('text').find(o => o.id == 'homePlateText')
+        var tx = logoCreator.getObjects('i-text').find(o => o.id == 'homePlateText')
         tx.set("text", $("#cityName").val() + " " + text)
-        $("#exampleText").val($("#cityName").val()+" "+$("#nickName").val())
+        $("#exampleText").val($("#cityName").val().toUpperCase()+" "+$("#nickName").val().toUpperCase())
+        setBottomTextDelta()
 		logoCreator.renderAll()
         info.set("text",outputName())
         infoCanvas.renderAll()
@@ -3825,6 +3816,61 @@
         }
     })
 
+    $("#topTextDeltaY").on("input", function(e) {
+        setTopTextDelta()
+    })
+
+    $("#bottomTextDeltaY").on("input", function(e) {
+        setBottomTextDelta()
+    })
+
+    function setTopTextDelta() {
+        let r = logoCreator.getObjects().find(o => o.id == "roundelTextTop")
+        let c = logoCreator.getObjects().find(o => o.id == "circleTextTop")
+        let s = logoCreator.getObjects().find(o => o.id == "squareTextTop")
+        let rs = logoCreator.getObjects().find(o => o.id == "roundedSquareTextTop")
+        let hp = logoCreator.getObjects().find(o => o.id == "homePlateText")
+        let amt = parseInt($("#topTextDeltaY").val())
+        let len = $("#cityName").val().length
+        let style = {}
+        let chars = {}
+        for (i=0; i<len; i++) {
+            chars[i] = {deltaY: (amt*-1)}
+        }
+        style[0] = chars
+        r.set("styles", style)
+        c.set("styles", style)
+        s.set("styles", style)
+        rs.set("styles", style)
+        len = $("#cityName").val().length + $("#nickName").val().length + 1
+        for (i=0; i<len; i++) {
+            chars[i] = {deltaY: (amt*-1)}
+        }
+        style[0] = chars
+        hp.set("styles", style)
+        logoCreator.renderAll()
+    }
+
+    function setBottomTextDelta() {
+        let r = logoCreator.getObjects().find(o => o.id == "roundelTextBottom")
+        let c = logoCreator.getObjects().find(o => o.id == "circleTextBottom")
+        let s = logoCreator.getObjects().find(o => o.id == "squareTextBottom")
+        let rs = logoCreator.getObjects().find(o => o.id == "roundedSquareTextBottom")
+        let amt = parseInt($("#bottomTextDeltaY").val())
+        let len = $("#nickName").val().length
+        let style = {}
+        let chars = {}
+        for (i=0; i<len; i++) {
+            chars[i] = {deltaY: (amt*-1)}
+        }
+        style[0] = chars
+        r.set("styles", style)
+        c.set("styles", style)
+        s.set("styles", style)
+        rs.set("styles", style)
+        logoCreator.renderAll()
+    }
+
     logoCreator.on('mouse:move', function(e) {
 		if (logoCreator.hoverCursor != "move") {
 			var ctx = logoCreator.contextContainer;
@@ -3927,7 +3973,7 @@
                     roundedSquareTextBottom.set('fontFamily',data.familyName)
                     logoCreator.renderAll()
 
-                    var tmpTxt = new fabric.Text("ABC 123",{
+                    var tmpTxt = new fabric.IText("ABC 123",{
                         fontFamily: data.familyName,
                         fontSize: 96,
                         originX: 'center',
