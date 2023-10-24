@@ -1,6 +1,6 @@
-# OOTP-Logo-Maker
-
 <img src="https://i.imgur.com/j7WxEM7.png">
+
+# OOTP Logo Maker
 
 At long last, a cross-platform tool to help you make logos for OOTP Baseball
 
