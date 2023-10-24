@@ -2,8 +2,6 @@
 
 # OOTP Logo Maker
 
-I've been asked numerous times if I would ever consider making this.
-
 At long last, a cross-platform tool to help you make logos for OOTP Baseball
 
 - 5 different logo "shapes" to choose from.
