@@ -1,7 +1,7 @@
 {
   "name": "OOTP-Logo-Maker",
   "productName": "OOTP Logo Maker",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "OOTP Logo Maker",
   "main": "main.js",
   "repository": "https://github.com/eriqjaffe/OOTP-Logo-Maker",
@@ -29,7 +29,7 @@
     "node-font2base64": "^0.9.2"
   },
   "build": {
-    "appId": "com.ootputilities.uniformmaker",
+    "appId": "com.ootputilities.logomaker",
     "mac": {
       "category": "public.app-category.utilities",
       "target": [
