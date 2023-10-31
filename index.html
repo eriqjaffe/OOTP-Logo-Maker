@@ -4235,7 +4235,7 @@
                        + $("#teamBGColor").spectrum("get").toHex().toLowerCase()
                        + "_"
                        + $("#teamTextColor").spectrum("get").toHex().toLowerCase()
-        return outputName
+        return outputName.replace(" ","_")
     }
 
     function findIndexByText(dropdown, text) {

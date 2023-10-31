@@ -1,13 +1,14 @@
-# OOTP-Logo-Maker
+<img src="https://i.imgur.com/j7WxEM7.png">
 
-<img src="https://i.imgur.com/M7fveHm.png">
+# OOTP Logo Maker
 
 At long last, a cross-platform tool to help you make logos for OOTP Baseball
 
-- 5 different "shapes" to choose from.
-- 3 different "gloss" styles to choose from.
+- 5 different logo "shapes" to choose from.
+- 3 different gloss overlay styles to choose from.
 - 22 different background patterns to choose from, or you can add your own.
+- 68 font options to choose from, or you can add your own.
 
-All the stock elements can be customized - change colors and angles on pretty much everything, and you can even scale the background patterns to your liking.
+Most of the the stock elements can be customized - change sizes, colors, and angles on pretty much everything, and you can even scale the background patterns to your liking.
 
-Like my other apps, you can also import fonts from your computer, although they may not work quite right as I'm still trying to figure out how to adjust the baselines of the fonts.
+If you've used any of my other apps over the years, you'll already have a pretty good idea how this works.
