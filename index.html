@@ -488,12 +488,12 @@
                                             <td style="text-align:center;">
                                                 <input type="checkbox" class="capTextToggle" data-group="textLogo" data-id="capLogoTextStroke1" id="capLogoStroke1ColorCheck" checked>
                                                 <label>Width:&nbsp;</label>
-                                                <input type="number" id="capLogoStroke1Width" class="strokeWidth" data-group="textLogo" data-id="capLogoTextStroke1" data-canvas="capLogoCanvas" value="4" min="0" max="20">
+                                                <input type="number" id="capLogoStroke1Width" class="strokeWidth" data-group="textLogo" data-id="capLogoTextStroke1" data-canvas="logoCreator" value="4" min="0" max="20">
                                                 <input class="textSelector textColorSelector selector" type="text" id="capLogoStroke1Color" data-element="capLogoTextStroke1" data-canvas="above">
                                             </td>
                                             <td style="text-align:center;"><input type="checkbox" class="capTextToggle" data-group="textLogo" data-id="capLogoTextStroke2" id="capLogoStroke2ColorCheck" checked>
                                                 <label>Width:&nbsp;</label>
-                                                <input type="number" id="capLogoStroke2Width" class="strokeWidth" data-group="textLogo" data-id="capLogoTextStroke2" data-canvas="capLogoCanvas" value="6" min="0" max="20">
+                                                <input type="number" id="capLogoStroke2Width" class="strokeWidth" data-group="textLogo" data-id="capLogoTextStroke2" data-canvas="logoCreator" value="6" min="0" max="20">
                                                 <input class="textSelector textColorSelector selector" type="text" id="capLogoStroke2Color" data-element="capLogoTextStroke2" data-canvas="above">
                                             </td>
                                         </tr>
@@ -513,13 +513,13 @@
                                             <td style="text-align:center;">
                                                 <input type="checkbox" class="capText2Toggle" data-group="textLogo2" data-id="capLogo2TextStroke1" id="capLogo2Stroke1ColorCheck" checked>
                                                 <label>Width:&nbsp;</label>
-                                                <input type="number" id="capLogo2Stroke1Width" class="strokeWidth" data-group="textLogo2" data-id="capLogo2TextStroke1" data-canvas="capLogoCanvas" value="4" min="0" max="20">
+                                                <input type="number" id="capLogo2Stroke1Width" class="strokeWidth" data-group="textLogo2" data-id="capLogo2TextStroke1" data-canvas="logoCreator" value="4" min="0" max="20">
                                                 <input class="textSelector text2ColorSelector selector" type="text" id="capLogo2Stroke1Color" data-element="capLogo2TextStroke1" data-canvas="above">
                                             </td>
                                             <td style="text-align:center;">
                                                 <input type="checkbox" class="capText2Toggle" data-group="textLogo2" data-id="capLogo2TextStroke2" id="capLogo2Stroke2ColorCheck" checked>
                                                 <label>Width:&nbsp;</label>
-                                                <input type="number" id="capLogo2Stroke2Width" class="strokeWidth" data-group="textLogo2" data-id="capLogo2TextStroke2" data-canvas="capLogoCanvas" value="6" min="0" max="20">
+                                                <input type="number" id="capLogo2Stroke2Width" class="strokeWidth" data-group="textLogo2" data-id="capLogo2TextStroke2" data-canvas="logoCreator" value="6" min="0" max="20">
                                                 <input class="textSelector text2ColorSelector selector" type="text" id="capLogo2Stroke2Color" data-element="capLogo2TextStroke2" data-canvas="above">
                                             </td>
                                         <tr>
@@ -2705,6 +2705,123 @@
         logoCreator.add(homePlate)
         logoCreator.add(square)
         logoCreator.add(roundedSquare)
+
+        opentype.load("./fonts/Acme-Regular.ttf", (err,font) => {
+			if (err || !font) {
+				console.log(err)
+				return;
+			}
+
+			const path = font.getPath("L",95,275,160)
+			const svgPath = path.toPathData(5)
+
+			capLogoText = new fabric.Path(svgPath,{
+				left: 225,
+				top: 225,
+				originX: 'center',
+				originY: 'center',
+				centeredScaling: true,
+				centeredRotation: true,
+				id: 'capLogoText',
+				fill: initialColors["capLogoTextColor"]
+			})
+			
+			capLogoTextStroke1 = new fabric.Path(svgPath,{
+				originX: 'center',
+				originY: 'center',
+				left: 225,
+				top: 225,
+				centeredScaling: true,
+				centeredRotation: true,
+				stroke: initialColors["capLogoStroke1Color"],
+				strokeWidth: 10,
+				strokeLineCap: "round",
+				id: 'capLogoTextStroke1',
+				fill: initialColors["capLogoStroke1Color"]
+			})
+			
+			capLogoTextStroke2 = new fabric.Path(svgPath,{
+				originX: 'center',
+				originY: 'center',
+				left: 225,
+				top: 225,
+				centeredScaling: true,
+				centeredRotation: true,
+				stroke: initialColors["capLogoStroke2Color"],
+				strokeWidth: 20,
+				strokeLineCap: "round",
+				id: 'capLogoTextStroke2',
+				fill: initialColors["capLogoStroke2Color"]
+			})
+			
+			textLogo = new fabric.Group ([])
+			textLogo.set({
+				visible:true,
+				id:'textLogo',
+				description: "Cap Text #1"
+			});
+
+			textLogo.addWithUpdate(capLogoTextStroke2)
+			textLogo.addWithUpdate(capLogoTextStroke1)
+			textLogo.addWithUpdate(capLogoText)
+
+			logoCreator.add(textLogo);
+
+			const path2 = font.getPath("A",115,295,160)
+			const svgPath2 = path2.toPathData(5)
+
+			capLogo2Text = new fabric.Path(svgPath2,{
+				left: 275,
+				top: 275,
+				originX: 'center',
+				originY: 'center',
+				centeredScaling: true,
+				centeredRotation: true,
+				id: 'capLogo2Text',
+				fill: initialColors["capLogoTextColor"]
+			})
+			
+			capLogo2TextStroke1 = new fabric.Path(svgPath2,{
+				originX: 'center',
+				originY: 'center',
+				left: 275,
+				top: 275,
+				centeredScaling: true,
+				centeredRotation: true,
+				stroke: initialColors["capLogoStroke1Color"],
+				strokeWidth: 10,
+				strokeLineCap: "round",
+				id: 'capLogo2TextStroke1',
+				fill: initialColors["capLogoStroke1Color"]
+			})
+			
+			capLogo2TextStroke2 = new fabric.Path(svgPath2,{
+				originX: 'center',
+				originY: 'center',
+				left: 275,
+				top: 275,
+				centeredScaling: true,
+				centeredRotation: true,
+				stroke: initialColors["capLogoStroke2Color"],
+				strokeWidth: 20,
+				strokeLineCap: "round",
+				id: 'capLogo2TextStroke2',
+				fill: initialColors["capLogoStroke2Color"]
+			})
+			
+			textLogo2 = new fabric.Group ([])
+			textLogo2.set({
+				visible:true,
+				id:'textLogo2',
+				description: "Cap Text #2"
+			});
+
+			textLogo2.addWithUpdate(capLogo2TextStroke2)
+			textLogo2.addWithUpdate(capLogo2TextStroke1)
+			textLogo2.addWithUpdate(capLogo2Text)
+
+			logoCreator.add(textLogo2);
+		})
         
         logoCreator.renderAll()
     }
@@ -4250,6 +4367,136 @@
             logoCreator.renderAll()
         })
     }
+
+    function capWordmarkChange(data,newFont) {
+		var tmp = (data.fontPath == undefined) ? data : data.fontPath;
+		opentype.load(tmp, (err,font) => {
+			if (err || !font) {
+				console.log(err)
+				return;
+			}
+
+			var grp = logoCreator.getObjects("group").find(o => o.id === "textLogo")
+			var grp2 = logoCreator.getObjects("group").find(o => o.id === "textLogo2")
+
+			grp.getObjects('path').forEach(function(o) {
+				grp.removeWithUpdate(o)
+			})
+
+			grp2.getObjects('path').forEach(function(o) {
+				grp2.removeWithUpdate(o)
+			})
+
+			const path = font.getPath($("#capText").val(),95,275,60)
+			const svgPath = path.toPathData(5)
+
+			capLogoText = new fabric.Path(svgPath,{
+				left: 95,
+				top: 275,
+				originX: 'center',
+				originY: 'center',
+				centeredScaling: true,
+				centeredRotation: true,
+				id: 'capLogoText',
+				fill: $("#capLogoTextColor").spectrum("get")
+			})
+			
+			capLogoTextStroke1 = new fabric.Path(svgPath,{
+				originX: 'center',
+				originY: 'center',
+				left: 95,
+				top: 275,
+				centeredScaling: true,
+				centeredRotation: true,
+				stroke: $("#capLogoStroke1Color").spectrum("get"),
+				strokeWidth: $("#capLogoStroke1Width").val(),
+				strokeLineCap: "round",
+				id: 'capLogoTextStroke1',
+				fill: $("#capLogoStroke1Color").spectrum("get")
+			})
+			
+			capLogoTextStroke2 = new fabric.Path(svgPath,{
+				originX: 'center',
+				originY: 'center',
+				left: 95,
+				top: 275,
+				centeredScaling: true,
+				centeredRotation: true,
+				stroke: $("#capLogoStroke2Color").spectrum("get"),
+				strokeWidth: $("#capLogoStroke2Width").val(),
+				strokeLineCap: "round",
+				id: 'capLogoTextStroke2',
+				fill: $("#capLogoStroke2Color").spectrum("get")
+			})
+
+			textLogo.addWithUpdate(capLogoTextStroke2)
+			textLogo.addWithUpdate(capLogoTextStroke1)
+			textLogo.addWithUpdate(capLogoText)
+
+			const path2 = font.getPath($("#capText2").val(),115,295,60)
+			const svgPath2 = path2.toPathData(5)
+
+			capLogo2Text = new fabric.Path(svgPath2,{
+				left: 115,
+				top: 295,
+				originX: 'center',
+				originY: 'center',
+				centeredScaling: true,
+				centeredRotation: true,
+				id: 'capLogo2Text',
+				fill: $("#capLogo2TextColor").spectrum("get")
+			})
+			
+			capLogo2TextStroke1 = new fabric.Path(svgPath2,{
+				originX: 'center',
+				originY: 'center',
+				left: 115,
+				top: 295,
+				centeredScaling: true,
+				centeredRotation: true,
+				stroke: $("#capLogo2Stroke1Color").spectrum("get"),
+				strokeWidth: $("#capLogo2Stroke1Width").val(),
+				strokeLineCap: "round",
+				id: 'capLogo2TextStroke1',
+				fill: $("#capLogo2Stroke1Color").spectrum("get")
+			})
+			
+			capLogo2TextStroke2 = new fabric.Path(svgPath2,{
+				originX: 'center',
+				originY: 'center',
+				left: 115,
+				top: 295,
+				centeredScaling: true,
+				centeredRotation: true,
+				stroke: $("#capLogo2Stroke2Color").spectrum("get"),
+				strokeWidth: $("#capLogo2Stroke2Width").val(),
+				strokeLineCap: "round",
+				id: 'capLogo2TextStroke2',
+				fill: $("#capLogo2Stroke2Color").spectrum("get")
+			})
+
+			textLogo2.addWithUpdate(capLogo2TextStroke2)
+			textLogo2.addWithUpdate(capLogo2TextStroke1)
+			textLogo2.addWithUpdate(capLogo2Text)
+
+			logoCreator.renderAll()
+
+			if (newFont) {
+				var thumbText = font.getPath("ABC 123", 0, 0, 96)
+				var outPath = thumbText.toPathData(5)
+
+				var foo = new fabric.Path(outPath, {
+					fill: 'black',
+					top: 0,
+					left: 0
+				})
+
+				refreshDropdowns(data,foo)
+
+				//updateDDSlick("cap",addData,addData2)
+			}
+		})
+	}
 
     function getExtension(filename) {
 		var ext = (filename||'').split('.');
