@@ -35,7 +35,7 @@
 
             const im = (params.get('im') == "true") ? true : false
 
-            const initialColors = {topTextColor:"#ffffff", topTextStrokeColor:"#000000", bottomTextColor:"#ffffff", bottomTextStrokeColor:"#000000", teamBGColor:"#0C2340", teamTextColor: "#ffffff", stitches: "#e82a50", roundelOuterStroke: "#ffffff", roundelInnerStroke: "red", roundelOuterCircle: "blue", roundelCenterStroke: "green", roundelInnerCircle: "#ffffff", OuterStroke: 'red', CenterStroke: 'green', InnerStroke: 'blue', Fill: 'yellow', pattern: "#e82a50"}
+            const initialColors = {topTextColor:"#ffffff", topTextStrokeColor:"#000000", bottomTextColor:"#ffffff", bottomTextStrokeColor:"#000000", teamBGColor:"#0C2340", teamTextColor: "#ffffff", stitches: "#e82a50", roundelOuterStroke: "#ffffff", roundelInnerStroke: "red", roundelOuterCircle: "blue", roundelCenterStroke: "green", roundelInnerCircle: "#ffffff", OuterStroke: 'red', CenterStroke: 'green', InnerStroke: 'blue', Fill: 'yellow', pattern: "#e82a50", capLogoTextColor: "#0000ff", capLogoStroke1Color: "#ffffff", capLogoStroke2Color: "#ff0000", capLogo2TextColor: "#0000ff", capLogo2Stroke1Color: "#ffffff", capLogo2Stroke2Color: "#ff0000"}
 
             const validFontTypes = ["ttf", "otf"]
             const validImageTypes = ["png","jpg","jpeg","bmp","gif","tiff"]
@@ -471,6 +471,141 @@
                                         </tr>
                                     </table>
                                 </div>
+                                <div class="accord-header inactive-header" id="monogramHeader">Monogram</div>
+                                <div class="accord-content">
+                                    <table style="width:478px;">
+                                        <tr>
+                                            <td class="checkCell"><input type="checkbox" class="capTextureToggle textActiveToggle" data-id="textLogo" data-textbox="capText" data-checkbox="capTextToggle" data-selector="textColorSelector" id="textLogoCheck"></td>
+                                            <td colspan="2"><label>Text: </label><input type="text" class="capText" id="capText" data-id="capText" value="L" style="width:79%; text-align:center;" disabled/></td>
+                                        </tr>
+                                    </table>
+                                    <table style="width:478px;" id="tableOne">
+                                        <tr>
+                                            <td style="text-align:center;">
+                                                <input type="checkbox" class="capTextToggle" data-group="textLogo" data-id="capLogoText" id="capLogoTextColorCheck" checked>
+                                                <input class="textSelector textColorSelector selector" type="text" id="capLogoTextColor" data-element="capLogoText" data-canvas="above">
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <input type="checkbox" class="capTextToggle" data-group="textLogo" data-id="capLogoTextStroke1" id="capLogoStroke1ColorCheck" checked>
+                                                <label>Width:&nbsp;</label>
+                                                <input type="number" id="capLogoStroke1Width" class="strokeWidth" data-group="textLogo" data-id="capLogoTextStroke1" data-canvas="capLogoCanvas" value="4" min="0" max="20">
+                                                <input class="textSelector textColorSelector selector" type="text" id="capLogoStroke1Color" data-element="capLogoTextStroke1" data-canvas="above">
+                                            </td>
+                                            <td style="text-align:center;"><input type="checkbox" class="capTextToggle" data-group="textLogo" data-id="capLogoTextStroke2" id="capLogoStroke2ColorCheck" checked>
+                                                <label>Width:&nbsp;</label>
+                                                <input type="number" id="capLogoStroke2Width" class="strokeWidth" data-group="textLogo" data-id="capLogoTextStroke2" data-canvas="capLogoCanvas" value="6" min="0" max="20">
+                                                <input class="textSelector textColorSelector selector" type="text" id="capLogoStroke2Color" data-element="capLogoTextStroke2" data-canvas="above">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table style="width:478px;">
+                                        <tr>
+                                            <td class="checkCell"><input type="checkbox" class="capTextureToggle textActiveToggle" data-id="textLogo2" data-textbox="capText2" data-checkbox="capText2Toggle" data-selector="text2ColorSelector" id="textLogo2Check"></td>
+                                            <td colspan="2"><label>Text: </label><input type="text" class="capText" id="capText2" data-id="capText2" value="A" style="width:79%; text-align:center;" disabled/></td>
+                                        </tr>
+                                    </table>
+                                    <table style="width:478px;" id="tableTwo">
+                                        <tr>
+                                            <td style="text-align:center;">
+                                                <input type="checkbox" class="capText2Toggle" data-group="textLogo2" data-id="capLogo2Text" id="capLogo2TextColorCheck" checked>
+                                                <input class="textSelector text2ColorSelector selector" type="text" id="capLogo2TextColor" data-element="capLogo2Text" data-canvas="above">
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <input type="checkbox" class="capText2Toggle" data-group="textLogo2" data-id="capLogo2TextStroke1" id="capLogo2Stroke1ColorCheck" checked>
+                                                <label>Width:&nbsp;</label>
+                                                <input type="number" id="capLogo2Stroke1Width" class="strokeWidth" data-group="textLogo2" data-id="capLogo2TextStroke1" data-canvas="capLogoCanvas" value="4" min="0" max="20">
+                                                <input class="textSelector text2ColorSelector selector" type="text" id="capLogo2Stroke1Color" data-element="capLogo2TextStroke1" data-canvas="above">
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <input type="checkbox" class="capText2Toggle" data-group="textLogo2" data-id="capLogo2TextStroke2" id="capLogo2Stroke2ColorCheck" checked>
+                                                <label>Width:&nbsp;</label>
+                                                <input type="number" id="capLogo2Stroke2Width" class="strokeWidth" data-group="textLogo2" data-id="capLogo2TextStroke2" data-canvas="capLogoCanvas" value="6" min="0" max="20">
+                                                <input class="textSelector text2ColorSelector selector" type="text" id="capLogo2Stroke2Color" data-element="capLogo2TextStroke2" data-canvas="above">
+                                            </td>
+                                        <tr>
+                                    </table>
+                                    <table style="width:478px;">
+                                        <tr>
+                                            <td colspan="3">
+                                                <select id="capTextSelect" class="textOption msdd" style="width:100%;">
+                                                    <option data-image="./images/Acme.png" value="./fonts/Acme-Regular.ttf">Acme</option>
+                                                    <option data-image="./images/All State.png" value="./fonts/all_state-webfont.ttf">All State</option>
+                                                    <option data-image="./images/Athletic Gothic.png" value="./fonts/athletic_gothic-webfont.ttf">Athletic Gothic</option>
+                                                    <option data-image="./images/Athletic Gothic Shadow.png" value="./fonts/athletic_gothic_shadow-webfont.ttf">Athletic Gothic Shadow</option>
+                                                    <option data-image="./images/Beaverton Script.png" value="./fonts/beaverton_script-webfont.ttf">Beaverton Script</option>
+                                                    <option data-image="./images/Berkshire Swash.png" value="./fonts/BerkshireSwash-Regular.ttf">Berkshire Swash</option>
+                                                    <option data-image="./images/CantoraOne.png" value="./fonts/CantoraOne-Regular.ttf">CantoraOne</option>
+                                                    <option data-image="./images/Caxton Roman.png" value="./fonts/caxton_roman-webfont.ttf">Caxton Roman</option>
+                                                    <option data-image="./images/Chela One.png" value="./fonts/ChelaOne-Regular.ttf">Chela</option>
+                                                    <option data-image="./images/Russell Circus.png" value="./fonts/circus-webfont.ttf">Russell Circus</option>
+                                                    <option data-image="./images/Condiment.png" value="./fonts/Condiment-Regular.ttf">Condiment</option>
+                                                    <option data-image="./images/Cookie.png" value="./fonts/Cookie-Regular.ttf">Cookie</option>
+                                                    <option data-image="./images/Courgette.png" value="./fonts/Courgette-Regular.ttf">Courgette</option>
+                                                    <option data-image="./images/Croissant One.png" value="./fonts/CroissantOne-Regular.ttf">Croissant</option>
+                                                    <option data-image="./images/Damion.png" value="./fonts/Damion-Regular.ttf">Damion</option>
+                                                    <option data-image="./images/Engagement.png" value="./fonts/Engagement-Regular.ttf">Engagement</option>
+                                                    <option data-image="./images/Germania One.png" value="./fonts/GermaniaOne-Regular.ttf">Germania</option>
+                                                    <option data-image="./images/Graduate.png" value="./fonts/Graduate-Regular.ttf" selected>Graduate</option>
+                                                    <option data-image="./images/Grand Hotel.png" value="./fonts/GrandHotel-Regular.ttf">Grand Hotel</option>
+                                                    <option data-image="./images/Jockey One.png" value="./fonts/JockeyOne-Regular.ttf">Jockey</option>
+                                                    <option data-image="./images/Kaushan Script.png" value="./fonts/KaushanScript-Regular.ttf">Kaushan Script</option>
+                                                    <option data-image="./images/Leckerli One.png" value="./fonts/LeckerliOne-Regular.ttf">Leckerli</option>
+                                                    <option data-image="./images/Lily Script One.png" value="./fonts/LilyScriptOne-Regular.ttf">Lily Script</option>
+                                                    <option data-image="./images/Lobster.png" value="./fonts/Lobster-Regular.ttf">Lobster</option>
+                                                    <option data-image="./images/Lobster Two.png" value="./fonts/LobsterTwo-Regular.ttf">Lobster Two</option>
+                                                    <option data-image="./images/Metal Mania.png" value="./fonts/MetalMania-Regular.ttf">Metal Mania</option>
+                                                    <option data-image="./images/Miniver.png" value="./fonts/Miniver-Regular.ttf">Miniver</option>
+                                                    <option data-image="./images/MLB Block.png" value="./fonts/MLBBlock.ttf">MLB Block</option>
+                                                    <option data-image="./images/MLB Cubs.png" value="./fonts/MLBCubs.ttf">MLB Chicago N</option>
+                                                    <option data-image="./images/MLB Red Sox.png" value="./fonts/MLBRedSox.ttf">McAuliffe</option>
+                                                    <option data-image="./images/Molle.png" value="./fonts/Molle-Regular.ttf">Molle</option>
+                                                    <option data-image="./images/New Rocker.png" value="./fonts/NewRocker-Regular.ttf">New Rocker</option>
+                                                    <option data-image="./images/Norican.png" value="./fonts/Norican-Regular.ttf">Norican</option>
+                                                    <option data-image="./images/Oleo Script.png" value="./fonts/OleoScript-Regular.ttf">Oleo Script</option>
+                                                    <option data-image="./images/Pacifico.png" value="./fonts/Pacifico.ttf">Pacifico</option>
+                                                    <option data-image="./images/Pirata One.png" value="./fonts/PirataOne-Regular.ttf">Pirata</option>
+                                                    <option data-image="./images/Playball.png" value="./fonts/Playball-Regular.ttf">Playball</option>
+                                                    <option data-image="./images/Pro Full Block.png" value="./fonts/pro_full_block-webfont.ttf">Pro Full Block</option>
+                                                    <option data-image="./images/Quicksand.png" value="./fonts/Quicksand-Regular.ttf">Quicksand</option>
+                                                    <option data-image="./images/Rubik Mono One.png" value="./fonts/RubikMonoOne-Regular.ttf">Rubik Mono</option>
+                                                    <option data-image="./images/Rubik One.png" value="./fonts/RubikOne-Regular.ttf">Rubik</option>
+                                                    <option data-image="./images/Rum Raisin.png" value="./fonts/RumRaisin-Regular.ttf">Rum Raisin</option>
+                                                    <option data-image="./images/Satisfy.png" value="./fonts/Satisfy-Regular.ttf">Satisfy</option>
+                                                    <option data-image="./images/Seymour One.png" value="./fonts/SeymourOne-Regular.ttf">Seymour</option>
+                                                    <option data-image="./images/UA Tiffany.png" value="./fonts/tiffany-webfont.ttf">Tiffany</option>
+                                                    <option data-image="./images/Trade Winds.png" value="./fonts/TradeWinds-Regular.ttf">Trade Winds</option>
+                                                    <option data-image="./images/Kansas.png" value="./fonts/tuscan-webfont.ttf">Kansas</option>
+                                                    <option data-image="./images/UnifrakturCook.png" value="./fonts/UnifrakturCook-Bold.ttf">Unifraktur Cook</option>
+                                                    <option data-image="./images/UnifrakturMaguntia.png" value="./fonts/UnifrakturMaguntia-Book.ttf">Unifraktur Maguntia</option>
+                                                    <option data-image="./images/Varsity Block C.png" value="./fonts/VarsityBlockC.ttf">Varsity Block C</option>
+                                                    <option data-image="./images/Varsity Classic Serif A.png" value="./fonts/VarsityClassicSerifA.ttf">Varsity Classic Serif A</option>
+                                                    <option data-image="./images/Varsity Classic Serif B.png" value="./fonts/VarsityClassicSerifB.ttf">Varsity Classic Serif B</option>
+                                                    <option data-image="./images/Vibur.png" value="./fonts/Vibur-Regular.ttf">Vibur</option>
+                                                    <option data-image="./images/Viga.png" value="./fonts/Viga-Regular.ttf">Viga</option>
+                                                    <option data-image="./images/Wellfleet.png" value="./fonts/Wellfleet-Regular.ttf">Wellfleet</option>
+                                                    <option data-image="./images/Wendy One.png" value="./fonts/WendyOne-Regular.ttf">Wendy</option>
+                                                    <option data-image="./images/Yellowtail.png" value="./fonts/Yellowtail-Regular.ttf">Yellowtail</option>
+                                                    <option data-image="./images/Rawlings Fancy Block.png" value="./fonts/rawlingsfancyblock-regular-webfont.ttf">Fancy Block</option>
+                                                    <option data-image="./images/Rawlings Old English.png" value="./fonts/rawlingsoldenglish-webfont.ttf">Old English</option>
+                                                    <option data-image="./images/Richardson Fancy Block.png" value="./fonts/richardson_fancy_block-webfont.ttf">Fancy Block 2</option>
+                                                    <option data-image="./images/SPL28Script.png" value="./fonts/spl28script-webfont.ttf">SPL Script</option>
+                                                    <option data-image="./images/VarsityClassicD.png" value="./fonts/VarsityClassicD.ttf">Varsity Classic D</option>
+                                                    <option data-image="./images/VarsityBlockA.png" value="./fonts/VarsityBlockA.ttf">Varsity Block A</option>
+                                                    <option data-image="./images/VarsityBlockB.png" value="./fonts/VarsityBlockB.ttf">Varsity Block B</option>
+                                                    <option data-image="./images/VarsityBlockD.png" value="./fonts/VarsityBlockD.ttf">Varsity Block D</option>
+                                                    <option data-image="./images/VarsityClassicA.png" value="./fonts/VarsityClassicA.ttf">Varsity Classic A</option>
+                                                    <option data-image="./images/VarsityClassicB.png" value="./fonts/VarsityClassicB.ttf">Varsity Classic B</option>
+                                                    <option data-image="./images/VarsityClassicC.png" value="./fonts/VarsityClassicC.ttf">Varsity Classic C</option>
+                                                </select>	
+                                            </td>
+                                        </tr>
+                                        <tr><td colspan="3" align="center">
+                                            <input id="customFont" type="file" name="customFont" accept=".ttf, .otf" style="display:none;" />
+                                            <input type="button" class="button textOption localFontButton" id="fakeFontButton" data-canvas="cap" value="Choose a Local Font..." />
+                                            <input type="button" class="button textOption" id="uploadTheFont" value="Upload Font" style="display:none;" />
+                                        </td></tr>
+                                    </table>
+                                </div>
                                 <div class="accord-header inactive-header" id="imagesHeader">Images</div>
                                 <div class="accord-content">
                                     <div id="uploadImageDiv">
@@ -662,6 +797,7 @@
 
         let topFontDropdown = new MsDropdown(document.getElementById("topFont"), {visibleRows: 6})
         let bottomFontDropdown = new MsDropdown(document.getElementById("bottomFont"), {visibleRows: 6})
+        let monogramFontDropdown = new MsDropdown(document.getElementById("capTextSelect"), {visibleRows: 6})
 
         $("#localFontFolder").trigger("click")
 
@@ -3225,6 +3361,7 @@
 		if (data.result == 'success') {
             let topFontDropdown = document.getElementById("topFont").msDropdown;
             let bottomFontDropdown = document.getElementById("bottomFont").msDropdown
+            let monogramFontDropdown = document.getElementById("capTextSelect").msDropdown
 
 			for (result of data.fonts) {
                 if (result.status == "ok") {
@@ -3262,6 +3399,8 @@
 							bottomFontDropdown.add({text:name, value:value, image:thumb},0)
                             
 							//if (value == prefs.preferredNumberFont) { bottomFontDropdown.selectedIndex = 0 }
+
+                            monogramFontDropdown.add({text:name, value:value, image:thumb},0)
 						}
 
 						sortFontDropdowns()
@@ -3272,6 +3411,7 @@
 			}
             topFontDropdown.selectedIndex = 0
             bottomFontDropdown.selectedIndex = 0
+            monogramFontDropdown.selectedIndex = 0
 		}
 		//hideOverlay()
 		if (fontErrors.length > 0) {
@@ -3948,12 +4088,16 @@
                 // switch to the already known font
                 const topFontDropdown= document.getElementById("topFont").msDropdown;
                 const bottomFontDropdown = document.getElementById("bottomFont").msDropdown;
+                const monogramFontDropdown = document.getElementById("capTextSelect").msDropdown
                 var foo = findIndexByText(topFontDropdown, data.fontName)
                 topFontDropdown.selectedIndex = foo
                 topFontDropdown.refresh()
                 var bar = findIndexByText(bottomFontDropdown, data.fontName)
                 bottomFontDropdown.selectedIndex = bar
                 bottomFontDropdown.refresh()
+                var zoo = findIndexByText(monogramFontDropdown, data.fontName)
+                monogramFontDropdown.selectedIndex = zoo
+                monogramFontDropdown.refresh()
             } else {
                 // add the font to the app
                 $("head").prepend("<style>@font-face {\n   font-family: '"+data.familyName+"';\n   src: url('"+data.fontData+"') format('truetype');\n}\n."+data.familyName+" { font-family: '"+data.familyName+"';}\n</style>");
@@ -4160,6 +4304,7 @@
 
 		const topFontDropdown= document.getElementById("topFont").msDropdown;
         const bottomFontDropdown = document.getElementById("bottomFont").msDropdown;
+        const monogramFontDropdown = document.getElementById("capTextSelect").msDropdown;
 
 		const displayName = (data.fontStyle == "Regular") ? data.fontName : data.fontName +" "+data.fontStyle
 
@@ -4168,11 +4313,14 @@
 		if (idx == -1) {
 			topFontDropdown.add({text:displayName, value:data.fontName, image:data.thumb},0)
 			bottomFontDropdown.add({text:displayName, value:data.fontName, image:data.thumb},0)
+            monogramFontDropdown.add({text:displayName, value:data.fontName, image:data.thumb},0)
             topFontDropdown.selectedIndex = 0;
             bottomFontDropdown.selectedIndex = 0;
+            monogramFontDropdown.selectedIndex = 0
 		} else {
             topFontDropdown.selectedIndex = idx;
-            topFontDropdown.selectedIndex = idx;
+            bottomFontDropdown.selectedIndex = idx;
+            monogramFontDropdown.selectedIndex = idx;
 		}
 
 		sortFontDropdowns()
@@ -4181,6 +4329,7 @@
     function sortFontDropdowns() {
         const selectedTopFont = $("#topFont").val()
         const selectedBottomFont = $("#bottomFont").val()
+        const selectedMonogramFont = $("#capTextSelect").val()
         const selectedPattern = $("#patternSelect").val()
         const selectedDecor = $("#decorSelect").val()
 
@@ -4193,6 +4342,11 @@
          	return $(x).text().toLowerCase() < $(y).text().toLowerCase() ? -1 : 1;
 		}))
 		$("#bottomFont").val(selectedBottomFont)
+
+        $("#capTextSelect").html($('#capTextSelect option').sort(function(x, y) {
+         	return $(x).text().toLowerCase() < $(y).text().toLowerCase() ? -1 : 1;
+		}))
+		$("#capTextSelect").val(selectedMonogramFont)
 
         $("#patternSelect").html($('#patternSelect option').sort(function(x, y) {
          	return $(x).text().toLowerCase() < $(y).text().toLowerCase() ? -1 : 1;
