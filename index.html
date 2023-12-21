@@ -475,7 +475,7 @@
                                 <div class="accord-content">
                                     <table style="width:478px;">
                                         <tr>
-                                            <td class="checkCell"><input type="checkbox" class="capTextureToggle textActiveToggle" data-id="textLogo" data-textbox="capText" data-checkbox="capTextToggle" data-selector="textColorSelector" id="textLogoCheck"></td>
+                                            <td class="checkCell"><input type="checkbox" class="capTextureToggle textActiveToggle" data-id="textLogo" data-textbox="capText" data-number="monogram1Stroke" data-checkbox="capTextToggle" data-selector="textColorSelector" id="textLogoCheck"></td>
                                             <td colspan="2"><label>Text: </label><input type="text" class="capText" id="capText" data-id="capText" value="L" style="width:79%; text-align:center;" disabled/></td>
                                         </tr>
                                     </table>
@@ -488,19 +488,19 @@
                                             <td style="text-align:center;">
                                                 <input type="checkbox" class="capTextToggle" data-group="textLogo" data-id="capLogoTextStroke1" id="capLogoStroke1ColorCheck" checked>
                                                 <label>Width:&nbsp;</label>
-                                                <input type="number" id="capLogoStroke1Width" class="strokeWidth" data-group="textLogo" data-id="capLogoTextStroke1" data-canvas="logoCreator" value="4" min="0" max="20">
+                                                <input type="number" id="capLogoStroke1Width" class="strokeWidth monogram1Stroke" data-group="textLogo" data-id="capLogoTextStroke1" data-canvas="logoCreator" value="4" min="0" max="20">
                                                 <input class="textSelector textColorSelector selector" type="text" id="capLogoStroke1Color" data-element="capLogoTextStroke1" data-canvas="above">
                                             </td>
                                             <td style="text-align:center;"><input type="checkbox" class="capTextToggle" data-group="textLogo" data-id="capLogoTextStroke2" id="capLogoStroke2ColorCheck" checked>
                                                 <label>Width:&nbsp;</label>
-                                                <input type="number" id="capLogoStroke2Width" class="strokeWidth" data-group="textLogo" data-id="capLogoTextStroke2" data-canvas="logoCreator" value="6" min="0" max="20">
+                                                <input type="number" id="capLogoStroke2Width" class="strokeWidth monogram1Stroke" data-group="textLogo" data-id="capLogoTextStroke2" data-canvas="logoCreator" value="6" min="0" max="20">
                                                 <input class="textSelector textColorSelector selector" type="text" id="capLogoStroke2Color" data-element="capLogoTextStroke2" data-canvas="above">
                                             </td>
                                         </tr>
                                     </table>
                                     <table style="width:478px;">
                                         <tr>
-                                            <td class="checkCell"><input type="checkbox" class="capTextureToggle textActiveToggle" data-id="textLogo2" data-textbox="capText2" data-checkbox="capText2Toggle" data-selector="text2ColorSelector" id="textLogo2Check"></td>
+                                            <td class="checkCell"><input type="checkbox" class="capTextureToggle textActiveToggle" data-id="textLogo2" data-textbox="capText2" data-number="monogram2Stroke" data-checkbox="capText2Toggle" data-selector="text2ColorSelector" id="textLogo2Check"></td>
                                             <td colspan="2"><label>Text: </label><input type="text" class="capText" id="capText2" data-id="capText2" value="A" style="width:79%; text-align:center;" disabled/></td>
                                         </tr>
                                     </table>
@@ -513,13 +513,13 @@
                                             <td style="text-align:center;">
                                                 <input type="checkbox" class="capText2Toggle" data-group="textLogo2" data-id="capLogo2TextStroke1" id="capLogo2Stroke1ColorCheck" checked>
                                                 <label>Width:&nbsp;</label>
-                                                <input type="number" id="capLogo2Stroke1Width" class="strokeWidth" data-group="textLogo2" data-id="capLogo2TextStroke1" data-canvas="logoCreator" value="4" min="0" max="20">
+                                                <input type="number" id="capLogo2Stroke1Width" class="strokeWidth monogram2Stroke" data-group="textLogo2" data-id="capLogo2TextStroke1" data-canvas="logoCreator" value="4" min="0" max="20">
                                                 <input class="textSelector text2ColorSelector selector" type="text" id="capLogo2Stroke1Color" data-element="capLogo2TextStroke1" data-canvas="above">
                                             </td>
                                             <td style="text-align:center;">
                                                 <input type="checkbox" class="capText2Toggle" data-group="textLogo2" data-id="capLogo2TextStroke2" id="capLogo2Stroke2ColorCheck" checked>
                                                 <label>Width:&nbsp;</label>
-                                                <input type="number" id="capLogo2Stroke2Width" class="strokeWidth" data-group="textLogo2" data-id="capLogo2TextStroke2" data-canvas="logoCreator" value="6" min="0" max="20">
+                                                <input type="number" id="capLogo2Stroke2Width" class="strokeWidth monogram2Stroke" data-group="textLogo2" data-id="capLogo2TextStroke2" data-canvas="logoCreator" value="6" min="0" max="20">
                                                 <input class="textSelector text2ColorSelector selector" type="text" id="capLogo2Stroke2Color" data-element="capLogo2TextStroke2" data-canvas="above">
                                             </td>
                                         <tr>
@@ -603,6 +603,8 @@
                                             <input id="customFont" type="file" name="customFont" accept=".ttf, .otf" style="display:none;" />
                                             <input type="button" class="button textOption localFontButton" id="fakeFontButton" data-canvas="cap" value="Choose a Local Font..." />
                                             <input type="button" class="button textOption" id="uploadTheFont" value="Upload Font" style="display:none;" />
+                                            <input type="button" class="button" id="centerMonogram" value="Center Monogram">
+                                            <input type="button" class="button" id="cropMonogram" value="Crop To Shape">
                                         </td></tr>
                                     </table>
                                 </div>
@@ -802,6 +804,10 @@
         $("#localFontFolder").trigger("click")
 
         $("#localPatternFolder").trigger("click")
+        
+        $(".textActiveToggle").each(function() {
+            $(this).trigger("change")
+        })
 
         sortFontDropdowns()
         
@@ -1539,6 +1545,62 @@
             logoCreator.remove(o)
             logoCreator.renderAll()
         }
+    })
+
+    $(".textActiveToggle").on("change", function(e) {
+        let obj = logoCreator.getObjects('group').find(o => o.id == $(this).data("id"))
+        obj.set("visible",$(this).is(":checked"))
+        logoCreator.renderAll()
+        var checkbox = $(this).data("checkbox");
+		var selector = $(this).data("selector");
+		var textbox = $(this).data("textbox")
+        let num = $(this).data("number")
+		if ($(this).is(":checked")) {
+			$("#"+textbox).prop("disabled",false)
+			$("."+checkbox).each(function(e) {
+				$(this).prop("disabled",false)
+			})
+            $("."+num).each(function(e) {
+				$(this).prop("disabled",false)
+			})
+			$("."+selector).each(function(e) {
+				$(this).spectrum('enable');
+			})
+		} else {
+			$("#"+textbox).prop("disabled",true)
+			$("."+checkbox).each(function(e) {
+				$(this).prop("disabled",true)
+			})
+            $("."+num).each(function(e) {
+				$(this).prop("disabled",true)
+			})
+			$("."+selector).each(function(e) {
+				$(this).spectrum('disable');
+			})
+		}
+    })
+
+    $("#centerMonogram").on("click",function() {
+        let firstLetter = logoCreator.getObjects('group').find(o => o.id == 'textLogo')
+        let secondLetter = logoCreator.getObjects('group').find(o => o.id == 'textLogo2')
+        console.log(textLogo.visible)
+        if (textLogo.visible && !textLogo2.visible) {
+            logoCreator.centerObject(textLogo)
+        }
+        if (!textLogo.visible && textLogo2.visible) {
+            logoCreator.centerObject(textLogo2)
+        }
+        if (textLogo.visible && textLogo2.visible) {
+            let group = new fabric.Group([textLogo, textLogo2])
+            logoCreator.centerObject(group)
+            let items = group.getObjects();
+            group.destroy();
+            logoCreator.remove(group);
+            for(var i = 0; i < items.length; i++) {
+                logoCreator.add(items[i]);
+            }
+        }
+        logoCreator.renderAll()
     })
 
     fabric.Object.prototype.set({
@@ -2756,7 +2818,7 @@
 			
 			textLogo = new fabric.Group ([])
 			textLogo.set({
-				visible:true,
+				visible:false,
 				id:'textLogo',
 				description: "Cap Text #1"
 			});
@@ -2811,7 +2873,7 @@
 			
 			textLogo2 = new fabric.Group ([])
 			textLogo2.set({
-				visible:true,
+				visible:false,
 				id:'textLogo2',
 				description: "Cap Text #2"
 			});
@@ -2985,6 +3047,9 @@
         const p = logoCreator.getObjects('image').find(o => o.id == 'pattern')
         const d = logoCreator.getObjects('group').find(o => o.id == "decor")
         const i = logoCreator.getObjects('image')
+        let ma = logoCreator.getObjects('group').find(o => o.id == 'textLogo')
+        let mb = logoCreator.getObjects('group').find(o => o.id == 'textLogo2')
+        const m = [ma, mb]
         const visible = $("#stitchesCheck").is(":checked")
         const patternVisible = $("#patternCheck").is(":checked")
         const cf = logoCreator.getObjects().find(o => o.id == 'circleFill')
@@ -2993,12 +3058,14 @@
         const rf = logoCreator.getObjects().find(o => o.id == 'roundedSquareFill')
         const overlay = logoCreator.getObjects('image').find(o => o.id == 'overlayImage')
 		logoCreator.getObjects('group').forEach(function(o) {
-			if (o.id == selected) {
-				o.set("visible", true)
-			} else {
-				o.set("visible", false)
-			}
+            if (o.id == selected) {
+                o.set("visible", true)
+            } else {
+                o.set("visible", false)
+            }
 		})
+        ma.set('visible', $("#textLogoCheck").is(":checked"))
+        mb.set('visible', $("#textLogo2Check").is(":checked"))
         if (selected == 'homePlate') {
             logoCreator.getObjects('i-text').forEach(function(o) {
                 o.set('visible',(o.id == 'homePlateText'))
@@ -3062,6 +3129,12 @@
                         img.set({clipPath: roundelClip})
                     }
                 }
+                for (mon of m) {
+                    if (mon.clipPath != undefined || mon.clipPath != null) {
+                        mon.set({clipPath: roundelClip})
+                        mon.addWithUpdate()
+                    }
+                }
                 break;
             case "circle":
                 s.set({
@@ -3100,6 +3173,12 @@
                 for (img of i) {
                     if (img.clipPath != undefined || img.clipPath != null) {
                         img.set({clipPath: circleClip})
+                    }
+                }
+                for (mon of m) {
+                    if (mon.clipPath != undefined || mon.clipPath != null) {
+                        mon.set({clipPath: circleClip})
+                        mon.addWithUpdate()
                     }
                 }
                 $("#roundelDecorSelector").spectrum('disable')
@@ -3146,6 +3225,12 @@
                         img.set({clipPath: homePlateClip})
                     }
                 }
+                for (mon of m) {
+                    if (mon.clipPath != undefined || mon.clipPath != null) {
+                        mon.set({clipPath: homePlateClip})
+                        mon.addWithUpdate()
+                    }
+                }
                 $("#roundelDecorSelector").spectrum('disable')
                 $("#decorSelect").attr("disabled",true)
                 $("#roundelSpan").css("display","none")
@@ -3190,6 +3275,12 @@
                         img.set({clipPath: squareClip})
                     }
                 }
+                for (mon of m) {
+                    if (mon.clipPath != undefined || mon.clipPath != null) {
+                        mon.set({clipPath: squareClip})
+                        mon.addWithUpdate()
+                    }
+                }
                 $("#roundelDecorSelector").spectrum('disable')
                 $("#decorSelect").attr("disabled",true)
                 $("#roundelSpan").css("display","none")
@@ -3232,6 +3323,12 @@
                 for (img of i) {
                     if (img.clipPath != undefined || img.clipPath != null) {
                         img.set({clipPath: roundedSquareClip})
+                    }
+                }
+                for (mon of m) {
+                    if (mon.clipPath != undefined || mon.clipPath != null) {
+                        mon.set({clipPath: roundedSquareClip})
+                        mon.addWithUpdate()
                     }
                 }
                 $("#roundelDecorSelector").spectrum('disable')
@@ -3939,6 +4036,45 @@
 			$("#colorSquare").val(hex);	
 		});
 	})
+
+    $("#cropMonogram").on("click", function(e) {
+        let cp = ""
+        switch ($("#logoShapeSelect").val()) {
+            case "roundel":
+                cp = roundelClip
+                break;
+            case "circle":
+                cp = circleClip
+                break;
+            case "square":
+                cp = squareClip
+                break;
+            case "homePlate":
+                cp = homePlateClip
+                break;
+            case "roundedSquare":
+                cp = roundedSquareClip
+                break;
+        }
+        if ($(this).val() == "Crop To Shape") {
+            $(this).val("Overflow Shape")
+            textLogo.set({ clipPath: cp })
+            textLogo.moveTo(6)
+            textLogo2.set({ clipPath: cp })
+            textLogo2.moveTo(6)
+            textLogo.addWithUpdate()
+            textLogo2.addWithUpdate()
+        } else {
+            $(this).val("Crop To Shape")
+            logoCreator.bringToFront(textLogo)
+            textLogo.set({ clipPath: null })
+            logoCreator.bringToFront(textLogo2)
+            textLogo2.set({ clipPath: null })
+            textLogo.addWithUpdate()
+            textLogo2.addWithUpdate()
+        }
+        logoCreator.renderAll()
+    })
 
     $("#cropImage").on("click",function(e) {
         let o = logoCreator.getActiveObject()
