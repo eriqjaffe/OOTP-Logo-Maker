@@ -35,7 +35,7 @@
 
             const im = (params.get('im') == "true") ? true : false
 
-            const initialColors = {topTextColor:"#ffffff", topTextStrokeColor:"#000000", bottomTextColor:"#ffffff", bottomTextStrokeColor:"#000000", teamBGColor:"#0C2340", teamTextColor: "#ffffff", stitches: "#e82a50", roundelOuterStroke: "#ffffff", roundelInnerStroke: "red", roundelOuterCircle: "blue", roundelCenterStroke: "green", roundelInnerCircle: "#ffffff", OuterStroke: 'red', CenterStroke: 'green', InnerStroke: 'blue', Fill: 'yellow', pattern: "#e82a50", capLogoTextColor: "#0000ff", capLogoStroke1Color: "#ffffff", capLogoStroke2Color: "#ff0000", capLogo2TextColor: "#0000ff", capLogo2Stroke1Color: "#ffffff", capLogo2Stroke2Color: "#ff0000"}
+            const initialColors = {topTextColor:"#ffffff", topTextStrokeColor:"#000000", bottomTextColor:"#ffffff", bottomTextStrokeColor:"#000000", teamBGColor:"#0C2340", teamTextColor: "#ffffff", stitches: "#e82a50", roundelOuterStroke: "#ffffff", roundelInnerStroke: "red", roundelOuterCircle: "blue", roundelCenterStroke: "green", roundelInnerCircle: "#ffffff", OuterStroke: 'red', CenterStroke: 'green', InnerStroke: 'blue', Fill: 'yellow', pattern: "#e82a50", capLogoTextColor: "#0000ff", capLogoTextStroke1Color: "#ffffff", capLogoTextStroke2Color: "#ff0000", capLogo2TextColor: "#0000ff", capLogo2TextStroke1Color: "#ffffff", capLogo2TextStroke2Color: "#ff0000"}
 
             const validFontTypes = ["ttf", "otf"]
             const validImageTypes = ["png","jpg","jpeg","bmp","gif","tiff"]
@@ -475,52 +475,52 @@
                                 <div class="accord-content">
                                     <table style="width:478px;">
                                         <tr>
-                                            <td class="checkCell"><input type="checkbox" class="capTextureToggle textActiveToggle" data-id="textLogo" data-textbox="capText" data-number="monogram1Stroke" data-checkbox="capTextToggle" data-selector="textColorSelector" id="textLogoCheck"></td>
-                                            <td colspan="2"><label>Text: </label><input type="text" class="capText" id="capText" data-id="capText" value="L" style="width:79%; text-align:center;" disabled/></td>
+                                            <td class="checkCell"><input type="checkbox" class="monogramCheck capTextureToggle textActiveToggle" data-id="textLogo" data-textbox="capText" data-checkbox="capTextToggle" data-selector="textColorSelector" data-number="capTextStrokeWidth" id="textLogoCheck"></td>
+                                            <td colspan="2"><label>Text: </label><input type="text" class="capText capTextToggle" id="capText" data-id="capText" value="L" style="width:79%; text-align:center;" disabled/></td>
                                         </tr>
                                     </table>
                                     <table style="width:478px;" id="tableOne">
                                         <tr>
                                             <td style="text-align:center;">
-                                                <input type="checkbox" class="capTextToggle" data-group="textLogo" data-id="capLogoText" id="capLogoTextColorCheck" checked>
-                                                <input class="textSelector textColorSelector selector" type="text" id="capLogoTextColor" data-element="capLogoText" data-canvas="above">
+                                                <input type="checkbox" class="capTextToggle" data-group="textLogo" data-id="capLogoText" id="capLogoTextColorCheck" checked disabled>
+                                                <input class="textColorSelector selector" type="text" id="capLogoTextColor" data-element="capLogoTextColor" data-canvas="above">
                                             </td>
                                             <td style="text-align:center;">
-                                                <input type="checkbox" class="capTextToggle" data-group="textLogo" data-id="capLogoTextStroke1" id="capLogoStroke1ColorCheck" checked>
+                                                <input type="checkbox" class="capTextToggle" data-group="textLogo" data-id="capLogoTextStroke1" id="capLogoStroke1ColorCheck" checked disabled>
                                                 <label>Width:&nbsp;</label>
-                                                <input type="number" id="capLogoStroke1Width" class="strokeWidth monogram1Stroke" data-group="textLogo" data-id="capLogoTextStroke1" data-canvas="logoCreator" value="4" min="0" max="20">
-                                                <input class="textSelector textColorSelector selector" type="text" id="capLogoStroke1Color" data-element="capLogoTextStroke1" data-canvas="above">
+                                                <input type="number" id="capLogoStroke1Width" class="strokeWidth capTextToggle" data-group="textLogo" data-id="capLogoTextStroke1Color" data-canvas="logoCreator" value="10" min="0" max="20" disabled>
+                                                <input class="textColorSelector selector" type="text" id="capLogoTextStroke1Color" data-element="capLogoTextStroke1Color" data-canvas="above">
                                             </td>
-                                            <td style="text-align:center;"><input type="checkbox" class="capTextToggle" data-group="textLogo" data-id="capLogoTextStroke2" id="capLogoStroke2ColorCheck" checked>
+                                            <td style="text-align:center;"><input type="checkbox" class="capTextToggle" data-group="textLogo" data-id="capLogoTextStroke2" id="capLogoStroke2ColorCheck" checked disabled>
                                                 <label>Width:&nbsp;</label>
-                                                <input type="number" id="capLogoStroke2Width" class="strokeWidth monogram1Stroke" data-group="textLogo" data-id="capLogoTextStroke2" data-canvas="logoCreator" value="6" min="0" max="20">
-                                                <input class="textSelector textColorSelector selector" type="text" id="capLogoStroke2Color" data-element="capLogoTextStroke2" data-canvas="above">
+                                                <input type="number" id="capLogoStroke2Width" class="strokeWidth capTextToggle" data-group="textLogo" data-id="capLogoTextStroke2Color" data-canvas="logoCreator" value="20" min="0" max="40" disabled>
+                                                <input class="textColorSelector selector" type="text" id="capLogoTextStroke2Color" data-element="capLogoTextStroke2Color" data-canvas="above">
                                             </td>
                                         </tr>
                                     </table>
                                     <table style="width:478px;">
                                         <tr>
-                                            <td class="checkCell"><input type="checkbox" class="capTextureToggle textActiveToggle" data-id="textLogo2" data-textbox="capText2" data-number="monogram2Stroke" data-checkbox="capText2Toggle" data-selector="text2ColorSelector" id="textLogo2Check"></td>
-                                            <td colspan="2"><label>Text: </label><input type="text" class="capText" id="capText2" data-id="capText2" value="A" style="width:79%; text-align:center;" disabled/></td>
+                                            <td class="checkCell"><input type="checkbox" class="monogramCheck capTextureToggle textActiveToggle" data-id="textLogo2" data-textbox="capText2" data-checkbox="capText2Toggle" data-selector="text2ColorSelector" data-number="capText2StrokeWidth" id="textLogo2Check"></td>
+                                            <td colspan="2"><label>Text: </label><input type="text" class="capText capText2Toggle" id="capText2" data-id="capText2" value="A" style="width:79%; text-align:center;" disabled/></td>
                                         </tr>
                                     </table>
                                     <table style="width:478px;" id="tableTwo">
                                         <tr>
                                             <td style="text-align:center;">
-                                                <input type="checkbox" class="capText2Toggle" data-group="textLogo2" data-id="capLogo2Text" id="capLogo2TextColorCheck" checked>
-                                                <input class="textSelector text2ColorSelector selector" type="text" id="capLogo2TextColor" data-element="capLogo2Text" data-canvas="above">
+                                                <input type="checkbox" class="capText2Toggle" data-group="textLogo2" data-id="capLogo2Text" id="capLogo2TextColorCheck" checked disabled>
+                                                <input class="text2ColorSelector selector" type="text" id="capLogo2TextColor" data-element="capLogo2TextColor" data-canvas="above">
                                             </td>
                                             <td style="text-align:center;">
-                                                <input type="checkbox" class="capText2Toggle" data-group="textLogo2" data-id="capLogo2TextStroke1" id="capLogo2Stroke1ColorCheck" checked>
+                                                <input type="checkbox" class="capText2Toggle" data-group="textLogo2" data-id="capLogo2TextStroke1" id="capLogo2Stroke1ColorCheck" checked disabled>
                                                 <label>Width:&nbsp;</label>
-                                                <input type="number" id="capLogo2Stroke1Width" class="strokeWidth monogram2Stroke" data-group="textLogo2" data-id="capLogo2TextStroke1" data-canvas="logoCreator" value="4" min="0" max="20">
-                                                <input class="textSelector text2ColorSelector selector" type="text" id="capLogo2Stroke1Color" data-element="capLogo2TextStroke1" data-canvas="above">
+                                                <input type="number" id="capLogo2Stroke1Width" class="strokeWidth capText2Toggle" data-group="textLogo2" data-id="capLogo2TextStroke1Color" data-canvas="logoCreator" value="10" min="0" max="20" disabled>
+                                                <input class="text2ColorSelector selector" type="text" id="capLogo2TextStroke1Color" data-element="capLogo2TextStroke1Color" data-canvas="above">
                                             </td>
                                             <td style="text-align:center;">
-                                                <input type="checkbox" class="capText2Toggle" data-group="textLogo2" data-id="capLogo2TextStroke2" id="capLogo2Stroke2ColorCheck" checked>
+                                                <input type="checkbox" class="capText2Toggle" data-group="textLogo2" data-id="capLogo2TextStroke2" id="capLogo2Stroke2ColorCheck" checked disabled>
                                                 <label>Width:&nbsp;</label>
-                                                <input type="number" id="capLogo2Stroke2Width" class="strokeWidth monogram2Stroke" data-group="textLogo2" data-id="capLogo2TextStroke2" data-canvas="logoCreator" value="6" min="0" max="20">
-                                                <input class="textSelector text2ColorSelector selector" type="text" id="capLogo2Stroke2Color" data-element="capLogo2TextStroke2" data-canvas="above">
+                                                <input type="number" id="capLogo2Stroke2Width" class="strokeWidth capText2Toggle" data-group="textLogo2" data-id="capLogo2TextStroke2Color" data-canvas="logoCreator" value="20" min="0" max="40" disabled>
+                                                <input class="text2ColorSelector selector" type="text" id="capLogo2TextStroke2Color" data-element="capLogo2TextStroke2Color" data-canvas="above">
                                             </td>
                                         <tr>
                                     </table>
@@ -1113,6 +1113,73 @@
 		})
 	})
 
+    $(".textColorSelector").each(function() {
+        const el = $(this).attr('id')
+		var color = $(this).attr('id');
+		$(this).spectrum({
+			type: "color",
+			showAlpha: false,
+			showInput: true,
+			preferredFormat: 'hex',
+			showInitial: true,
+			showPalette: true,
+			showButtons: true,
+            disabled: true,
+			//showSelectionPalette: true,
+			color: initialColors[$(this).attr('id')],
+			beforeShow: function(color) {
+				//$(this).spectrum("option", "palette", commonPalette)
+			},
+			show: function(color) {
+				var original_color = color;
+				$(this).data('changed', false);
+			},
+			move: function(color) {
+                console.log(el)
+                changeMonogramColor("textLogo",el,color)
+			},
+			change: function(color) {
+                changeMonogramColor("textLogo",el,color)
+			},
+			hide: function(color) {
+                changeMonogramColor("textLogo",el,color)
+			}
+		})
+	})
+
+    $(".text2ColorSelector").each(function() {
+        const el = $(this).attr('id')
+		var color = $(this).attr('id');
+		$(this).spectrum({
+			type: "color",
+			showAlpha: false,
+			showInput: true,
+			preferredFormat: 'hex',
+			showInitial: true,
+			showPalette: true,
+			showButtons: true,
+            disabled: true,
+			//showSelectionPalette: true,
+			color: initialColors[$(this).attr('id')],
+			beforeShow: function(color) {
+				//$(this).spectrum("option", "palette", commonPalette)
+			},
+			show: function(color) {
+				var original_color = color;
+				$(this).data('changed', false);
+			},
+			move: function(color) {
+                changeMonogramColor("textLogo2",el,color)
+			},
+			change: function(color) {
+                changeMonogramColor("textLogo2",el,color)
+			},
+			hide: function(color) {
+                changeMonogramColor("textLogo2",el,color)
+			}
+		})
+	})
+
     $(".roundelSelector").each(function() {
         const el = $(this).attr('id')
         const canvas = $(this).data('canvas')
@@ -1244,8 +1311,17 @@
         })
         logoCreator.renderAll()
     }
+
+    function changeMonogramColor(group,el,color) {
+        const g = logoCreator.getObjects('group').find(o => o.id == group)
+        const o = g.getObjects().find(o => o.id == el)
+        o.set("fill", color.toHexString())
+        o.set("stroke", color.toHexString())
+        logoCreator.renderAll()
+    }
     
     function changeTextColor(el,color) {
+        console.log(el)
         const clr = (color == null) ? 'transparent' : color.toHexString()
         switch (el) {
             case "topTextColor":
@@ -1396,6 +1472,13 @@
         $("#textRotationAmount").val(parseInt($(this).val()))
         const d = logoCreator.getObjects('group').find(o => o.id == "decor")
         d.set("angle",angle)
+        logoCreator.renderAll()
+    })
+
+    $(".strokeWidth").on("input",function(e) {
+        const g = logoCreator.getObjects("group").find(o => o.id == $(this).data("group"))
+        const o = g.getObjects().find(o => o.id == $(this).data("id"))
+        o.set("strokeWidth",$(this).val())
         logoCreator.renderAll()
     })
 
@@ -2784,7 +2867,7 @@
 				originY: 'center',
 				centeredScaling: true,
 				centeredRotation: true,
-				id: 'capLogoText',
+				id: 'capLogoTextColor',
 				fill: initialColors["capLogoTextColor"]
 			})
 			
@@ -2795,11 +2878,11 @@
 				top: 225,
 				centeredScaling: true,
 				centeredRotation: true,
-				stroke: initialColors["capLogoStroke1Color"],
+				stroke: initialColors["capLogoTextStroke1Color"],
 				strokeWidth: 10,
 				strokeLineCap: "round",
-				id: 'capLogoTextStroke1',
-				fill: initialColors["capLogoStroke1Color"]
+				id: 'capLogoTextStroke1Color',
+				fill: initialColors["capLogoTextStroke1Color"]
 			})
 			
 			capLogoTextStroke2 = new fabric.Path(svgPath,{
@@ -2809,11 +2892,11 @@
 				top: 225,
 				centeredScaling: true,
 				centeredRotation: true,
-				stroke: initialColors["capLogoStroke2Color"],
+				stroke: initialColors["capLogoTextStroke2Color"],
 				strokeWidth: 20,
 				strokeLineCap: "round",
-				id: 'capLogoTextStroke2',
-				fill: initialColors["capLogoStroke2Color"]
+				id: 'capLogoTextStroke2Color',
+				fill: initialColors["capLogoTextStroke2Color"]
 			})
 			
 			textLogo = new fabric.Group ([])
@@ -2839,7 +2922,7 @@
 				originY: 'center',
 				centeredScaling: true,
 				centeredRotation: true,
-				id: 'capLogo2Text',
+				id: 'capLogo2TextColor',
 				fill: initialColors["capLogoTextColor"]
 			})
 			
@@ -2850,11 +2933,11 @@
 				top: 275,
 				centeredScaling: true,
 				centeredRotation: true,
-				stroke: initialColors["capLogoStroke1Color"],
+				stroke: initialColors["capLogo2TextStroke1Color"],
 				strokeWidth: 10,
 				strokeLineCap: "round",
-				id: 'capLogo2TextStroke1',
-				fill: initialColors["capLogoStroke1Color"]
+				id: 'capLogo2TextStroke1Color',
+				fill: initialColors["capLogo2TextStroke1Color"]
 			})
 			
 			capLogo2TextStroke2 = new fabric.Path(svgPath2,{
@@ -2864,11 +2947,11 @@
 				top: 275,
 				centeredScaling: true,
 				centeredRotation: true,
-				stroke: initialColors["capLogoStroke2Color"],
+				stroke: initialColors["capLogo2TextStroke2Color"],
 				strokeWidth: 20,
 				strokeLineCap: "round",
-				id: 'capLogo2TextStroke2',
-				fill: initialColors["capLogoStroke2Color"]
+				id: 'capLogo2TextStroke2Color',
+				fill: initialColors["capLogo2TextStroke2Color"]
 			})
 			
 			textLogo2 = new fabric.Group ([])
@@ -3436,6 +3519,19 @@
 
     $("#addPattern").on("click", function(e) {
         ipcRenderer.send("add-pattern", null)
+    })
+
+    $(".monogramCheck").on("change",function(e){
+        const state = $(this).is(":checked") ? false : true
+        $("."+$(this).data("checkbox")).each(function() {
+            $(this).attr("disabled",state)
+        })
+        $("."+$(this).data("selector")).each(function() {
+            $(this).spectrum(state ? 'disable' : 'enable');
+        })
+        let o = logoCreator.getObjects('group').find(o => o.id == $(this).data('id'))
+        o.set("visible", $(this).is(":checked"))
+        logoCreator.renderAll()
     })
 
     function getUserInput() {
