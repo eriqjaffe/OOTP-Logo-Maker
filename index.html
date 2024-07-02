@@ -203,6 +203,8 @@
                                                 <input type="number" class="topTextClass" id="topTextSpacing" value="0" style="width:40px;" onkeypress="return isNumberOrMinusKey(event)">
                                                 <label>&nbsp;&nbsp;&nbsp;&nbsp;Baseline:&nbsp;</label>
                                                 <input type="number" class="topTextClass" id="topTextDeltaY" value="0" min="-100" max="100" onkeypress="return isNumberOrMinusKey(event)">
+                                                <label>&nbsp;&nbsp;&nbsp;&nbsp;Stroke Width:&nbsp;</label>
+                                                <input type="number" class="topTextClass" id="topTextStrokeWidth" value="4" min="0" max="20" onkeypress="return isNumberOrMinusKey(event)">
                                             </td>
                                         </tr>
                                         <tr class="color_tr">
@@ -305,6 +307,8 @@
                                                 <input type="number" class="bottomTextClass" id="bottomTextSpacing" value="0" style="width:40px;" onkeypress="return isNumberOrMinusKey(event)">
                                                 <label>&nbsp;&nbsp;&nbsp;&nbsp;Baseline:&nbsp;</label>
                                                 <input type="number" class="bottomTextClass" id="bottomTextDeltaY" value="0" min="-100" max="100" onkeypress="return isNumberOrMinusKey(event)">
+                                                <label>&nbsp;&nbsp;&nbsp;&nbsp;Stroke Width:&nbsp;</label>
+                                                <input type="number" class="bottomTextClass" id="bottomTextStrokeWidth" value="4" min="0" max="20" onkeypress="return isNumberOrMinusKey(event)">
                                             </td>
                                         </tr>
                                         <tr class="color_tr">
@@ -3791,6 +3795,34 @@
         info.set("text",outputName())
         infoCanvas.renderAll()
 	})
+
+    $("#topTextStrokeWidth").on("input", function(e) {
+        const amt = $(this).val()
+        const info = infoCanvas.getObjects().find(o => o.id == 'infoText')
+		logoCreator.getObjects('i-text').forEach(function(o) {
+			if (o.id.includes("Top")) {
+				o.set("strokeWidth", amt)
+			}	
+		})
+        var tx = logoCreator.getObjects('i-text').find(o => o.id == 'homePlateText')
+        tx.set("strokeWidth", amt)
+        setTopTextDelta()
+		logoCreator.renderAll()
+    })
+
+    $("#bottomTextStrokeWidth").on("input", function(e) {
+        const amt = $(this).val()
+        const info = infoCanvas.getObjects().find(o => o.id == 'infoText')
+		logoCreator.getObjects('i-text').forEach(function(o) {
+			if (o.id.includes("Bottom")) {
+				o.set("strokeWidth", amt)
+			}	
+		})
+        //var tx = logoCreator.getObjects('i-text').find(o => o.id == 'homePlateText')
+        //tx.set("strokeWidth", amt)
+        setTopTextDelta()
+		logoCreator.renderAll()
+    })
 
     $("#save").on("click",function(e) {
 		if ($("#toggleGuides").val() == "Hide Guides") {
