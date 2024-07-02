@@ -1497,8 +1497,8 @@
         const grp = logoCreator.getObjects("group").find(o => o.id === which)
         const obj = grp._objects[0]
 
-        const top = obj.top;
-        const left = obj.left;
+        const top = grp.top;
+        const left = grp.left;
         const height = obj.height;
         const scaleX = obj.scaleX;
         const scaleY = obj.scaleY;
@@ -1520,8 +1520,8 @@
 			    const svgPath = path.toPathData(5)
 
                 capLogoText = new fabric.Path(svgPath,{
-                    left: left,
-                    top: top,
+                    left: 0,
+                    top: 0,
                     originX: 'center',
                     originY: 'center',
                     centeredScaling: true,
@@ -1533,12 +1533,13 @@
                 capLogoTextStroke1 = new fabric.Path(svgPath,{
                     originX: 'center',
                     originY: 'center',
-                    left: left,
-                    top: top,
+                    left: 0,
+                    top: 0,
                     centeredScaling: true,
                     centeredRotation: true,
                     stroke: stroke1Color,
                     strokeWidth: stroke1Width,
+                    strokeUniform: true,
                     strokeLineCap: "round",
                     id: 'capLogoStroke1Color',
                     fill: stroke1Color
@@ -1547,26 +1548,30 @@
                 capLogoTextStroke2 = new fabric.Path(svgPath,{
                     originX: 'center',
                     originY: 'center',
-                    left: left,
-                    top: top,
+                    left: 0,
+                    top: 0,
                     centeredScaling: true,
                     centeredRotation: true,
                     stroke: stroke2Color,
                     strokeWidth: stroke2Width,
+                    strokeUniform: true,
                     strokeLineCap: "round",
                     id: 'capLogoStroke2Color',
                     fill: stroke1Color
                 })
 
+                capLogoTextStroke2.setCoords()
+                capLogoTextStroke1.setCoords()
+                capLogoText.setCoords()
+
                 grp.addWithUpdate(capLogoTextStroke2)
                 grp.addWithUpdate(capLogoTextStroke1)
                 grp.addWithUpdate(capLogoText)
-
-                textLogo.set("left", left)
-                textLogo.set("top", top)
-                textLogo.set("height", height)
-                textLogo.set("scaleX", scaleX)
-                textLogo.set("scaleY", scaleY)
+                
+                grp.set("top", top)
+                grp.set("left", left)
+                grp.setCoords()
+                
                 logoCreator.renderAll()
             } else {
                 const path2 = font.getPath($("#capText2").val(),115,295,60)
@@ -1590,11 +1595,11 @@
                     top: 295,
                     centeredScaling: true,
                     centeredRotation: true,
-                    stroke: $("#capLogo2Stroke1Color").spectrum("get"),
-                    strokeWidth: $("#capLogo2Stroke1Width").val(),
+                    stroke: stroke1Color,
+                    strokeWidth: stroke1Width,
                     strokeLineCap: "round",
                     id: 'capLogo2TextStroke1',
-                    fill: $("#capLogo2Stroke1Color").spectrum("get")
+                    fill: stroke1
                 })
                 
                 capLogo2TextStroke2 = new fabric.Path(svgPath2,{
@@ -1604,11 +1609,11 @@
                     top: 295,
                     centeredScaling: true,
                     centeredRotation: true,
-                    stroke: $("#capLogo2Stroke2Color").spectrum("get"),
-                    strokeWidth: $("#capLogo2Stroke2Width").val(),
+                    stroke: stroke2Color,
+                    strokeWidth: stroke2Width,
                     strokeLineCap: "round",
                     id: 'capLogo2TextStroke2',
-                    fill: $("#capLogo2Stroke2Color").spectrum("get")
+                    fill: stroke2Color
                 })
 
                 textLogo2.addWithUpdate(capLogo2TextStroke2)
@@ -3037,6 +3042,7 @@
 				centeredRotation: true,
 				stroke: initialColors["capLogoTextStroke1Color"],
 				strokeWidth: 10,
+                strokeUniform: true,
 				strokeLineCap: "round",
 				id: 'capLogoTextStroke1Color',
 				fill: initialColors["capLogoTextStroke1Color"]
@@ -3051,6 +3057,7 @@
 				centeredRotation: true,
 				stroke: initialColors["capLogoTextStroke2Color"],
 				strokeWidth: 20,
+                strokeUniform: true,
 				strokeLineCap: "round",
 				id: 'capLogoTextStroke2Color',
 				fill: initialColors["capLogoTextStroke2Color"]
@@ -3092,6 +3099,7 @@
 				centeredRotation: true,
 				stroke: initialColors["capLogo2TextStroke1Color"],
 				strokeWidth: 10,
+                strokeUniform: true,
 				strokeLineCap: "round",
 				id: 'capLogo2TextStroke1Color',
 				fill: initialColors["capLogo2TextStroke1Color"]
@@ -3106,6 +3114,7 @@
 				centeredRotation: true,
 				stroke: initialColors["capLogo2TextStroke2Color"],
 				strokeWidth: 20,
+                strokeUniform: true,
 				strokeLineCap: "round",
 				id: 'capLogo2TextStroke2Color',
 				fill: initialColors["capLogo2TextStroke2Color"]
@@ -4250,6 +4259,20 @@
 			$("#tipContainer").html("Use Arrow keys to move image 1 pixel.<br>Use Shift + Arrow keys to move image 10 pixels.<br>Use Delete key to remove image.");
 		}
     })
+
+/*     logoCreator.on("object:scaling", function (e) {
+        var target = e.target;
+        if (!target || target.type !== 'path') {
+            return;
+        }
+        var sX = target.scaleX;
+        var sY = target.scaleY;
+        target.width *= sX;
+        target.height *= sY;
+        target.scaleX = 1;
+        target.scaleY = 1;
+        target.dirty = true;
+    }); */
 
     $("#creatorContainer").on('dragover', function() {
 		$("#creatorContainer").addClass('hover')
