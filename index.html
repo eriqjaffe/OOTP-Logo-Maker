@@ -69,8 +69,9 @@
                             <div id="creatorContainer">
 						        <canvas id="logoCreator" width="500" height="500" style="position:absolute; top:50; float:left; z-index:0;"></canvas>
 					        </div>
+                            <div id="tipContainer" style="top:517px; height:60px; width: 490px; padding-top:5px; margin-left:5px; font-weight:bold;"></div>
                         </div>
-                        <div id="tipContainer" style="height:60px; padding-top:5px; font-weight:bold;"></div>
+                        
                         <div id="donateContainer" style="width:512px; height: 50px; text-align:right; padding-top:10px">
                             <a href="https://www.paypal.com/donate?business=UTTZRPAMBFCWA&no_recurring=1&currency_code=USD" target="_blank">
                                 <img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button">
@@ -849,17 +850,61 @@
 		}
 		switch (e.keyCode) {
 			case 107: // plus
-				if (obj.get('type') == "group") {
-					obj.bringToFront();
-					logoCreator.renderAll();
-				}
-				return false;
-			case 109: // minus
-				if (obj.get('type') == "group") {
-					obj.sendToBack();
-					logoCreator.renderAll();
-				}
-				return false;
+                if (obj.get('type') == "group" || obj.get('type') == "image") {
+                    if (e.shiftKey) {
+                        obj.bringToFront()
+                        //tippyInstance.setContent(getStackingOrder())
+                        //tippyInstance.show()
+                    } else {
+                        obj.bringForward();
+                        //tippyInstance.setContent(getStackingOrder())
+                        //tippyInstance.show()	
+                    }
+                    activeCanvas.renderAll();
+                }
+                break;
+            case 187: // plus
+                if (obj.get('type') == "group" || obj.get('type') == "image") {
+                    if (e.shiftKey) {
+                        obj.bringToFront()
+                        //tippyInstance.setContent(getStackingOrder())
+                        //tippyInstance.show()
+                    } else {
+                        obj.bringForward();
+                        //tippyInstance.setContent(getStackingOrder())
+                        //tippyInstance.show()	
+                    }
+                    activeCanvas.renderAll();
+                }
+                break;
+            case 109: // minus
+                if (obj.get('type') == "group" || obj.get('type') == "image") {
+                    if (e.shiftKey) {
+                        obj.sendToBack()
+                        //tippyInstance.setContent(getStackingOrder())
+                        //tippyInstance.show()
+                    } else {
+                        obj.sendBackwards();
+                        //tippyInstance.setContent(getStackingOrder())
+                        //tippyInstance.show()
+                    }
+                    activeCanvas.renderAll();
+                }
+                break;
+            case 189: // minus
+                if (obj.get('type') == "group" || obj.get('type') == "image") {
+                    if (e.shiftKey) {
+                        obj.sendToBack()
+                        //tippyInstance.setContent(getStackingOrder())
+                        //tippyInstance.show()
+                    } else {
+                        obj.sendBackwards();
+                        //tippyInstance.setContent(getStackingOrder())
+                        //tippyInstance.show()
+                    }
+                    activeCanvas.renderAll();
+                }
+                break;
 			case 37:
 				e.preventDefault();
 				var a = obj.get('left') - movementDelta;
@@ -4253,7 +4298,8 @@
 				$("#uploadImageDiv").css("display","none");
 				$("#selectedImageDiv").css("display","block");
 			}
-			$("#tipContainer").html("Use Arrow keys to move image 1 pixel.<br>Use Shift + Arrow keys to move image 10 pixels.<br>Use Delete key to remove image.");
+			$("#tipContainer").html("<table><tr><td>Use Arrow keys to move image 1 pixel.<br>Use Shift + Arrow keys to move image 10 pixels.<br>Use Delete key to remove image.</td>\
+                <td>Use plus and minus keys to raise and lower object.<br>Use shift and plus/minus keys to bring object to font or back.</td></tr></table>");
 		}
 	})
 
