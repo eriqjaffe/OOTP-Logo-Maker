@@ -259,7 +259,7 @@ ipcMain.on('add-stroke', (event, arg) => {
 	})
 })
 
-ipcMain.on('remove-border', (event, arg) => {
+/* ipcMain.on('remove-border', (event, arg) => {
 	let imgdata = arg.imgdata
 	let fuzz = parseInt(arg.fuzz)
 	let pictureName = arg.pictureName
@@ -305,9 +305,52 @@ ipcMain.on('remove-border', (event, arg) => {
 			}
 		}
 	})
+}) */
+
+ipcMain.on('remove-border', (event, arg) => {
+	//[theImage, 1, 1, "removeBorder", null, null, fuzz, pictureName]
+	let imgdata = arg.imgdata
+	let pictureName = arg.name
+	let filePath = arg.filePath
+	let canvas = arg.canvas
+	let top = arg.top
+	let left = arg.left
+	let json = {}
+	let buffer = Buffer.from(imgdata.replace(/^data:image\/(png|gif|jpeg);base64,/,''), 'base64');
+	
+	Jimp.read(buffer, (err, image) => {
+		if (err) {
+			json.status = 'error'
+			json.message = err.message
+			event.sender.send('add-stroke-response', json)
+		} else {
+			try {
+				image.autocrop()
+				image.getBase64(Jimp.AUTO, (err, ret) => {
+					json.status = 'success'
+					json.data = ret
+					json.canvas = canvas
+					json.x = 0
+					json.y = 0
+					json.pTop = top
+					json.pLeft = left
+					json.pScaleX = 1
+					json.pScaleY = 1
+					json.pictureName = pictureName
+					json.path = filePath
+					event.sender.send('imagemagick-response', json)
+				})
+			} catch (error) {
+				json.status = 'error'
+				json.message = error.message
+				log.error(error);
+				event.sender.send('imagemagick-response', json)
+			}
+		}
+	})
 })
 
-ipcMain.on('replace-color', (event, arg) => {
+/* ipcMain.on('replace-color', (event, arg) => {
 	let imgdata = arg.imgdata
 	let pLeft = arg.pLeft
 	let pTop = arg.pTop
@@ -373,71 +416,95 @@ ipcMain.on('replace-color', (event, arg) => {
 			}
 		}
 	})
-})
+}) */
+
+	ipcMain.on('replace-color', (event, arg) => {
+		let imgdata = arg[0]
+		let pLeft = arg[1]
+		let pTop = arg[2]
+		let pScaleX = arg[3]
+		let pScaleY = arg[4]
+		let pictureName = arg[9]
+		let canvas = arg[10]
+		let colorSquare = arg[13]
+		let newColorSquare = arg[14]
+		let json = {}
+		let buffer = Buffer.from(imgdata.replace(/^data:image\/(png|gif|jpeg);base64,/,''), 'base64');
+	
+		Jimp.read(buffer, (err, image) => {
+			if (err) {
+				json.status = 'error'
+				json.message = err.message
+				log.error(err);
+				event.sender.send('imagemagick-response', json)
+			}
+			image.getBase64(Jimp.AUTO, (err, ret) => {
+				if (err) {
+					json.status = 'error'
+					json.message = err.message
+					log.error(err);
+					event.sender.send('imagemagick-response', json)
+				}
+				json.result = "success"
+				json.data = ret
+				json.pTop = pTop
+				json.pLeft = pLeft
+				json.x = pScaleX
+				json.y = pScaleY
+				json.pictureName = pictureName
+				json.canvas = canvas
+				json.colorSquare = colorSquare
+				json.newColorSquare = newColorSquare
+				json.pScaleX = pScaleX
+				json.pScaleY = pScaleY
+				event.sender.send('imagemagick-response', json)
+			})
+		})
+	})
 
 ipcMain.on('make-transparent', (event, arg) => {
-	let buffer = Buffer.from(arg.imgdata.replace(/^data:image\/(png|gif|jpeg);base64,/,''), 'base64');
+	let imgdata = arg.imgdata
 	let x = parseInt(arg.x);
 	let y = parseInt(arg.y);
-	let pTop = arg.pTop
-	let pLeft = arg.pLeft
-	let pScaleX = arg.pScaleX
-	let pScaleY = arg.pScaleY
+	let top = arg.pTop
+	let left = arg.pLeft
+	let scaleX = arg.pScaleX
+	let scaleY = arg.pScaleY
 	let pictureName = arg.pictureName
-	let colorSquare = arg.colorSquare
-	let fuzz = parseInt(arg.fuzz);
 	let canvas = arg.canvas
 	let path = arg.path
 	let json = {}
+	let buffer = Buffer.from(imgdata.replace(/^data:image\/(png|gif|jpeg);base64,/,''), 'base64');
 	Jimp.read(buffer, (err, image) => {
 		if (err) {
 			json.status = 'error'
-			json.message = "An error occurred - please make sure ImageMagick is installed"
-			console.log(err);
-			event.sender.send('imagemagick-response', json)
+			json.message = err.message
+			event.sender.send('add-stroke-response', json)
 		} else {
-            let cornerColor = image.getPixelColor(x, y)
-            new Jimp(image.bitmap.width+20, image.bitmap.height+20, cornerColor, (err, img) => {
-                img.blit(image, 10, 10)
-                img.write(tempDir+"/temp.png", (err) => {
-                    try {
-                        imagemagickCli.exec('magick convert '+tempDir+'/temp.png -fuzz '+fuzz+'% -fill none -draw "color '+x+','+y+' floodfill" '+tempDir+'/temp.png')
-                        .then(({ stdout, stderr }) => {
-                            Jimp.read(tempDir+"/temp.png", (err, image) => {
-                                if (err) {
-                                    json.status = 'error'
-                                    json.message = "An error occurred - please make sure ImageMagick is installed"
-                                    console.log(err);
-                                    event.sender.send('imagemagick-response', json)
-                                } else {
-                                    image.getBase64(Jimp.AUTO, (err, ret) => {
-                                        json.status = 'success'
-                                        json.data = ret
-                                        json.canvas = canvas
-                                        json.x = x
-                                        json.y = y
-                                        json.pTop = pTop
-                                        json.pLeft = pLeft
-                                        json.pScaleX = pScaleX
-                                        json.pScaleY = pScaleY
-                                        json.pictureName = pictureName
-                                        json.colorSquare = colorSquare
-										json.path = path
-                                        event.sender.send('imagemagick-response', json)
-                                    })
-                                }
-                            })
-                        })
-                    } catch (error) {
-                        json.status = 'error'
-                        json.message = "An error occurred - please make sure ImageMagick is installed"
-                        console.log(err);
-                        event.sender.send('imagemagick-response', json)
-                    }
-                })
-            })		
+			try {
+				image.autocrop()
+				image.getBase64(Jimp.AUTO, (err, ret) => {
+					json.status = 'success'
+					json.data = ret
+					json.canvas = canvas
+					json.x = x
+					json.y = y
+					json.pTop = top
+					json.pLeft = left
+					json.pScaleX = scaleX
+					json.pScaleY = scaleY
+					json.pictureName = pictureName
+					json.path = path
+					event.sender.send('imagemagick-response', json)
+				})
+			} catch (error) {
+				json.status = 'error'
+				json.message = error.message
+				log.error(error);
+				event.sender.send('imagemagick-response', json)
+			}
 		}
- 	})
+	})
 })
 
 ipcMain.on('remove-color-range', (event, arg) => {

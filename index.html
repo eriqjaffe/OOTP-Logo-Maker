@@ -16,6 +16,8 @@
         <script type="text/javascript" src="./scripts/dd.min.js"></script>
         <script type="text/javascript" src="./scripts/tooltipster.bundle.min.js"></script>
         <script type="text/javascript" src="./scripts/sweetalert2.min.js"></script>
+        <script src="./scripts/popper.min.js"></script>
+        <script src="./scripts/tippy-bundle.umd.js"></script>
         <link href='./scripts/logomaker.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/spectrum.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/skeletabs.css' rel='stylesheet' type='text/css'>
@@ -724,6 +726,13 @@
     </body>
     <script>
 
+    const logoTippy = tippy(document.getElementById('canvasContainer'), {
+        content: '',
+		trigger: 'manual',
+		placement: 'right-end',
+		allowHTML: true,
+    });
+
     let yearRange = ""
 
     $(document).ready(function() {
@@ -853,12 +862,12 @@
                 if (obj.get('type') == "group" || obj.get('type') == "image") {
                     if (e.shiftKey) {
                         obj.bringToFront()
-                        //tippyInstance.setContent(getStackingOrder())
-                        //tippyInstance.show()
+                        logoTippy.setContent(getStackingOrder())
+                        logoTippy.show()
                     } else {
                         obj.bringForward();
-                        //tippyInstance.setContent(getStackingOrder())
-                        //tippyInstance.show()	
+                        logoTippy.setContent(getStackingOrder())
+                        logoTippy.show()	
                     }
                     activeCanvas.renderAll();
                 }
@@ -867,12 +876,12 @@
                 if (obj.get('type') == "group" || obj.get('type') == "image") {
                     if (e.shiftKey) {
                         obj.bringToFront()
-                        //tippyInstance.setContent(getStackingOrder())
-                        //tippyInstance.show()
+                        logoTippy.setContent(getStackingOrder())
+                        logoTippy.show()
                     } else {
                         obj.bringForward();
-                        //tippyInstance.setContent(getStackingOrder())
-                        //tippyInstance.show()	
+                        logoTippy.setContent(getStackingOrder())
+                        logoTippy.show()	
                     }
                     activeCanvas.renderAll();
                 }
@@ -881,12 +890,12 @@
                 if (obj.get('type') == "group" || obj.get('type') == "image") {
                     if (e.shiftKey) {
                         obj.sendToBack()
-                        //tippyInstance.setContent(getStackingOrder())
-                        //tippyInstance.show()
+                        logoTippy.setContent(getStackingOrder())
+                        logoTippy.show()
                     } else {
                         obj.sendBackwards();
-                        //tippyInstance.setContent(getStackingOrder())
-                        //tippyInstance.show()
+                        logoTippy.setContent(getStackingOrder())
+                        logoTippy.show()
                     }
                     activeCanvas.renderAll();
                 }
@@ -895,12 +904,12 @@
                 if (obj.get('type') == "group" || obj.get('type') == "image") {
                     if (e.shiftKey) {
                         obj.sendToBack()
-                        //tippyInstance.setContent(getStackingOrder())
-                        //tippyInstance.show()
+                        logoTippy.setContent(getStackingOrder())
+                        logoTippy.show()
                     } else {
                         obj.sendBackwards();
-                        //tippyInstance.setContent(getStackingOrder())
-                        //tippyInstance.show()
+                        logoTippy.setContent(getStackingOrder())
+                        logoTippy.show()
                     }
                     activeCanvas.renderAll();
                 }
@@ -4032,6 +4041,7 @@
     })
 
     $("#removeColorRange").on("click",function(e) {
+        console.log("remove color range")
 		var canvas = logoCreator
         var canvasName = "logoCreator"
         var fuzz = parseInt($("#colorFuzz").val());
@@ -4044,20 +4054,63 @@
 			var object = canvas.getActiveObject()
 			var idx = canvas.getObjects().indexOf(object)
 			if (object.get('type') == "image") {
-				//showOverlay("Processing Image...")
+				//showOverlay("Processing Image...")\
 				var pictureName = object.get('name');
-				var pLeft = object.get('left')
-				var pTop = object.get('top')
-				var pScaleX = object.get('scaleX')
-				var pScaleY = object.get('scaleY')
-				var pX = x / pScaleX
-				var pY = y / pScaleY
+				var left = object.get('left')
+				var top = object.get('top')
+				var scaleX = object.get('scaleX')
+				var scaleY = object.get('scaleY')
                 var path = object.get('path')
-				$(colorSquare).removeClass("colorSquare").removeClass("colorSquareSelected");
-				var theImage = object._originalElement.currentSrc;
-				theImage = theImage.substr(theImage.indexOf(',') + 1).toString();	
-				ipcRenderer.send('remove-color-range', {imgdata: theImage, x: pX, y: pY, color: color, action: action, fuzz: fuzz, filename: pictureName, canvas: canvasName, pLeft: pLeft, pTop: pTop, pScaleX: pScaleX, pScaleY: pScaleY, pictureName: pictureName, colorSquare: colorSquare, path: path})		
-				return false;
+                var newcolor = null
+                $(colorSquare).removeClass("colorSquare").removeClass("colorSquareSelected");
+				const img = new Image();
+				img.onload = function() {
+					const canvas = document.createElement('canvas');
+					const ctx = canvas.getContext('2d');
+
+					canvas.width = img.width;
+					canvas.height = img.height;
+
+					ctx.drawImage(img, 0, 0);
+
+					const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+					const pixels = imageData.data;
+					const startIndex = (y * canvas.width + x) * 4;
+					const baseColor = {
+						r: pixels[startIndex],
+						g: pixels[startIndex + 1],
+						b: pixels[startIndex + 2],
+						a: pixels[startIndex + 3] // Get alpha channel value
+					};
+
+					const stack = [{ x: x, y: y }];
+
+					while (stack.length) {
+						const { x, y } = stack.pop();
+						const index = (y * canvas.width + x) * 4;
+
+						if (
+							x >= 0 && x < canvas.width &&
+							y >= 0 && y < canvas.height &&
+							isColorMatchAlpha(pixels, index, baseColor, replacementColor, fuzz)
+						) {
+							pixels[index] = replacementColor.r;
+							pixels[index + 1] = replacementColor.g;
+							pixels[index + 2] = replacementColor.b;
+							pixels[index + 3] = replacementColor.a; // Set alpha channel value
+
+							stack.push({ x: x + 1, y: y });
+							stack.push({ x: x - 1, y: y });
+							stack.push({ x: x, y: y + 1 });
+							stack.push({ x: x, y: y - 1 });
+						}
+					}
+
+					ctx.putImageData(imageData, 0, 0);
+
+                    ipcRenderer.send('make-transparent', {imgdata: canvas.toDataURL(), x: 0, y: 0, filename: pictureName, canvas: canvasName, pLeft: left, pTop: top, pScaleX: scaleX, scaleY: scaleY, pictureName: pictureName, path: path})
+				};
+				img.src = object._originalElement.currentSrc;
 			}
 		}
 	})
@@ -4071,25 +4124,59 @@
 		var x = $(this).data("x");
 		var y = $(this).data("y");
 		var action = $(this).attr("id");
-		
-		if (canvas.getActiveObject()) {
+        if (canvas.getActiveObject()) {
 			var object = canvas.getActiveObject()
 			var idx = canvas.getObjects().indexOf(object)
 			if (object.get('type') == "image") {
 				//showOverlay("Processing Image...")
 				var pictureName = object.get('name');
-				var pLeft = object.get('left')
-				var pTop = object.get('top')
-				var pScaleX = object.get('scaleX')
-				var pScaleY = object.get('scaleY')
-				var pX = x / pScaleX
-				var pY = y / pScaleY
+				var left = object.get('left')
+				var top = object.get('top')
+				var scaleX = object.get('scaleX')
+				var scaleY = object.get('scaleY')
+				var pX = x / scaleX
+				var pY = y / scaleY
                 var path = object.get('path')
-				$(colorSquare).removeClass("colorSquare").removeClass("colorSquareSelected");
-				var theImage = object._originalElement.currentSrc;
-				theImage = theImage.substr(theImage.indexOf(',') + 1).toString();
-				ipcRenderer.send('remove-all-color', {imgdata: theImage, x: pX, y: pY, color: color, action: action, fuzz: fuzz, filename: pictureName, canvas: canvasName, pLeft: pLeft, pTop: pTop, pScaleX: pScaleX, pScaleY: pScaleY, pictureName: pictureName, colorSquare: colorSquare, color: color, path: path})			
-				return false;
+                var newcolor = null
+				$(colorSquare).removeClass("colorSquareActive").removeClass("colorSquareSelected");
+				const img = new Image();
+				
+				img.onload = function() {
+					const canvas = document.createElement('canvas');
+					const ctx = canvas.getContext('2d');
+
+					canvas.width = img.width;
+					canvas.height = img.height;
+
+					ctx.drawImage(img, 0, 0);
+
+					const pixelData = ctx.getImageData(x, y, 1, 1).data; // Get pixel data at coordinates (x, y)
+					const color = { r: pixelData[0], g: pixelData[1], b: pixelData[2] }; // Extract RGB values from pixel data
+
+					const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+					const pixels = imageData.data;
+
+					for (let i = 0; i < pixels.length; i += 4) {
+						const r = pixels[i];
+						const g = pixels[i + 1];
+						const b = pixels[i + 2];
+						const a = pixels[i + 3];
+
+						if (isColorWithinTolerance({ r, g, b }, color, fuzz)) {
+							pixels[i] = replacementColor.r;
+							pixels[i + 1] = replacementColor.g;
+							pixels[i + 2] = replacementColor.b;
+							pixels[i + 3] = 0; // Set alpha channel to 0 for transparency
+						}
+					}
+
+					ctx.putImageData(imageData, 0, 0);
+
+                    console.log(canvas.toDataURL())
+
+					ipcRenderer.send('make-transparent', {imgdata: canvas.toDataURL(), x: 0, y: 0, filename: pictureName, canvas: canvasName, pLeft: left, pTop: top, scaleX: scaleX, scaleY: scaleY, pictureName: pictureName, path: path})
+				};
+				img.src = object._originalElement.currentSrc;
 			}
 		}
 	})
@@ -4236,23 +4323,84 @@
 		let action = $(this).attr("id");
 		let color = $("#colorSquare").val();
 		if (canvas.getActiveObject()) {
-			var object = canvas.getActiveObject()
+            var object = canvas.getActiveObject()
 			var idx = canvas.getObjects().indexOf(object)
 			if (object.get('type') == "image") {
-				//showOverlay("Processing Image...")
-				var pictureName = object.get('name');
-				var pLeft = object.get('left')
-				var pTop = object.get('top')
-				var pScaleX = object.get('scaleX')
-				var pScaleY = object.get('scaleY')
-				var pX = x / pScaleX
-				var pY = y / pScaleY
-                var path = object.get('path')
 				$(colorSquare).removeClass("colorSquare").removeClass("colorSquareSelected");
-				var theImage = object._originalElement.currentSrc;
-				theImage = theImage.substr(theImage.indexOf(',') + 1).toString();	
-				ipcRenderer.send('make-transparent', {imgdata: theImage, x: pX, y: pY, color: color, action: action, fuzz: fuzz, filename: pictureName, canvas: canvasName, pLeft: pLeft, pTop: pTop, pScaleX: pScaleX, pScaleY: pScaleY, pictureName: pictureName, colorSquare: colorSquare, path: path})		
-				return false;
+				let left = object.get("left");
+				let top = object.get("top");
+                let scaleX = object.get('scaleX')
+				let scaleY = object.get('scaleY')
+                let path = object.get('path')
+				let pictureName = object.get('name');
+				let theImage = object._originalElement.currentSrc;
+				let replacementColor = hexToRgb("#000000")
+				let x = 1
+				let y = 1
+				const img = new Image();
+				img.onload = function() {
+					const tempCanvas = document.createElement('canvas');
+					const tempCtx = tempCanvas.getContext('2d');
+
+					tempCanvas.width = img.width;
+					tempCanvas.height = img.height;
+
+					tempCtx.drawImage(img, 0, 0);
+
+					let color = GetColorPixel(tempCtx,1,1)
+
+					let hexColor = rgb2hex(color[0], color[1], color[2])
+
+					const canvas = document.createElement('canvas');
+					const ctx = canvas.getContext('2d');
+
+					canvas.width = img.width+20;
+					canvas.height = img.height+20;
+
+					ctx.fillStyle = hexColor;
+					ctx.fillRect(0,0, canvas.width,canvas.height);
+
+					ctx.drawImage(img, 10, 10);
+
+					const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+					const pixels = imageData.data;
+					const startIndex = (y * canvas.width + x) * 4;
+					const baseColor = {
+						r: pixels[startIndex],
+						g: pixels[startIndex + 1],
+						b: pixels[startIndex + 2],
+						a: pixels[startIndex + 3] // Get alpha channel value
+					};
+
+					const stack = [{ x: x, y: y }];
+
+					while (stack.length) {
+						const { x, y } = stack.pop();
+						const index = (y * canvas.width + x) * 4;
+
+						if (
+							x >= 0 && x < canvas.width &&
+							y >= 0 && y < canvas.height &&
+							isColorMatchAlpha(pixels, index, baseColor, replacementColor, fuzz)
+						) {
+							pixels[index] = replacementColor.r;
+							pixels[index + 1] = replacementColor.g;
+							pixels[index + 2] = replacementColor.b;
+							pixels[index + 3] = replacementColor.a; // Set alpha channel value
+
+							stack.push({ x: x + 1, y: y });
+							stack.push({ x: x - 1, y: y });
+							stack.push({ x: x, y: y + 1 });
+							stack.push({ x: x, y: y - 1 });
+						}
+					}
+
+					ctx.putImageData(imageData, 0, 0);
+
+					ipcRenderer.send('make-transparent', {imgdata: canvas.toDataURL(), x: 0, y: 0, filename: pictureName, canvas: canvasName, pLeft: left, pTop: top, pScaleX: scaleX, scaleY: scaleY, pictureName: pictureName, path: path})
+				};
+				img.src = object._originalElement.currentSrc;
+                return false;
 			}
 		}
 	})
@@ -4292,6 +4440,8 @@
     logoCreator.on('selection:created', function(e) {
 		var obj = e.selected[0];
 		if (obj.type == 'image') {
+            logoTippy.setContent(getStackingOrder())
+			logoTippy.show()
 			$("#fileName").html(obj.get('name'));
 			if ($("#trimImageDiv").css("display") == "none") {
 				$("#trimImageDiv").css("display","block");
@@ -4300,10 +4450,13 @@
 			}
 			$("#tipContainer").html("<table><tr><td>Use Arrow keys to move image 1 pixel.<br>Use Shift + Arrow keys to move image 10 pixels.<br>Use Delete key to remove image.</td>\
                 <td>Use plus and minus keys to raise and lower object.<br>Use shift and plus/minus keys to bring object to font or back.</td></tr></table>");
-		}
+		} else {
+            $("#tipContainer").html("")
+        }
 	})
 
     logoCreator.on('selection:cleared', function(e) {
+        logoTippy.hide()
         $("#fileName").html("");
         $("#trimImageDiv").css("display","none");
         $("#uploadImageDiv").css("display","block");
@@ -5011,6 +5164,76 @@
 			}
 		}
 		return -1
+	}
+
+    function getStackingOrder() {
+		const items = []
+        let zIdx = "<b>Stacking Order:</b><br><hr>"
+		logoCreator.getObjects().forEach(function(o) {
+			if (o.selectable && o.visible) {
+				const item = {}
+				item.z = o.getZIndex()
+				item.id = o.id
+				item.description = (o.description != undefined) ? o.description : o.id
+				items.push(item)
+			}
+		})
+		items.sort((a, b) => b.z - a.z);
+		for (item of items) {
+			if (logoCreator.getActiveObject().id == item.id) {
+				zIdx += "<b>"+item.description+" (z-index: "+item.z+")</b><br>"
+			} else {
+				zIdx += item.description+" (z-index: "+item.z+")<br>"
+			}
+				
+		}
+		return zIdx
+	}
+    
+    function isColorWithinTolerance(pixelColor, targetColor, tolerance) {
+		const dr = Math.abs(pixelColor.r - targetColor.r);
+		const dg = Math.abs(pixelColor.g - targetColor.g);
+		const db = Math.abs(pixelColor.b - targetColor.b);
+
+		return (dr <= tolerance && dg <= tolerance && db <= tolerance);
+	}
+
+	function isColorMatch(pixels, index, baseColor, targetColor, tolerance) {
+		const dr = Math.abs(baseColor.r - pixels[index]);
+		const dg = Math.abs(baseColor.g - pixels[index + 1]);
+		const db = Math.abs(baseColor.b - pixels[index + 2]);
+
+		return (dr + dg + db) / 3 <= tolerance;
+	}
+
+	function isColorMatchAlpha(pixels, index, baseColor, targetColor, tolerance) {
+		const dr = Math.abs(baseColor.r - pixels[index]);
+		const dg = Math.abs(baseColor.g - pixels[index + 1]);
+		const db = Math.abs(baseColor.b - pixels[index + 2]);
+		const da = Math.abs(baseColor.a - pixels[index + 3]); // Include alpha channel difference
+
+		return (dr + dg + db + da) / 4 <= tolerance
+	}
+
+    function hexToRgb(hex) {
+		// Remove '#' if present
+		hex = hex.replace(/^#/, '');
+
+		// Parse hex values
+		const bigint = parseInt(hex, 16);
+
+		// Extract RGB components
+		const r = (bigint >> 16) & 255;
+		const g = (bigint >> 8) & 255;
+		const b = bigint & 255;
+
+		return { r, g, b };
+	}
+
+	function GetColorPixel(context, x, y) {
+  		const imageData = context.getImageData(x, y, 1, 1).data;
+  		const rgbColor = [imageData[0], imageData[1], imageData[2]];
+		return rgbColor;
 	}
     </script>
 </html>
