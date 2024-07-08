@@ -212,7 +212,7 @@ ipcMain.on('remove-border', (event, arg) => {
 		if (err) {
 			json.status = 'error'
 			json.message = err.message
-			event.sender.send('add-stroke-response', json)
+			event.sender.send('imagemagick-response', json)
 		} else {
 			try {
 				image.autocrop()
@@ -240,51 +240,7 @@ ipcMain.on('remove-border', (event, arg) => {
 	})
 })
 
-ipcMain.on('replace-color', (event, arg) => {
-	let imgdata = arg[0]
-	let pLeft = arg[1]
-	let pTop = arg[2]
-	let pScaleX = arg[3]
-	let pScaleY = arg[4]
-	let pictureName = arg[9]
-	let canvas = arg[10]
-	let colorSquare = arg[13]
-	let newColorSquare = arg[14]
-	let json = {}
-	let buffer = Buffer.from(imgdata.replace(/^data:image\/(png|gif|jpeg);base64,/,''), 'base64');
-
-	Jimp.read(buffer, (err, image) => {
-		if (err) {
-			json.status = 'error'
-			json.message = err.message
-			log.error(err);
-			event.sender.send('imagemagick-response', json)
-		}
-		image.getBase64(Jimp.AUTO, (err, ret) => {
-			if (err) {
-				json.status = 'error'
-				json.message = err.message
-				log.error(err);
-				event.sender.send('imagemagick-response', json)
-			}
-			json.result = "success"
-			json.data = ret
-			json.pTop = pTop
-			json.pLeft = pLeft
-			json.x = pScaleX
-			json.y = pScaleY
-			json.pictureName = pictureName
-			json.canvas = canvas
-			json.colorSquare = colorSquare
-			json.newColorSquare = newColorSquare
-			json.pScaleX = pScaleX
-			json.pScaleY = pScaleY
-			event.sender.send('imagemagick-response', json)
-		})
-	})
-})
-
-ipcMain.on('make-transparent', (event, arg) => {
+ipcMain.on('update-image', (event, arg) => {
 	let imgdata = arg.imgdata
 	let x = parseInt(arg.x);
 	let y = parseInt(arg.y);
@@ -301,7 +257,7 @@ ipcMain.on('make-transparent', (event, arg) => {
 		if (err) {
 			json.status = 'error'
 			json.message = err.message
-			event.sender.send('add-stroke-response', json)
+			event.sender.send('imagemagick-response', json)
 		} else {
 			try {
 				image.autocrop()

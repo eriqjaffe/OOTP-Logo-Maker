@@ -4036,7 +4036,7 @@
 
 					ctx.globalCompositeOperation = 'source-over';
 					ctx.drawImage(image, x, y);
-                    ipcRenderer.send('make-transparent', {imgdata: canvas.toDataURL(), x: 0, y: 0, filename: pictureName, canvas: "logoCreator", pLeft: left, pTop: top, pScaleX: scaleX, scaleY: scaleY, pictureName: pictureName, path: path})
+                    ipcRenderer.send('update-image', {imgdata: canvas.toDataURL(), x: 0, y: 0, filename: pictureName, canvas: "logoCreator", pLeft: left, pTop: top, pScaleX: scaleX, scaleY: scaleY, pictureName: pictureName, path: path})
 				}
 				image.src = object._originalElement.currentSrc
 				return false;
@@ -4112,7 +4112,7 @@
 
 					ctx.putImageData(imageData, 0, 0);
 
-                    ipcRenderer.send('make-transparent', {imgdata: canvas.toDataURL(), x: 0, y: 0, filename: pictureName, canvas: canvasName, pLeft: left, pTop: top, pScaleX: scaleX, scaleY: scaleY, pictureName: pictureName, path: path})
+                    ipcRenderer.send('update-image', {imgdata: canvas.toDataURL(), x: 0, y: 0, filename: pictureName, canvas: canvasName, pLeft: left, pTop: top, pScaleX: scaleX, scaleY: scaleY, pictureName: pictureName, path: path})
 				};
 				img.src = object._originalElement.currentSrc;
 			}
@@ -4178,7 +4178,7 @@
 
                     console.log(canvas.toDataURL())
 
-					ipcRenderer.send('make-transparent', {imgdata: canvas.toDataURL(), x: 0, y: 0, filename: pictureName, canvas: canvasName, pLeft: left, pTop: top, scaleX: scaleX, scaleY: scaleY, pictureName: pictureName, path: path})
+					ipcRenderer.send('update-image', {imgdata: canvas.toDataURL(), x: 0, y: 0, filename: pictureName, canvas: canvasName, pLeft: left, pTop: top, scaleX: scaleX, scaleY: scaleY, pictureName: pictureName, path: path})
 				};
 				img.src = object._originalElement.currentSrc;
 			}
@@ -4273,7 +4273,7 @@
 						}
 
 						ctx.putImageData(imageData, 0, 0);
-                        ipcRenderer.send('make-transparent', {imgdata: canvas.toDataURL(), x: 0, y: 0, filename: pictureName, canvas: canvasName, pLeft: left, pTop: top, pScaleX: scaleX, scaleY: scaleY, pictureName: pictureName, path: path})
+                        ipcRenderer.send('update-image', {imgdata: canvas.toDataURL(), x: 0, y: 0, filename: pictureName, canvas: canvasName, pLeft: left, pTop: top, pScaleX: scaleX, scaleY: scaleY, pictureName: pictureName, path: path})
 						return false;
 					};
 					img.src = object._originalElement.currentSrc
@@ -4308,7 +4308,7 @@
 						}
 
 						ctx.putImageData(imageData, 0, 0);
-                        ipcRenderer.send('make-transparent', {imgdata: canvas.toDataURL(), x: 0, y: 0, filename: pictureName, canvas: canvasName, pLeft: left, pTop: top, pScaleX: scaleX, scaleY: scaleY, pictureName: pictureName, path: path})
+                        ipcRenderer.send('update-image', {imgdata: canvas.toDataURL(), x: 0, y: 0, filename: pictureName, canvas: canvasName, pLeft: left, pTop: top, pScaleX: scaleX, scaleY: scaleY, pictureName: pictureName, path: path})
 						return false;
 					}
 					img.src = object._originalElement.currentSrc;
@@ -4323,14 +4323,14 @@
 			alert(response.message)
 			//hideOverlay()
 		} else {
+            
 			let canvas = logoCreator
 			let data = response.data
 			let imLeft = response.pLeft
 			let imTop = response.pTop
 			let pictureName = response.pictureName
             let path = response.path
-		
-			var object = canvas.getActiveObject()
+            var object = canvas.getActiveObject()
 			var idx = canvas.getObjects().indexOf(object)
 
 			var imgObj = new Image();
@@ -4479,7 +4479,7 @@
 
 					ctx.putImageData(imageData, 0, 0);
 
-					ipcRenderer.send('make-transparent', {imgdata: canvas.toDataURL(), x: 0, y: 0, filename: pictureName, canvas: canvasName, pLeft: left, pTop: top, pScaleX: scaleX, scaleY: scaleY, pictureName: pictureName, path: path})
+					ipcRenderer.send('update-image', {imgdata: canvas.toDataURL(), x: 0, y: 0, filename: pictureName, canvas: canvasName, pLeft: left, pTop: top, pScaleX: scaleX, scaleY: scaleY, pictureName: pictureName, path: path})
 				};
 				img.src = object._originalElement.currentSrc;
                 return false;
