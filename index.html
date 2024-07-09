@@ -1697,7 +1697,6 @@
     })
 
     $(".textActiveToggle").on("change", function(e) {
-        console.log($(this).data("id"))
         let obj = logoCreator.getObjects('group').find(o => o.id == $(this).data("id"))
         obj.set("visible",$(this).is(":checked"))
         logoCreator.renderAll()
@@ -2758,8 +2757,6 @@
             alert('font loading failed ' + data.familyName);
         });
         
-        console.log($("#bottomFont").val())
-        
         var bottomFont = new FontFaceObserver($("#bottomFont").val())
         bottomFont.load()
         .then(function() {
@@ -2947,8 +2944,7 @@
                 textAlign: 'center',
                 id: 'capLogoTextColor',
                 fill: initialColors["capLogoTextColor"],
-                selectable: false,
-                strokeUniform: true,
+                selectable: false
             })
 
             capLogoStroke1 = new fabric.IText($("#capText").val(),{
@@ -2964,8 +2960,7 @@
                 fill: initialColors["capLogoTextStroke1Color"],
                 stroke: initialColors["capLogoTextStroke1Color"],
                 strokeWidth: $("#capLogoStroke1Width").val(),
-                selectable: false,
-                strokeUniform: true,
+                selectable: false
             })
 
             capLogoStroke2 = new fabric.IText($("#capText").val(),{
@@ -2981,8 +2976,7 @@
                 fill: initialColors["capLogoTextStroke2Color"],
                 stroke: initialColors["capLogoTextStroke2Color"],
                 strokeWidth: $("#capLogoStroke2Width").val(),
-                selectable: false,
-                strokeUniform: true,
+                selectable: false
             })
 
             capLogo2Text = new fabric.IText($("#capText2").val(),{
@@ -2996,8 +2990,7 @@
                 textAlign: 'center',
                 id: 'capLogoTextColor',
                 fill: initialColors["capLogoTextColor"],
-                selectable: false,
-                strokeUniform: true,
+                selectable: false
             })
 
             capLogo2Stroke1 = new fabric.IText($("#capText2").val(),{
@@ -3013,8 +3006,7 @@
                 fill: initialColors["capLogoTextStroke1Color"],
                 stroke: initialColors["capLogoTextStroke1Color"],
                 strokeWidth: $("#capLogoStroke1Width").val(),
-                selectable: false,
-                strokeUniform: true,
+                selectable: false
             })
 
             capLogo2Stroke2 = new fabric.IText($("#capText2").val(),{
@@ -3030,8 +3022,7 @@
                 fill: initialColors["capLogoTextStroke2Color"],
                 stroke: initialColors["capLogoTextStroke2Color"],
                 strokeWidth: $("#capLogoStroke2Width").val(),
-                selectable: false,
-                strokeUniform: true,
+                selectable: false
             })
 
             textLogo.addWithUpdate(capLogoStroke2)
@@ -4560,7 +4551,11 @@
     })
 
     $("#localFont").on("click",function(e) {
-        ipcRenderer.send('upload-font', null)
+        ipcRenderer.send('upload-font', "name")
+    })
+
+    $("#fakeFontButton").on("click",function(e) {
+        ipcRenderer.send('upload-font', "monogram")
     })
 
     $("#uploadImage").on("click",function(e) {
@@ -4792,14 +4787,14 @@
                 // switch to the already known font
                 const topFontDropdown= document.getElementById("topFont").msDropdown;
                 const bottomFontDropdown = document.getElementById("bottomFont").msDropdown;
-                const monogramFontDropdown = document.getElementById("capTextSelect").msDropdown
-                var foo = findIndexByText(topFontDropdown, data.fontName)
+                let foo = findIndexByText(topFontDropdown, data.fontName)
                 topFontDropdown.selectedIndex = foo
                 topFontDropdown.refresh()
-                var bar = findIndexByText(bottomFontDropdown, data.fontName)
+                let bar = findIndexByText(bottomFontDropdown, data.fontName)
                 bottomFontDropdown.selectedIndex = bar
                 bottomFontDropdown.refresh()
-                var zoo = findIndexByText(monogramFontDropdown, data.fontName)
+                const monogramFontDropdown = document.getElementById("capTextSelect").msDropdown
+                let zoo = findIndexByText(monogramFontDropdown, data.fontName)
                 monogramFontDropdown.selectedIndex = zoo
                 monogramFontDropdown.refresh()
             } else {
@@ -4819,6 +4814,14 @@
                     squareTextBottom.set('fontFamily',data.familyName)
                     roundedSquareTextTop.set('fontFamily',data.familyName)
                     roundedSquareTextBottom.set('fontFamily',data.familyName)
+                    let g = logoCreator.getObjects('group').find(o => o.id == "textLogo")
+                    g.getObjects().forEach(function(o) {
+                        o.set('fontFamily',data.familyName)
+                    })
+                    let h = logoCreator.getObjects('group').find(o => o.id == "textLogo2")
+                    h.getObjects().forEach(function(o) {
+                        o.set('fontFamily',data.familyName)
+                    })
                     logoCreator.renderAll()
 
                     var tmpTxt = new fabric.IText("ABC 123",{
@@ -5031,7 +5034,6 @@
             bottomFontDropdown.selectedIndex = idx;
             monogramFontDropdown.selectedIndex = idx;
 		}
-
 		sortFontDropdowns()
 	}
 

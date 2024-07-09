@@ -114,6 +114,7 @@ ipcMain.on('upload-image', (event, arg) => {
 })
 
 ipcMain.on('upload-font', (event, arg) => {
+
     let json = {}
     const options = {
 		defaultPath: store.get("uploadFontPath", app.getPath('desktop')),
@@ -138,7 +139,8 @@ ipcMain.on('upload-font', (event, arg) => {
 					"fontFormat": ext,
 					"fontMimetype": 'font/' + ext,
 					"fontData": fontPath.href,
-					"fontPath": filePath
+					"fontPath": filePath,
+					"destination": arg
 				};
 				fs.copyFileSync(result.filePaths[0], filePath)
 				event.sender.send('add-font-response', json)
@@ -153,7 +155,7 @@ ipcMain.on('upload-font', (event, arg) => {
 				//fs.unlinkSync(result.filePaths[0])
 			}
 		} else {
-            json.status = "cancelled"
+			json.status = "cancelled"
 			event.sender.send('add-font-response', json)
 		}
 	}).catch(err => {
