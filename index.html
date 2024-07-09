@@ -2937,25 +2937,26 @@
         .then(function() {
         // when font is loaded, use it.
             capLogoText = new fabric.IText($("#capText").val(),{
-                top: 200,
-                left: 225,
+                top: 226,
+                left: 226,
                 visible: true,
                 fontFamily: $("#capTextSelect").val(),
-                fontSize: 140,
+                fontSize: 150,
                 originX: 'center',
                 originY: 'center',
                 textAlign: 'center',
                 id: 'capLogoTextColor',
                 fill: initialColors["capLogoTextColor"],
                 selectable: false,
+                strokeUniform: true,
             })
 
             capLogoStroke1 = new fabric.IText($("#capText").val(),{
-                top: 200,
-                left: 225,
+                top: 226,
+                left: 226,
                 visible: true,
                 fontFamily: $("#capTextSelect").val(),
-                fontSize: 140,
+                fontSize: 150,
                 originX: 'center',
                 originY: 'center',
                 textAlign: 'center',
@@ -2964,14 +2965,15 @@
                 stroke: initialColors["capLogoTextStroke1Color"],
                 strokeWidth: $("#capLogoStroke1Width").val(),
                 selectable: false,
+                strokeUniform: true,
             })
 
             capLogoStroke2 = new fabric.IText($("#capText").val(),{
-                top: 200,
-                left: 225,
+                top: 226,
+                left: 226,
                 visible: true,
                 fontFamily: $("#capTextSelect").val(),
-                fontSize: 140,
+                fontSize: 150,
                 originX: 'center',
                 originY: 'center',
                 textAlign: 'center',
@@ -2980,28 +2982,30 @@
                 stroke: initialColors["capLogoTextStroke2Color"],
                 strokeWidth: $("#capLogoStroke2Width").val(),
                 selectable: false,
+                strokeUniform: true,
             })
 
             capLogo2Text = new fabric.IText($("#capText2").val(),{
-                top: 300,
-                left: 300,
+                top: 281,
+                left: 275,
                 visible: true,
                 fontFamily: $("#capTextSelect").val(),
-                fontSize: 140,
+                fontSize: 150,
                 originX: 'center',
                 originY: 'center',
                 textAlign: 'center',
                 id: 'capLogoTextColor',
                 fill: initialColors["capLogoTextColor"],
                 selectable: false,
+                strokeUniform: true,
             })
 
             capLogo2Stroke1 = new fabric.IText($("#capText2").val(),{
-                top: 300,
-                left: 300,
+                top: 281,
+                left: 275,
                 visible: true,
                 fontFamily: $("#capTextSelect").val(),
-                fontSize: 140,
+                fontSize: 150,
                 originX: 'center',
                 originY: 'center',
                 textAlign: 'center',
@@ -3010,14 +3014,15 @@
                 stroke: initialColors["capLogoTextStroke1Color"],
                 strokeWidth: $("#capLogoStroke1Width").val(),
                 selectable: false,
+                strokeUniform: true,
             })
 
             capLogo2Stroke2 = new fabric.IText($("#capText2").val(),{
-                top: 300,
-                left: 300,
+                top: 281,
+                left: 275,
                 visible: true,
                 fontFamily: $("#capTextSelect").val(),
-                fontSize: 140,
+                fontSize: 150,
                 originX: 'center',
                 originY: 'center',
                 textAlign: 'center',
@@ -3026,6 +3031,7 @@
                 stroke: initialColors["capLogoTextStroke2Color"],
                 strokeWidth: $("#capLogoStroke2Width").val(),
                 selectable: false,
+                strokeUniform: true,
             })
 
             textLogo.addWithUpdate(capLogoStroke2)
@@ -4442,20 +4448,6 @@
 			$("#tipContainer").html("Use Arrow keys to move image 1 pixel.<br>Use Shift + Arrow keys to move image 10 pixels.<br>Use Delete key to remove image.");
 		}
     })
-
-/*     logoCreator.on("object:scaling", function (e) {
-        var target = e.target;
-        if (!target || target.type !== 'path') {
-            return;
-        }
-        var sX = target.scaleX;
-        var sY = target.scaleY;
-        target.width *= sX;
-        target.height *= sY;
-        target.scaleX = 1;
-        target.scaleY = 1;
-        target.dirty = true;
-    }); */
 
     $("#creatorContainer").on('dragover', function() {
 		$("#creatorContainer").addClass('hover')
