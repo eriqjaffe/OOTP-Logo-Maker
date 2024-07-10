@@ -13,8 +13,8 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "electron": "^26.3.0",
-    "electron-builder": "^23.6.0"
+    "electron": "^31.2.0",
+    "electron-builder": "^24.13.3"
   },
   "dependencies": {
     "add-filename-increment": "^1.0.0",
@@ -23,7 +23,7 @@
     "colorthief": "^2.4.0",
     "electron-store": "^8.1.0",
     "fontname": "^1.0.1",
-    "jimp": "^0.22.8",
+    "jimp": "^0.22.12",
     "node-font2base64": "^0.9.2"
   },
   "build": {
@@ -35,7 +35,8 @@
       ]
     },
     "dmg": {
-      "writeUpdateInfo": false
+      "writeUpdateInfo": false,
+      "artifactName": "${productName}_${version}_macOS.${ext}"
     },
     "win": {
       "target": [
@@ -44,14 +45,14 @@
       ]
     },
     "portable": {
-      "artifactName": "${productName}_${version}_portable.${ext}"
+      "artifactName": "${productName}_${version}_Windows_portable.${ext}"
     },
     "nsis": {
       "oneClick": false,
       "perMachine": true,
       "allowToChangeInstallationDirectory": true,
       "allowElevation": true,
-      "artifactName": "${productName} ${version} setup.${ext}",
+      "artifactName": "${productName}_${version}_Windows_setup.${ext}",
       "menuCategory": "OOTP Utilities",
       "shortcutName": "${productName}",
       "include": "build/installer.nsh",
