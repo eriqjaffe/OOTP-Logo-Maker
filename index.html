@@ -16,6 +16,8 @@
         <script type="text/javascript" src="./scripts/dd.min.js"></script>
         <script type="text/javascript" src="./scripts/tooltipster.bundle.min.js"></script>
         <script type="text/javascript" src="./scripts/sweetalert2.min.js"></script>
+        <script src="./scripts/popper.min.js"></script>
+        <script src="./scripts/tippy-bundle.umd.js"></script>
         <link href='./scripts/logomaker.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/spectrum.css' rel='stylesheet' type='text/css'>
         <link href='./scripts/skeletabs.css' rel='stylesheet' type='text/css'>
@@ -27,7 +29,6 @@
         <script>
             const { ipcRenderer } = require('electron');
             const { sort, sortFn, convert } = require('color-sorter')
-            const hasbin = require('hasbin');
             
             require('./renderer.js')
 
@@ -35,7 +36,7 @@
 
             const im = (params.get('im') == "true") ? true : false
 
-            const initialColors = {topTextColor:"#ffffff", topTextStrokeColor:"#000000", bottomTextColor:"#ffffff", bottomTextStrokeColor:"#000000", teamBGColor:"#0C2340", teamTextColor: "#ffffff", stitches: "#e82a50", roundelOuterStroke: "#ffffff", roundelInnerStroke: "red", roundelOuterCircle: "blue", roundelCenterStroke: "green", roundelInnerCircle: "#ffffff", OuterStroke: 'red', CenterStroke: 'green', InnerStroke: 'blue', Fill: 'yellow', pattern: "#e82a50", capLogoTextColor: "#0000ff", capLogoStroke1Color: "#ffffff", capLogoStroke2Color: "#ff0000", capLogo2TextColor: "#0000ff", capLogo2Stroke1Color: "#ffffff", capLogo2Stroke2Color: "#ff0000"}
+            const initialColors = {topTextColor:"#ffffff", topTextStrokeColor:"#000000", bottomTextColor:"#ffffff", bottomTextStrokeColor:"#000000", teamBGColor:"#0C2340", teamTextColor: "#ffffff", stitches: "#e82a50", roundelOuterStroke: "#ffffff", roundelInnerStroke: "red", roundelOuterCircle: "blue", roundelCenterStroke: "green", roundelInnerCircle: "#ffffff", OuterStroke: 'red', CenterStroke: 'green', InnerStroke: 'blue', Fill: 'yellow', pattern: "#e82a50", capLogoTextColor: "#0000ff", capLogoTextStroke1Color: "#ffffff", capLogoTextStroke2Color: "#ff0000", capLogo2TextColor: "#0000ff", capLogo2TextStroke1Color: "#ffffff", capLogo2TextStroke2Color: "#ff0000"}
 
             const validFontTypes = ["ttf", "otf"]
             const validImageTypes = ["png","jpg","jpeg","bmp","gif","tiff"]
@@ -69,8 +70,8 @@
                             <div id="creatorContainer">
 						        <canvas id="logoCreator" width="500" height="500" style="position:absolute; top:50; float:left; z-index:0;"></canvas>
 					        </div>
+                            <div id="tipContainer" style="top:517px; height:64px; width: 500px; padding-top:1px; margin-left:8px; font-weight:bold;"></div>
                         </div>
-                        <div id="tipContainer" style="height:60px; padding-top:5px; font-weight:bold;"></div>
                         <div id="donateContainer" style="width:512px; height: 50px; text-align:right; padding-top:10px">
                             <a href="https://www.paypal.com/donate?business=UTTZRPAMBFCWA&no_recurring=1&currency_code=USD" target="_blank">
                                 <img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button">
@@ -203,6 +204,8 @@
                                                 <input type="number" class="topTextClass" id="topTextSpacing" value="0" style="width:40px;" onkeypress="return isNumberOrMinusKey(event)">
                                                 <label>&nbsp;&nbsp;&nbsp;&nbsp;Baseline:&nbsp;</label>
                                                 <input type="number" class="topTextClass" id="topTextDeltaY" value="0" min="-100" max="100" onkeypress="return isNumberOrMinusKey(event)">
+                                                <label>&nbsp;&nbsp;&nbsp;&nbsp;Stroke Width:&nbsp;</label>
+                                                <input type="number" class="topTextClass" id="topTextStrokeWidth" value="4" min="0" max="20" onkeypress="return isNumberOrMinusKey(event)">
                                             </td>
                                         </tr>
                                         <tr class="color_tr">
@@ -305,6 +308,8 @@
                                                 <input type="number" class="bottomTextClass" id="bottomTextSpacing" value="0" style="width:40px;" onkeypress="return isNumberOrMinusKey(event)">
                                                 <label>&nbsp;&nbsp;&nbsp;&nbsp;Baseline:&nbsp;</label>
                                                 <input type="number" class="bottomTextClass" id="bottomTextDeltaY" value="0" min="-100" max="100" onkeypress="return isNumberOrMinusKey(event)">
+                                                <label>&nbsp;&nbsp;&nbsp;&nbsp;Stroke Width:&nbsp;</label>
+                                                <input type="number" class="bottomTextClass" id="bottomTextStrokeWidth" value="4" min="0" max="20" onkeypress="return isNumberOrMinusKey(event)">
                                             </td>
                                         </tr>
                                         <tr class="color_tr">
@@ -475,52 +480,52 @@
                                 <div class="accord-content">
                                     <table style="width:478px;">
                                         <tr>
-                                            <td class="checkCell"><input type="checkbox" class="capTextureToggle textActiveToggle" data-id="textLogo" data-textbox="capText" data-number="monogram1Stroke" data-checkbox="capTextToggle" data-selector="textColorSelector" id="textLogoCheck"></td>
-                                            <td colspan="2"><label>Text: </label><input type="text" class="capText" id="capText" data-id="capText" value="L" style="width:79%; text-align:center;" disabled/></td>
+                                            <td class="checkCell"><input type="checkbox" class="monogramCheck capTextureToggle textActiveToggle" data-id="textLogo" data-textbox="capText" data-checkbox="capTextToggle" data-selector="textColorSelector" data-number="capTextStrokeWidth" id="textLogoCheck"></td>
+                                            <td colspan="2"><label>Text: </label><input type="text" class="capText capTextToggle" id="capText" data-id="textLogo" value="L" style="width:79%; text-align:center;" disabled/></td>
                                         </tr>
                                     </table>
                                     <table style="width:478px;" id="tableOne">
                                         <tr>
                                             <td style="text-align:center;">
-                                                <input type="checkbox" class="capTextToggle" data-group="textLogo" data-id="capLogoText" id="capLogoTextColorCheck" checked>
-                                                <input class="textSelector textColorSelector selector" type="text" id="capLogoTextColor" data-element="capLogoText" data-canvas="above">
+                                                <input type="checkbox" class="capTextToggle" data-group="textLogo" data-id="capLogoText" id="capLogoTextColorCheck" checked disabled>
+                                                <input class="textColorSelector selector" type="text" id="capLogoTextColor" data-element="capLogoTextColor" data-canvas="above">
                                             </td>
                                             <td style="text-align:center;">
-                                                <input type="checkbox" class="capTextToggle" data-group="textLogo" data-id="capLogoTextStroke1" id="capLogoStroke1ColorCheck" checked>
+                                                <input type="checkbox" class="capTextToggle" data-group="textLogo" data-id="capLogoTextStroke1" id="capLogoStroke1ColorCheck" checked disabled>
                                                 <label>Width:&nbsp;</label>
-                                                <input type="number" id="capLogoStroke1Width" class="strokeWidth monogram1Stroke" data-group="textLogo" data-id="capLogoTextStroke1" data-canvas="logoCreator" value="4" min="0" max="20">
-                                                <input class="textSelector textColorSelector selector" type="text" id="capLogoStroke1Color" data-element="capLogoTextStroke1" data-canvas="above">
+                                                <input type="number" id="capLogoStroke1Width" class="strokeWidth capTextToggle" data-group="textLogo" data-id="capLogoTextStroke1Color" data-canvas="logoCreator" value="10" min="0" max="20" disabled>
+                                                <input class="textColorSelector selector" type="text" id="capLogoTextStroke1Color" data-element="capLogoTextStroke1Color" data-canvas="above">
                                             </td>
-                                            <td style="text-align:center;"><input type="checkbox" class="capTextToggle" data-group="textLogo" data-id="capLogoTextStroke2" id="capLogoStroke2ColorCheck" checked>
+                                            <td style="text-align:center;"><input type="checkbox" class="capTextToggle" data-group="textLogo" data-id="capLogoTextStroke2" id="capLogoStroke2ColorCheck" checked disabled>
                                                 <label>Width:&nbsp;</label>
-                                                <input type="number" id="capLogoStroke2Width" class="strokeWidth monogram1Stroke" data-group="textLogo" data-id="capLogoTextStroke2" data-canvas="logoCreator" value="6" min="0" max="20">
-                                                <input class="textSelector textColorSelector selector" type="text" id="capLogoStroke2Color" data-element="capLogoTextStroke2" data-canvas="above">
+                                                <input type="number" id="capLogoStroke2Width" class="strokeWidth capTextToggle" data-group="textLogo" data-id="capLogoTextStroke2Color" data-canvas="logoCreator" value="20" min="0" max="40" disabled>
+                                                <input class="textColorSelector selector" type="text" id="capLogoTextStroke2Color" data-element="capLogoTextStroke2Color" data-canvas="above">
                                             </td>
                                         </tr>
                                     </table>
                                     <table style="width:478px;">
                                         <tr>
-                                            <td class="checkCell"><input type="checkbox" class="capTextureToggle textActiveToggle" data-id="textLogo2" data-textbox="capText2" data-number="monogram2Stroke" data-checkbox="capText2Toggle" data-selector="text2ColorSelector" id="textLogo2Check"></td>
-                                            <td colspan="2"><label>Text: </label><input type="text" class="capText" id="capText2" data-id="capText2" value="A" style="width:79%; text-align:center;" disabled/></td>
+                                            <td class="checkCell"><input type="checkbox" class="monogramCheck capTextureToggle textActiveToggle" data-id="textLogo2" data-textbox="capText2" data-checkbox="capText2Toggle" data-selector="text2ColorSelector" data-number="capText2StrokeWidth" id="textLogo2Check"></td>
+                                            <td colspan="2"><label>Text: </label><input type="text" class="capText capText2Toggle" id="capText2" data-id="textLogo2" value="A" style="width:79%; text-align:center;" disabled/></td>
                                         </tr>
                                     </table>
                                     <table style="width:478px;" id="tableTwo">
                                         <tr>
                                             <td style="text-align:center;">
-                                                <input type="checkbox" class="capText2Toggle" data-group="textLogo2" data-id="capLogo2Text" id="capLogo2TextColorCheck" checked>
-                                                <input class="textSelector text2ColorSelector selector" type="text" id="capLogo2TextColor" data-element="capLogo2Text" data-canvas="above">
+                                                <input type="checkbox" class="capText2Toggle" data-group="textLogo2" data-id="capLogo2Text" id="capLogo2TextColorCheck" checked disabled>
+                                                <input class="text2ColorSelector selector" type="text" id="capLogo2TextColor" data-element="capLogo2TextColor" data-canvas="above">
                                             </td>
                                             <td style="text-align:center;">
-                                                <input type="checkbox" class="capText2Toggle" data-group="textLogo2" data-id="capLogo2TextStroke1" id="capLogo2Stroke1ColorCheck" checked>
+                                                <input type="checkbox" class="capText2Toggle" data-group="textLogo2" data-id="capLogo2TextStroke1" id="capLogo2Stroke1ColorCheck" checked disabled>
                                                 <label>Width:&nbsp;</label>
-                                                <input type="number" id="capLogo2Stroke1Width" class="strokeWidth monogram2Stroke" data-group="textLogo2" data-id="capLogo2TextStroke1" data-canvas="logoCreator" value="4" min="0" max="20">
-                                                <input class="textSelector text2ColorSelector selector" type="text" id="capLogo2Stroke1Color" data-element="capLogo2TextStroke1" data-canvas="above">
+                                                <input type="number" id="capLogo2Stroke1Width" class="strokeWidth capText2Toggle" data-group="textLogo2" data-id="capLogo2TextStroke1Color" data-canvas="logoCreator" value="10" min="0" max="20" disabled>
+                                                <input class="text2ColorSelector selector" type="text" id="capLogo2TextStroke1Color" data-element="capLogo2TextStroke1Color" data-canvas="above">
                                             </td>
                                             <td style="text-align:center;">
-                                                <input type="checkbox" class="capText2Toggle" data-group="textLogo2" data-id="capLogo2TextStroke2" id="capLogo2Stroke2ColorCheck" checked>
+                                                <input type="checkbox" class="capText2Toggle" data-group="textLogo2" data-id="capLogo2TextStroke2" id="capLogo2Stroke2ColorCheck" checked disabled>
                                                 <label>Width:&nbsp;</label>
-                                                <input type="number" id="capLogo2Stroke2Width" class="strokeWidth monogram2Stroke" data-group="textLogo2" data-id="capLogo2TextStroke2" data-canvas="logoCreator" value="6" min="0" max="20">
-                                                <input class="textSelector text2ColorSelector selector" type="text" id="capLogo2Stroke2Color" data-element="capLogo2TextStroke2" data-canvas="above">
+                                                <input type="number" id="capLogo2Stroke2Width" class="strokeWidth capText2Toggle" data-group="textLogo2" data-id="capLogo2TextStroke2Color" data-canvas="logoCreator" value="20" min="0" max="40" disabled>
+                                                <input class="text2ColorSelector selector" type="text" id="capLogo2TextStroke2Color" data-element="capLogo2TextStroke2Color" data-canvas="above">
                                             </td>
                                         <tr>
                                     </table>
@@ -528,74 +533,74 @@
                                         <tr>
                                             <td colspan="3">
                                                 <select id="capTextSelect" class="textOption msdd" style="width:100%;">
-                                                    <option data-image="./images/Acme.png" value="./fonts/Acme-Regular.ttf">Acme</option>
-                                                    <option data-image="./images/All State.png" value="./fonts/all_state-webfont.ttf">All State</option>
-                                                    <option data-image="./images/Athletic Gothic.png" value="./fonts/athletic_gothic-webfont.ttf">Athletic Gothic</option>
-                                                    <option data-image="./images/Athletic Gothic Shadow.png" value="./fonts/athletic_gothic_shadow-webfont.ttf">Athletic Gothic Shadow</option>
-                                                    <option data-image="./images/Beaverton Script.png" value="./fonts/beaverton_script-webfont.ttf">Beaverton Script</option>
-                                                    <option data-image="./images/Berkshire Swash.png" value="./fonts/BerkshireSwash-Regular.ttf">Berkshire Swash</option>
-                                                    <option data-image="./images/CantoraOne.png" value="./fonts/CantoraOne-Regular.ttf">CantoraOne</option>
-                                                    <option data-image="./images/Caxton Roman.png" value="./fonts/caxton_roman-webfont.ttf">Caxton Roman</option>
-                                                    <option data-image="./images/Chela One.png" value="./fonts/ChelaOne-Regular.ttf">Chela</option>
-                                                    <option data-image="./images/Russell Circus.png" value="./fonts/circus-webfont.ttf">Russell Circus</option>
-                                                    <option data-image="./images/Condiment.png" value="./fonts/Condiment-Regular.ttf">Condiment</option>
-                                                    <option data-image="./images/Cookie.png" value="./fonts/Cookie-Regular.ttf">Cookie</option>
-                                                    <option data-image="./images/Courgette.png" value="./fonts/Courgette-Regular.ttf">Courgette</option>
-                                                    <option data-image="./images/Croissant One.png" value="./fonts/CroissantOne-Regular.ttf">Croissant</option>
-                                                    <option data-image="./images/Damion.png" value="./fonts/Damion-Regular.ttf">Damion</option>
-                                                    <option data-image="./images/Engagement.png" value="./fonts/Engagement-Regular.ttf">Engagement</option>
-                                                    <option data-image="./images/Germania One.png" value="./fonts/GermaniaOne-Regular.ttf">Germania</option>
-                                                    <option data-image="./images/Graduate.png" value="./fonts/Graduate-Regular.ttf" selected>Graduate</option>
-                                                    <option data-image="./images/Grand Hotel.png" value="./fonts/GrandHotel-Regular.ttf">Grand Hotel</option>
-                                                    <option data-image="./images/Jockey One.png" value="./fonts/JockeyOne-Regular.ttf">Jockey</option>
-                                                    <option data-image="./images/Kaushan Script.png" value="./fonts/KaushanScript-Regular.ttf">Kaushan Script</option>
-                                                    <option data-image="./images/Leckerli One.png" value="./fonts/LeckerliOne-Regular.ttf">Leckerli</option>
-                                                    <option data-image="./images/Lily Script One.png" value="./fonts/LilyScriptOne-Regular.ttf">Lily Script</option>
-                                                    <option data-image="./images/Lobster.png" value="./fonts/Lobster-Regular.ttf">Lobster</option>
-                                                    <option data-image="./images/Lobster Two.png" value="./fonts/LobsterTwo-Regular.ttf">Lobster Two</option>
-                                                    <option data-image="./images/Metal Mania.png" value="./fonts/MetalMania-Regular.ttf">Metal Mania</option>
-                                                    <option data-image="./images/Miniver.png" value="./fonts/Miniver-Regular.ttf">Miniver</option>
-                                                    <option data-image="./images/MLB Block.png" value="./fonts/MLBBlock.ttf">MLB Block</option>
-                                                    <option data-image="./images/MLB Cubs.png" value="./fonts/MLBCubs.ttf">MLB Chicago N</option>
-                                                    <option data-image="./images/MLB Red Sox.png" value="./fonts/MLBRedSox.ttf">McAuliffe</option>
-                                                    <option data-image="./images/Molle.png" value="./fonts/Molle-Regular.ttf">Molle</option>
-                                                    <option data-image="./images/New Rocker.png" value="./fonts/NewRocker-Regular.ttf">New Rocker</option>
-                                                    <option data-image="./images/Norican.png" value="./fonts/Norican-Regular.ttf">Norican</option>
-                                                    <option data-image="./images/Oleo Script.png" value="./fonts/OleoScript-Regular.ttf">Oleo Script</option>
-                                                    <option data-image="./images/Pacifico.png" value="./fonts/Pacifico.ttf">Pacifico</option>
-                                                    <option data-image="./images/Pirata One.png" value="./fonts/PirataOne-Regular.ttf">Pirata</option>
-                                                    <option data-image="./images/Playball.png" value="./fonts/Playball-Regular.ttf">Playball</option>
-                                                    <option data-image="./images/Pro Full Block.png" value="./fonts/pro_full_block-webfont.ttf">Pro Full Block</option>
-                                                    <option data-image="./images/Quicksand.png" value="./fonts/Quicksand-Regular.ttf">Quicksand</option>
-                                                    <option data-image="./images/Rubik Mono One.png" value="./fonts/RubikMonoOne-Regular.ttf">Rubik Mono</option>
-                                                    <option data-image="./images/Rubik One.png" value="./fonts/RubikOne-Regular.ttf">Rubik</option>
-                                                    <option data-image="./images/Rum Raisin.png" value="./fonts/RumRaisin-Regular.ttf">Rum Raisin</option>
-                                                    <option data-image="./images/Satisfy.png" value="./fonts/Satisfy-Regular.ttf">Satisfy</option>
-                                                    <option data-image="./images/Seymour One.png" value="./fonts/SeymourOne-Regular.ttf">Seymour</option>
-                                                    <option data-image="./images/UA Tiffany.png" value="./fonts/tiffany-webfont.ttf">Tiffany</option>
-                                                    <option data-image="./images/Trade Winds.png" value="./fonts/TradeWinds-Regular.ttf">Trade Winds</option>
-                                                    <option data-image="./images/Kansas.png" value="./fonts/tuscan-webfont.ttf">Kansas</option>
-                                                    <option data-image="./images/UnifrakturCook.png" value="./fonts/UnifrakturCook-Bold.ttf">Unifraktur Cook</option>
-                                                    <option data-image="./images/UnifrakturMaguntia.png" value="./fonts/UnifrakturMaguntia-Book.ttf">Unifraktur Maguntia</option>
-                                                    <option data-image="./images/Varsity Block C.png" value="./fonts/VarsityBlockC.ttf">Varsity Block C</option>
-                                                    <option data-image="./images/Varsity Classic Serif A.png" value="./fonts/VarsityClassicSerifA.ttf">Varsity Classic Serif A</option>
-                                                    <option data-image="./images/Varsity Classic Serif B.png" value="./fonts/VarsityClassicSerifB.ttf">Varsity Classic Serif B</option>
-                                                    <option data-image="./images/Vibur.png" value="./fonts/Vibur-Regular.ttf">Vibur</option>
-                                                    <option data-image="./images/Viga.png" value="./fonts/Viga-Regular.ttf">Viga</option>
-                                                    <option data-image="./images/Wellfleet.png" value="./fonts/Wellfleet-Regular.ttf">Wellfleet</option>
-                                                    <option data-image="./images/Wendy One.png" value="./fonts/WendyOne-Regular.ttf">Wendy</option>
-                                                    <option data-image="./images/Yellowtail.png" value="./fonts/Yellowtail-Regular.ttf">Yellowtail</option>
-                                                    <option data-image="./images/Rawlings Fancy Block.png" value="./fonts/rawlingsfancyblock-regular-webfont.ttf">Fancy Block</option>
-                                                    <option data-image="./images/Rawlings Old English.png" value="./fonts/rawlingsoldenglish-webfont.ttf">Old English</option>
-                                                    <option data-image="./images/Richardson Fancy Block.png" value="./fonts/richardson_fancy_block-webfont.ttf">Fancy Block 2</option>
-                                                    <option data-image="./images/SPL28Script.png" value="./fonts/spl28script-webfont.ttf">SPL Script</option>
-                                                    <option data-image="./images/VarsityClassicD.png" value="./fonts/VarsityClassicD.ttf">Varsity Classic D</option>
-                                                    <option data-image="./images/VarsityBlockA.png" value="./fonts/VarsityBlockA.ttf">Varsity Block A</option>
-                                                    <option data-image="./images/VarsityBlockB.png" value="./fonts/VarsityBlockB.ttf">Varsity Block B</option>
-                                                    <option data-image="./images/VarsityBlockD.png" value="./fonts/VarsityBlockD.ttf">Varsity Block D</option>
-                                                    <option data-image="./images/VarsityClassicA.png" value="./fonts/VarsityClassicA.ttf">Varsity Classic A</option>
-                                                    <option data-image="./images/VarsityClassicB.png" value="./fonts/VarsityClassicB.ttf">Varsity Classic B</option>
-                                                    <option data-image="./images/VarsityClassicC.png" value="./fonts/VarsityClassicC.ttf">Varsity Classic C</option>
+                                                    <option data-image="./images/Acme.png" value='Acme' selected>Acme</option>
+                                                    <option data-image="./images/All State.png" value='All State'>All State</option>
+                                                    <option data-image="./images/Athletic Gothic Shadow.png" value='Athletic Gothic Shadow'>Athletic Gothic Shadow</option>
+                                                    <option data-image="./images/Athletic Gothic.png" value='Athletic Gothic'>Athletic Gothic</option>
+                                                    <option data-image="./images/Beaverton Script.png" value='Beaverton Script'>Beaverton Script</option>
+                                                    <option data-image="./images/Berkshire Swash.png" value='Berkshire Swash'>Berkshire Swash</option>
+                                                    <option data-image="./images/CantoraOne.png" value='CantoraOne'>Cantora</option>
+                                                    <option data-image="./images/Caxton Roman.png" value='Caxton Roman'>Caxton Roman</option>
+                                                    <option data-image="./images/Chela One.png" value='Chela One'>Chela</option>
+                                                    <option data-image="./images/Condiment.png" value='Condiment'>Condiment</option>
+                                                    <option data-image="./images/Cookie.png" value='Cookie'>Cookie</option>
+                                                    <option data-image="./images/Courgette.png" value='Courgette'>Courgette</option>
+                                                    <option data-image="./images/Croissant One.png" value='Croissant One'>Croissant</option>
+                                                    <option data-image="./images/Damion.png" value='Damion'>Damion</option>
+                                                    <option data-image="./images/Engagement.png" value='Engagement'>Engagement</option>
+                                                    <option data-image="./images/Germania One.png" value='Germania One'>Germania</option>
+                                                    <option data-image="./images/Graduate.png" value='Graduate'>Graduate</option>
+                                                    <option data-image="./images/Grand Hotel.png" value='Grand Hotel'>Grand Hotel</option>
+                                                    <option data-image="./images/Jockey One.png" value='Jockey One'>Jockey</option>
+                                                    <option data-image="./images/Kansas.png" value='Kansas'>Kansas</option>
+                                                    <option data-image="./images/Kaushan Script.png" value='Kaushan Script'>Kaushan Script</option>
+                                                    <option data-image="./images/Leckerli One.png" value='Leckerli One'>Leckerli</option>
+                                                    <option data-image="./images/Lily Script One.png" value='Lily Script One'>Lily Script</option>
+                                                    <option data-image="./images/Lobster Two.png" value='Lobster Two'>Lobster Two</option>
+                                                    <option data-image="./images/Lobster.png" value='Lobster'>Lobster</option>
+                                                    <option data-image="./images/Metal Mania.png" value='Metal Mania'>Metal Mania</option>
+                                                    <option data-image="./images/Miniver.png" value='Miniver'>Miniver</option>
+                                                    <option data-image="./images/MLB Block.png" value='MLB Block'>MLB Block</option>
+                                                    <option data-image="./images/MLB_Tuscan_New.png" value='MLB_Tuscan_New'>MLB Tuscan</option>
+                                                    <option data-image="./images/Molle.png" value='Molle'>Molle</option>
+                                                    <option data-image="./images/New Rocker.png" value='New Rocker'>New Rocker</option>
+                                                    <option data-image="./images/Norican.png" value='Norican'>Norican</option>
+                                                    <option data-image="./images/Oleo Script Swash Caps.png" value='Oleo Script Swash Caps'>Oleo Script Swash Caps</option>
+                                                    <option data-image="./images/Oleo Script.png" value='Oleo Script'>Oleo Script</option>
+                                                    <option data-image="./images/Pacifico.png" value='Pacifico'>Pacifico</option>
+                                                    <option data-image="./images/Pirata One.png" value='Pirata One'>Pirata</option>
+                                                    <option data-image="./images/Playball.png" value='Playball'>Playball</option>
+                                                    <option data-image="./images/Pro Full Block.png" value='Pro Full Block'>Pro Full Block</option>
+                                                    <option data-image="./images/Quicksand.png" value='Quicksand'>Quicksand</option>
+                                                    <option data-image="./images/Rawlings Fancy Block.png" value='Rawlings Fancy Block'>Fancy Block</option>
+                                                    <option data-image="./images/Rawlings Old English.png" value='Rawlings Old English'>Old English</option>
+                                                    <option data-image="./images/Richardson Fancy Block.png" value='Richardson Fancy Block'>Fancy Block 2</option>
+                                                    <option data-image="./images/Rubik Mono One.png" value='Rubik Mono One'>Rubik Mono</option>
+                                                    <option data-image="./images/Rubik One.png" value='Rubik One'>Rubik</option>
+                                                    <option data-image="./images/Rum Raisin.png" value='Rum Raisin'>Rum Raisin</option>
+                                                    <option data-image="./images/Russell Circus.png" value='Russell Circus'>Russell Circus</option>
+                                                    <option data-image="./images/Satisfy.png" value='Satisfy'>Satisfy</option>
+                                                    <option data-image="./images/Seymour One.png" value='Seymour One'>Seymour</option>
+                                                    <option data-image="./images/SPL28Script.png" value='SPL28Script'>SPL2Script</option>
+                                                    <option data-image="./images/Trade Winds.png" value='Trade Winds'>Trade Winds</option>
+                                                    <option data-image="./images/UA Tiffany.png" value='UA Tiffany'>UA Tiffany</option>
+                                                    <option data-image="./images/UnifrakturCook.png" value='UnifrakturCook'>Unifraktur Cook</option>
+                                                    <option data-image="./images/UnifrakturMaguntia.png" value='UnifrakturMaguntia'>Unifraktur Maguntia</option>
+                                                    <option data-image="./images/VarsityBlockA.png" value='Varsity Block A'>Varsity Block A</option>
+                                                    <option data-image="./images/VarsityBlockB.png" value='Varsity Block B'>Varsity Block B</option>
+                                                    <option data-image="./images/Varsity Block C.png" value='Varsity Block C'>Varsity Block C</option>
+                                                    <option data-image="./images/VarsityBlockD.png" value='Varsity Block D'>Varsity Block D</option>
+                                                    <option data-image="./images/VarsityClassicA.png" value='Varsity Classic A'>Varsity Classic A</option>
+                                                    <option data-image="./images/VarsityClassicB.png" value='Varsity Classic B'>Varsity Classic B</option>
+                                                    <option data-image="./images/VarsityClassicC.png" value='Varsity Classic C'>Varsity Classic C</option>
+                                                    <option data-image="./images/VarsityClassicD.png" value='Varsity Classic D'>Varsity Classic D</option>
+                                                    <option data-image="./images/Varsity Classic Serif A.png" value='Varsity Classic Serif A'>Varsity Classic Serif A</option>
+                                                    <option data-image="./images/Varsity Classic Serif B.png" value='Varsity Classic Serif B'>Varsity Classic Serif B</option>
+                                                    <option data-image="./images/Vibur.png" value='Vibur'>Vibur</option>
+                                                    <option data-image="./images/Viga.png" value='Viga'>Viga</option>
+                                                    <option data-image="./images/Wellfleet.png" value='Wellfleet'>Wellfleet</option>
+                                                    <option data-image="./images/Wendy One.png" value='Wendy One'>Wendy</option>
+                                                    <option data-image="./images/Yellowtail.png" value='Yellowtail'>Yellowtail</option>
                                                 </select>	
                                             </td>
                                         </tr>
@@ -719,27 +724,16 @@
     </body>
     <script>
 
+    const logoTippy = tippy(document.getElementById('canvasContainer'), {
+        content: '',
+		trigger: 'manual',
+		placement: 'right-end',
+		allowHTML: true,
+    });
+
     let yearRange = ""
 
     $(document).ready(function() {
-
-        hasbin('magick', function (result) {
-            if (result != true) {
-                $(".im").each(function() {
-                    $(this).css("display","none")
-                })
-                $(".noim").each(function() {
-                    $(this).css("display","inline-block")
-                })
-            } else {
-                $(".im").each(function() {
-                    $(this).css("display","inline-block")
-                })
-                $(".noim").each(function() {
-                    $(this).css("display","none")
-                })
-            }
-        })
 
         switch (process.platform) {
             case "win32":
@@ -845,17 +839,61 @@
 		}
 		switch (e.keyCode) {
 			case 107: // plus
-				if (obj.get('type') == "group") {
-					obj.bringToFront();
-					logoCreator.renderAll();
-				}
-				return false;
-			case 109: // minus
-				if (obj.get('type') == "group") {
-					obj.sendToBack();
-					logoCreator.renderAll();
-				}
-				return false;
+                if (obj.get('type') == "group" || obj.get('type') == "image") {
+                    if (e.shiftKey) {
+                        obj.bringToFront()
+                        logoTippy.setContent(getStackingOrder())
+                        logoTippy.show()
+                    } else {
+                        obj.bringForward();
+                        logoTippy.setContent(getStackingOrder())
+                        logoTippy.show()	
+                    }
+                    activeCanvas.renderAll();
+                }
+                break;
+            case 187: // plus
+                if (obj.get('type') == "group" || obj.get('type') == "image") {
+                    if (e.shiftKey) {
+                        obj.bringToFront()
+                        logoTippy.setContent(getStackingOrder())
+                        logoTippy.show()
+                    } else {
+                        obj.bringForward();
+                        logoTippy.setContent(getStackingOrder())
+                        logoTippy.show()	
+                    }
+                    activeCanvas.renderAll();
+                }
+                break;
+            case 109: // minus
+                if (obj.get('type') == "group" || obj.get('type') == "image") {
+                    if (e.shiftKey) {
+                        obj.sendToBack()
+                        logoTippy.setContent(getStackingOrder())
+                        logoTippy.show()
+                    } else {
+                        obj.sendBackwards();
+                        logoTippy.setContent(getStackingOrder())
+                        logoTippy.show()
+                    }
+                    activeCanvas.renderAll();
+                }
+                break;
+            case 189: // minus
+                if (obj.get('type') == "group" || obj.get('type') == "image") {
+                    if (e.shiftKey) {
+                        obj.sendToBack()
+                        logoTippy.setContent(getStackingOrder())
+                        logoTippy.show()
+                    } else {
+                        obj.sendBackwards();
+                        logoTippy.setContent(getStackingOrder())
+                        logoTippy.show()
+                    }
+                    activeCanvas.renderAll();
+                }
+                break;
 			case 37:
 				e.preventDefault();
 				var a = obj.get('left') - movementDelta;
@@ -1113,6 +1151,73 @@
 		})
 	})
 
+    $(".textColorSelector").each(function() {
+        const el = $(this).attr('id')
+		var color = $(this).attr('id');
+		$(this).spectrum({
+			type: "color",
+			showAlpha: false,
+			showInput: true,
+			preferredFormat: 'hex',
+			showInitial: true,
+			showPalette: true,
+			showButtons: true,
+            disabled: true,
+			//showSelectionPalette: true,
+			color: initialColors[$(this).attr('id')],
+			beforeShow: function(color) {
+				//$(this).spectrum("option", "palette", commonPalette)
+			},
+			show: function(color) {
+				var original_color = color;
+				$(this).data('changed', false);
+			},
+			move: function(color) {
+                console.log(el)
+                changeMonogramColor("textLogo",el,color)
+			},
+			change: function(color) {
+                changeMonogramColor("textLogo",el,color)
+			},
+			hide: function(color) {
+                changeMonogramColor("textLogo",el,color)
+			}
+		})
+	})
+
+    $(".text2ColorSelector").each(function() {
+        const el = $(this).attr('id')
+		var color = $(this).attr('id');
+		$(this).spectrum({
+			type: "color",
+			showAlpha: false,
+			showInput: true,
+			preferredFormat: 'hex',
+			showInitial: true,
+			showPalette: true,
+			showButtons: true,
+            disabled: true,
+			//showSelectionPalette: true,
+			color: initialColors[$(this).attr('id')],
+			beforeShow: function(color) {
+				//$(this).spectrum("option", "palette", commonPalette)
+			},
+			show: function(color) {
+				var original_color = color;
+				$(this).data('changed', false);
+			},
+			move: function(color) {
+                changeMonogramColor("textLogo2",el,color)
+			},
+			change: function(color) {
+                changeMonogramColor("textLogo2",el,color)
+			},
+			hide: function(color) {
+                changeMonogramColor("textLogo2",el,color)
+			}
+		})
+	})
+
     $(".roundelSelector").each(function() {
         const el = $(this).attr('id')
         const canvas = $(this).data('canvas')
@@ -1244,8 +1349,17 @@
         })
         logoCreator.renderAll()
     }
+
+    function changeMonogramColor(group,el,color) {
+        const g = logoCreator.getObjects('group').find(o => o.id == group)
+        const o = g.getObjects().find(o => o.id == el)
+        o.set("fill", color.toHexString())
+        o.set("stroke", color.toHexString())
+        logoCreator.renderAll()
+    }
     
     function changeTextColor(el,color) {
+        console.log(el)
         const clr = (color == null) ? 'transparent' : color.toHexString()
         switch (el) {
             case "topTextColor":
@@ -1396,6 +1510,40 @@
         $("#textRotationAmount").val(parseInt($(this).val()))
         const d = logoCreator.getObjects('group').find(o => o.id == "decor")
         d.set("angle",angle)
+        logoCreator.renderAll()
+    })
+
+    $(".strokeWidth").on("input",function(e) {
+        const g = logoCreator.getObjects("group").find(o => o.id == $(this).data("group"))
+        const o = g.getObjects().find(o => o.id == $(this).data("id"))
+        o.set("strokeWidth",$(this).val())
+        logoCreator.renderAll()
+    })
+
+    $("#capTextSelect").on("change",function(e) {
+        let newFont = $(this).val()
+        let monogramFont = new FontFaceObserver($(this).val())
+        monogramFont.load()
+        .then(function() {
+            let group1 = logoCreator.getObjects('group').find(o => o.id == 'textLogo')
+            let group1obj = group1.getObjects('i-text').forEach(function(o){
+                o.set('fontFamily',newFont)
+            })
+            let group2 = logoCreator.getObjects('group').find(o => o.id == "textLogo2")
+            let group2obj = group2.getObjects('i-text').forEach(function(o){
+                o.set('fontFamily',newFont)
+            })
+            logoCreator.renderAll()
+        })
+
+    })
+
+    $(".capText").on("input",function(e) {
+        let text = $(this).val()
+        let group = logoCreator.getObjects('group').find(o => o.id == $(this).data("id"))
+        let obj = group.getObjects('i-text').forEach(function(o){
+            o.set("text", text)
+        })
         logoCreator.renderAll()
     })
 
@@ -1577,7 +1725,7 @@
 			$("."+selector).each(function(e) {
 				$(this).spectrum('disable');
 			})
-		}
+		} 
     })
 
     $("#centerMonogram").on("click",function() {
@@ -1602,6 +1750,7 @@
         }
         logoCreator.renderAll()
     })
+
 
     fabric.Object.prototype.set({
     	borderColor: 'red',
@@ -2760,132 +2909,137 @@
         logoCreator.add(stitches)
         logoCreator.add(roundelStitches)
         logoCreator.add(circleStitches)
-
-        
-
         logoCreator.add(circle)
         logoCreator.add(homePlate)
         logoCreator.add(square)
         logoCreator.add(roundedSquare)
 
-        opentype.load("./fonts/Acme-Regular.ttf", (err,font) => {
-			if (err || !font) {
-				console.log(err)
-				return;
-			}
+        textLogo = new fabric.Group ([])
+        textLogo.set({
+            visible:true,
+            id:'textLogo',
+            description: "Cap Text #1"
+        });
 
-			const path = font.getPath("L",95,275,160)
-			const svgPath = path.toPathData(5)
+        textLogo2 = new fabric.Group ([])
+        textLogo2.set({
+            visible:true,
+            id:'textLogo2',
+            description: "Cap Text #2"
+        });
 
-			capLogoText = new fabric.Path(svgPath,{
-				left: 225,
-				top: 225,
-				originX: 'center',
-				originY: 'center',
-				centeredScaling: true,
-				centeredRotation: true,
-				id: 'capLogoText',
-				fill: initialColors["capLogoTextColor"]
-			})
-			
-			capLogoTextStroke1 = new fabric.Path(svgPath,{
-				originX: 'center',
-				originY: 'center',
-				left: 225,
-				top: 225,
-				centeredScaling: true,
-				centeredRotation: true,
-				stroke: initialColors["capLogoStroke1Color"],
-				strokeWidth: 10,
-				strokeLineCap: "round",
-				id: 'capLogoTextStroke1',
-				fill: initialColors["capLogoStroke1Color"]
-			})
-			
-			capLogoTextStroke2 = new fabric.Path(svgPath,{
-				originX: 'center',
-				originY: 'center',
-				left: 225,
-				top: 225,
-				centeredScaling: true,
-				centeredRotation: true,
-				stroke: initialColors["capLogoStroke2Color"],
-				strokeWidth: 20,
-				strokeLineCap: "round",
-				id: 'capLogoTextStroke2',
-				fill: initialColors["capLogoStroke2Color"]
-			})
-			
-			textLogo = new fabric.Group ([])
-			textLogo.set({
-				visible:false,
-				id:'textLogo',
-				description: "Cap Text #1"
-			});
+        let monogramFont = new FontFaceObserver($("#capTextSelect").val())
+        monogramFont.load()
+        .then(function() {
+        // when font is loaded, use it.
+            capLogoText = new fabric.IText($("#capText").val(),{
+                top: 226,
+                left: 226,
+                visible: true,
+                fontFamily: $("#capTextSelect").val(),
+                fontSize: 150,
+                originX: 'center',
+                originY: 'center',
+                textAlign: 'center',
+                id: 'capLogoTextColor',
+                fill: initialColors["capLogoTextColor"],
+                selectable: false
+            })
 
-			textLogo.addWithUpdate(capLogoTextStroke2)
-			textLogo.addWithUpdate(capLogoTextStroke1)
-			textLogo.addWithUpdate(capLogoText)
+            capLogoStroke1 = new fabric.IText($("#capText").val(),{
+                top: 226,
+                left: 226,
+                visible: true,
+                fontFamily: $("#capTextSelect").val(),
+                fontSize: 150,
+                originX: 'center',
+                originY: 'center',
+                textAlign: 'center',
+                id: 'capLogoTextStroke1Color',
+                fill: initialColors["capLogoTextStroke1Color"],
+                stroke: initialColors["capLogoTextStroke1Color"],
+                strokeWidth: $("#capLogoStroke1Width").val(),
+                selectable: false
+            })
 
-			logoCreator.add(textLogo);
+            capLogoStroke2 = new fabric.IText($("#capText").val(),{
+                top: 226,
+                left: 226,
+                visible: true,
+                fontFamily: $("#capTextSelect").val(),
+                fontSize: 150,
+                originX: 'center',
+                originY: 'center',
+                textAlign: 'center',
+                id: 'capLogoTextStroke2Color',
+                fill: initialColors["capLogoTextStroke2Color"],
+                stroke: initialColors["capLogoTextStroke2Color"],
+                strokeWidth: $("#capLogoStroke2Width").val(),
+                selectable: false
+            })
 
-			const path2 = font.getPath("A",115,295,160)
-			const svgPath2 = path2.toPathData(5)
+            capLogo2Text = new fabric.IText($("#capText2").val(),{
+                top: 281,
+                left: 275,
+                visible: true,
+                fontFamily: $("#capTextSelect").val(),
+                fontSize: 150,
+                originX: 'center',
+                originY: 'center',
+                textAlign: 'center',
+                id: 'capLogoTextColor',
+                fill: initialColors["capLogoTextColor"],
+                selectable: false
+            })
 
-			capLogo2Text = new fabric.Path(svgPath2,{
-				left: 275,
-				top: 275,
-				originX: 'center',
-				originY: 'center',
-				centeredScaling: true,
-				centeredRotation: true,
-				id: 'capLogo2Text',
-				fill: initialColors["capLogoTextColor"]
-			})
-			
-			capLogo2TextStroke1 = new fabric.Path(svgPath2,{
-				originX: 'center',
-				originY: 'center',
-				left: 275,
-				top: 275,
-				centeredScaling: true,
-				centeredRotation: true,
-				stroke: initialColors["capLogoStroke1Color"],
-				strokeWidth: 10,
-				strokeLineCap: "round",
-				id: 'capLogo2TextStroke1',
-				fill: initialColors["capLogoStroke1Color"]
-			})
-			
-			capLogo2TextStroke2 = new fabric.Path(svgPath2,{
-				originX: 'center',
-				originY: 'center',
-				left: 275,
-				top: 275,
-				centeredScaling: true,
-				centeredRotation: true,
-				stroke: initialColors["capLogoStroke2Color"],
-				strokeWidth: 20,
-				strokeLineCap: "round",
-				id: 'capLogo2TextStroke2',
-				fill: initialColors["capLogoStroke2Color"]
-			})
-			
-			textLogo2 = new fabric.Group ([])
-			textLogo2.set({
-				visible:false,
-				id:'textLogo2',
-				description: "Cap Text #2"
-			});
+            capLogo2Stroke1 = new fabric.IText($("#capText2").val(),{
+                top: 281,
+                left: 275,
+                visible: true,
+                fontFamily: $("#capTextSelect").val(),
+                fontSize: 150,
+                originX: 'center',
+                originY: 'center',
+                textAlign: 'center',
+                id: 'capLogoTextStroke1Color',
+                fill: initialColors["capLogoTextStroke1Color"],
+                stroke: initialColors["capLogoTextStroke1Color"],
+                strokeWidth: $("#capLogoStroke1Width").val(),
+                selectable: false
+            })
 
-			textLogo2.addWithUpdate(capLogo2TextStroke2)
-			textLogo2.addWithUpdate(capLogo2TextStroke1)
-			textLogo2.addWithUpdate(capLogo2Text)
+            capLogo2Stroke2 = new fabric.IText($("#capText2").val(),{
+                top: 281,
+                left: 275,
+                visible: true,
+                fontFamily: $("#capTextSelect").val(),
+                fontSize: 150,
+                originX: 'center',
+                originY: 'center',
+                textAlign: 'center',
+                id: 'capLogoTextStroke2Color',
+                fill: initialColors["capLogoTextStroke2Color"],
+                stroke: initialColors["capLogoTextStroke2Color"],
+                strokeWidth: $("#capLogoStroke2Width").val(),
+                selectable: false
+            })
 
-			logoCreator.add(textLogo2);
-		})
-        
-        logoCreator.renderAll()
+            textLogo.addWithUpdate(capLogoStroke2)
+            textLogo.addWithUpdate(capLogoStroke1)
+            textLogo.addWithUpdate(capLogoText)
+
+            textLogo2.addWithUpdate(capLogo2Stroke2)
+            textLogo2.addWithUpdate(capLogo2Stroke1)
+            textLogo2.addWithUpdate(capLogo2Text)
+
+            logoCreator.add(textLogo)
+            logoCreator.add(textLogo2)
+        }).catch(function(e) {
+            console.log(e)
+            alert('font loading failed ' + data.familyName);
+        });
+
+        logoCreator.renderAll() 
     }
 
     function initializeInfoPanel() {
@@ -3438,6 +3592,19 @@
         ipcRenderer.send("add-pattern", null)
     })
 
+    $(".monogramCheck").on("change",function(e){
+/*         const state = $(this).is(":checked") ? false : true
+        $("."+$(this).data("checkbox")).each(function() {
+            $(this).attr("disabled",state)
+        })
+        $("."+$(this).data("selector")).each(function() {
+            $(this).spectrum(state ? 'disable' : 'enable');
+        })
+        let o = logoCreator.getObjects('group').find(o => o.id == $(this).data('id'))
+        o.set("visible", $(this).is(":checked"))
+        logoCreator.renderAll() */
+    })
+
     function getUserInput() {
         return Swal.fire({
             title: 'Enter a name for the pattern:',
@@ -3529,6 +3696,34 @@
         info.set("text",outputName())
         infoCanvas.renderAll()
 	})
+
+    $("#topTextStrokeWidth").on("input", function(e) {
+        const amt = $(this).val()
+        const info = infoCanvas.getObjects().find(o => o.id == 'infoText')
+		logoCreator.getObjects('i-text').forEach(function(o) {
+			if (o.id.includes("Top")) {
+				o.set("strokeWidth", amt)
+			}	
+		})
+        var tx = logoCreator.getObjects('i-text').find(o => o.id == 'homePlateText')
+        tx.set("strokeWidth", amt)
+        setTopTextDelta()
+		logoCreator.renderAll()
+    })
+
+    $("#bottomTextStrokeWidth").on("input", function(e) {
+        const amt = $(this).val()
+        const info = infoCanvas.getObjects().find(o => o.id == 'infoText')
+		logoCreator.getObjects('i-text').forEach(function(o) {
+			if (o.id.includes("Bottom")) {
+				o.set("strokeWidth", amt)
+			}	
+		})
+        //var tx = logoCreator.getObjects('i-text').find(o => o.id == 'homePlateText')
+        //tx.set("strokeWidth", amt)
+        setTopTextDelta()
+		logoCreator.renderAll()
+    })
 
     $("#save").on("click",function(e) {
 		if ($("#toggleGuides").val() == "Hide Guides") {
@@ -3682,17 +3877,41 @@
 				let scaleY = object.get('scaleY')
                 let path = object.get('path')
 				let pictureName = object.get('name');
-				let theImage = object._originalElement.currentSrc;
                 let color = $("#strokeColor").spectrum("get").toHex().toLowerCase()
                 let width = $("#strokeWidth").val()
-                theImage = theImage.substr(theImage.indexOf(',') + 1).toString();
-				ipcRenderer.send('add-stroke', {imgdata: theImage, left: left, top: top, scaleX: scaleX, path: path, pictureName: pictureName, color: color, width: width})
+                console.log(color)
+				const x = parseInt(width) + 1, y = parseInt(width);
+				let image = new Image();
+				image.onload = function() {
+					const canvas = document.createElement('canvas');
+					canvas.width = image.width + x * 2
+					canvas.height = image.height + y * 2
+					
+					const ctx = canvas.getContext('2d');
+
+					for (let angle = 0; angle < 360; angle += 360 / 36) {
+						ctx.drawImage(
+							image,
+							width * Math.sin((Math.PI * 2 * angle) / 360) + x,
+							width * Math.cos((Math.PI * 2 * angle) / 360) + y
+						);
+					}
+					ctx.globalCompositeOperation = 'source-in';
+					ctx.fillStyle = "#"+color;
+					ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+					ctx.globalCompositeOperation = 'source-over';
+					ctx.drawImage(image, x, y);
+                    ipcRenderer.send('update-image', {imgdata: canvas.toDataURL(), x: 0, y: 0, filename: pictureName, canvas: "logoCreator", pLeft: left, pTop: top, pScaleX: scaleX, scaleY: scaleY, pictureName: pictureName, path: path})
+				}
+				image.src = object._originalElement.currentSrc
 				return false;
 			}
-		}	
+		}
     })
 
     $("#removeColorRange").on("click",function(e) {
+        console.log("remove color range")
 		var canvas = logoCreator
         var canvasName = "logoCreator"
         var fuzz = parseInt($("#colorFuzz").val());
@@ -3705,20 +3924,63 @@
 			var object = canvas.getActiveObject()
 			var idx = canvas.getObjects().indexOf(object)
 			if (object.get('type') == "image") {
-				//showOverlay("Processing Image...")
+				//showOverlay("Processing Image...")\
 				var pictureName = object.get('name');
-				var pLeft = object.get('left')
-				var pTop = object.get('top')
-				var pScaleX = object.get('scaleX')
-				var pScaleY = object.get('scaleY')
-				var pX = x / pScaleX
-				var pY = y / pScaleY
+				var left = object.get('left')
+				var top = object.get('top')
+				var scaleX = object.get('scaleX')
+				var scaleY = object.get('scaleY')
                 var path = object.get('path')
-				$(colorSquare).removeClass("colorSquare").removeClass("colorSquareSelected");
-				var theImage = object._originalElement.currentSrc;
-				theImage = theImage.substr(theImage.indexOf(',') + 1).toString();	
-				ipcRenderer.send('remove-color-range', {imgdata: theImage, x: pX, y: pY, color: color, action: action, fuzz: fuzz, filename: pictureName, canvas: canvasName, pLeft: pLeft, pTop: pTop, pScaleX: pScaleX, pScaleY: pScaleY, pictureName: pictureName, colorSquare: colorSquare, path: path})		
-				return false;
+                var newcolor = null
+                $(colorSquare).removeClass("colorSquare").removeClass("colorSquareSelected");
+				const img = new Image();
+				img.onload = function() {
+					const canvas = document.createElement('canvas');
+					const ctx = canvas.getContext('2d');
+
+					canvas.width = img.width;
+					canvas.height = img.height;
+
+					ctx.drawImage(img, 0, 0);
+
+					const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+					const pixels = imageData.data;
+					const startIndex = (y * canvas.width + x) * 4;
+					const baseColor = {
+						r: pixels[startIndex],
+						g: pixels[startIndex + 1],
+						b: pixels[startIndex + 2],
+						a: pixels[startIndex + 3] // Get alpha channel value
+					};
+
+					const stack = [{ x: x, y: y }];
+
+					while (stack.length) {
+						const { x, y } = stack.pop();
+						const index = (y * canvas.width + x) * 4;
+
+						if (
+							x >= 0 && x < canvas.width &&
+							y >= 0 && y < canvas.height &&
+							isColorMatchAlpha(pixels, index, baseColor, replacementColor, fuzz)
+						) {
+							pixels[index] = replacementColor.r;
+							pixels[index + 1] = replacementColor.g;
+							pixels[index + 2] = replacementColor.b;
+							pixels[index + 3] = replacementColor.a; // Set alpha channel value
+
+							stack.push({ x: x + 1, y: y });
+							stack.push({ x: x - 1, y: y });
+							stack.push({ x: x, y: y + 1 });
+							stack.push({ x: x, y: y - 1 });
+						}
+					}
+
+					ctx.putImageData(imageData, 0, 0);
+
+                    ipcRenderer.send('update-image', {imgdata: canvas.toDataURL(), x: 0, y: 0, filename: pictureName, canvas: canvasName, pLeft: left, pTop: top, pScaleX: scaleX, scaleY: scaleY, pictureName: pictureName, path: path})
+				};
+				img.src = object._originalElement.currentSrc;
 			}
 		}
 	})
@@ -3732,32 +3994,65 @@
 		var x = $(this).data("x");
 		var y = $(this).data("y");
 		var action = $(this).attr("id");
-		
-		if (canvas.getActiveObject()) {
+        if (canvas.getActiveObject()) {
 			var object = canvas.getActiveObject()
 			var idx = canvas.getObjects().indexOf(object)
 			if (object.get('type') == "image") {
 				//showOverlay("Processing Image...")
 				var pictureName = object.get('name');
-				var pLeft = object.get('left')
-				var pTop = object.get('top')
-				var pScaleX = object.get('scaleX')
-				var pScaleY = object.get('scaleY')
-				var pX = x / pScaleX
-				var pY = y / pScaleY
+				var left = object.get('left')
+				var top = object.get('top')
+				var scaleX = object.get('scaleX')
+				var scaleY = object.get('scaleY')
+				var pX = x / scaleX
+				var pY = y / scaleY
                 var path = object.get('path')
-				$(colorSquare).removeClass("colorSquare").removeClass("colorSquareSelected");
-				var theImage = object._originalElement.currentSrc;
-				theImage = theImage.substr(theImage.indexOf(',') + 1).toString();
-				ipcRenderer.send('remove-all-color', {imgdata: theImage, x: pX, y: pY, color: color, action: action, fuzz: fuzz, filename: pictureName, canvas: canvasName, pLeft: pLeft, pTop: pTop, pScaleX: pScaleX, pScaleY: pScaleY, pictureName: pictureName, colorSquare: colorSquare, color: color, path: path})			
-				return false;
+                var newcolor = null
+				$(colorSquare).removeClass("colorSquareActive").removeClass("colorSquareSelected");
+				const img = new Image();
+				
+				img.onload = function() {
+					const canvas = document.createElement('canvas');
+					const ctx = canvas.getContext('2d');
+
+					canvas.width = img.width;
+					canvas.height = img.height;
+
+					ctx.drawImage(img, 0, 0);
+
+					const pixelData = ctx.getImageData(x, y, 1, 1).data; // Get pixel data at coordinates (x, y)
+					const color = { r: pixelData[0], g: pixelData[1], b: pixelData[2] }; // Extract RGB values from pixel data
+
+					const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+					const pixels = imageData.data;
+
+					for (let i = 0; i < pixels.length; i += 4) {
+						const r = pixels[i];
+						const g = pixels[i + 1];
+						const b = pixels[i + 2];
+						const a = pixels[i + 3];
+
+						if (isColorWithinTolerance({ r, g, b }, color, fuzz)) {
+							pixels[i] = replacementColor.r;
+							pixels[i + 1] = replacementColor.g;
+							pixels[i + 2] = replacementColor.b;
+							pixels[i + 3] = 0; // Set alpha channel to 0 for transparency
+						}
+					}
+
+					ctx.putImageData(imageData, 0, 0);
+
+                    console.log(canvas.toDataURL())
+
+					ipcRenderer.send('update-image', {imgdata: canvas.toDataURL(), x: 0, y: 0, filename: pictureName, canvas: canvasName, pLeft: left, pTop: top, scaleX: scaleX, scaleY: scaleY, pictureName: pictureName, path: path})
+				};
+				img.src = object._originalElement.currentSrc;
 			}
 		}
 	})
 
     $(".replaceColor").on("click",function(e) {
-        console.log($(this).attr("id"))
-		$("#replaceColorSubmit").data("action",$(this).attr("id"))
+        $("#replaceColorSubmit").data("action",$(this).attr("id"))
         $("#replaceColorSubmit").data("x",$(this).data("x"))
         $("#replaceColorSubmit").data("y",$(this).data("y"))
         var color = $("#colorSquare").val();
@@ -3773,41 +4068,120 @@
     })
 
     $("#replaceColorSubmit").on("click",function(e) {
-        var canvas = logoCreator
         var canvasName = "logoCreator"
         var fuzz = parseInt($("#colorFuzz").val());
         var color = $("#colorSquare").val();
-        var newcolor = $("#replacementColor").spectrum("get").toHexString();
+        var newcolor = hexToRgb($("#replacementColor").spectrum("get").toHexString())
         var colorSquare = "#colorSquare"
-        var newColorSquare = "#replacemenColor"
-		var action = $(this).data("action");
+        var newColorSquare = "#replacementColor"
+        //newcolor = hexToRgb(newcolor)
+		const action = $(this).data("action");
 		var x = $(this).data("x");
 		var y = $(this).data("y");
-		if (canvas.getActiveObject()) {
-			var object = canvas.getActiveObject()
-			var idx = canvas.getObjects().indexOf(object)
+        
+        if (logoCreator.getActiveObject()) {
+			var object = logoCreator.getActiveObject()
+			var idx = logoCreator.getObjects().indexOf(object)
 			if (object.get('type') == "image") {
 				//showOverlay("Processing Image...")
-				var pictureName = object.get('name');
-				$(colorSquare).removeClass("colorSquare").removeClass("colorSquareSelected");
+				let pictureName = object.get('name');
+				$(colorSquare).removeClass("colorSquareActive").removeClass("colorSquareSelected");
 				
-				var theImage = object._originalElement.currentSrc;
+				let left = object.get('left')
+				let top = object.get('top')
+				let scaleX = object.get('scaleX')
+				let scaleY = object.get('scaleY')
+                let path = object.get('path')
+				let pX = x / scaleX
+				let pY = y / scaleY
 
-				var pLeft = object.get('left')
-				var pTop = object.get('top')
-				var pScaleX = object.get('scaleX')
-				var pScaleY = object.get('scaleY')
-				var pX = x / pScaleX
-				var pY = y / pScaleY
-                var path = object.get('path')
+				const img = new Image()
+                console.log(action)
+				if (action == "replaceColorRange") {	
+                    img.onload = function() {
+						const canvas = document.createElement('canvas');
+						const ctx = canvas.getContext('2d');
 
-				theImage = theImage.substr(theImage.indexOf(',') + 1).toString();
+						canvas.width = img.width;
+						canvas.height = img.height;
 
-                ipcRenderer.send('replace-color', {imgdata: theImage, pLeft: pLeft, pTop: pTop, pScaleX: pScaleX, pScaleY: pScaleY, action: action, color: color, newcolor: newcolor, fuzz: fuzz, pictureName: pictureName, canvas: canvasName, x: x, y: y, colorSquare: colorSquare, newColorSquare: newColorSquare, path: path})
-			
+						ctx.drawImage(img, 0, 0);
+
+						const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+						const pixels = imageData.data;
+						const startIndex = (y * canvas.width + x) * 4;
+						const baseColor = {
+							r: pixels[startIndex],
+							g: pixels[startIndex + 1],
+							b: pixels[startIndex + 2]
+						};
+
+						const stack = [{ x: x, y: y }];
+
+						while (stack.length) {
+							const { x, y } = stack.pop();
+							const index = (y * canvas.width + x) * 4;
+
+							if (
+								x >= 0 && x < canvas.width &&
+								y >= 0 && y < canvas.height &&
+								isColorMatch(pixels, index, baseColor, color, fuzz)
+							) {
+								pixels[index] = newcolor.r;
+								pixels[index + 1] = newcolor.g;
+								pixels[index + 2] = newcolor.b;
+
+								stack.push({ x: x + 1, y: y });
+								stack.push({ x: x - 1, y: y });
+								stack.push({ x: x, y: y + 1 });
+								stack.push({ x: x, y: y - 1 });
+							}
+						}
+
+						ctx.putImageData(imageData, 0, 0);
+                        ipcRenderer.send('update-image', {imgdata: canvas.toDataURL(), x: 0, y: 0, filename: pictureName, canvas: canvasName, pLeft: left, pTop: top, pScaleX: scaleX, scaleY: scaleY, pictureName: pictureName, path: path})
+						return false;
+					};
+					img.src = object._originalElement.currentSrc
+				} else {
+                    img.onload = function() {
+						const canvas = document.createElement('canvas');
+						const ctx = canvas.getContext('2d');
+
+						canvas.width = img.width;
+						canvas.height = img.height;
+
+						ctx.drawImage(img, 0, 0);
+
+						const pixelData = ctx.getImageData(x, y, 1, 1).data; // Get pixel data at coordinates (x, y)
+						const color = { r: pixelData[0], g: pixelData[1], b: pixelData[2] }; // Extract RGB values from pixel data
+
+						// Continue with your existing code...
+						const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+						const pixels = imageData.data;
+
+						for (let i = 0; i < pixels.length; i += 4) {
+							const r = pixels[i];
+							const g = pixels[i + 1];
+							const b = pixels[i + 2];
+							const a = pixels[i + 3];
+
+							if (isColorWithinTolerance({ r, g, b }, color, fuzz)) {
+								pixels[i] = newcolor.r;
+								pixels[i + 1] = newcolor.g;
+								pixels[i + 2] = newcolor.b;
+							}
+						}
+
+						ctx.putImageData(imageData, 0, 0);
+                        ipcRenderer.send('update-image', {imgdata: canvas.toDataURL(), x: 0, y: 0, filename: pictureName, canvas: canvasName, pLeft: left, pTop: top, pScaleX: scaleX, scaleY: scaleY, pictureName: pictureName, path: path})
+						return false;
+					}
+					img.src = object._originalElement.currentSrc;
+				}
 				return false;
 			}
-		}	
+		}
 	})
 
 	ipcRenderer.on('imagemagick-response', (event, response) => {
@@ -3815,14 +4189,14 @@
 			alert(response.message)
 			//hideOverlay()
 		} else {
+            
 			let canvas = logoCreator
 			let data = response.data
 			let imLeft = response.pLeft
 			let imTop = response.pTop
 			let pictureName = response.pictureName
             let path = response.path
-		
-			var object = canvas.getActiveObject()
+            var object = canvas.getActiveObject()
 			var idx = canvas.getObjects().indexOf(object)
 
 			var imgObj = new Image();
@@ -3897,23 +4271,84 @@
 		let action = $(this).attr("id");
 		let color = $("#colorSquare").val();
 		if (canvas.getActiveObject()) {
-			var object = canvas.getActiveObject()
+            var object = canvas.getActiveObject()
 			var idx = canvas.getObjects().indexOf(object)
 			if (object.get('type') == "image") {
-				//showOverlay("Processing Image...")
-				var pictureName = object.get('name');
-				var pLeft = object.get('left')
-				var pTop = object.get('top')
-				var pScaleX = object.get('scaleX')
-				var pScaleY = object.get('scaleY')
-				var pX = x / pScaleX
-				var pY = y / pScaleY
-                var path = object.get('path')
 				$(colorSquare).removeClass("colorSquare").removeClass("colorSquareSelected");
-				var theImage = object._originalElement.currentSrc;
-				theImage = theImage.substr(theImage.indexOf(',') + 1).toString();	
-				ipcRenderer.send('make-transparent', {imgdata: theImage, x: pX, y: pY, color: color, action: action, fuzz: fuzz, filename: pictureName, canvas: canvasName, pLeft: pLeft, pTop: pTop, pScaleX: pScaleX, pScaleY: pScaleY, pictureName: pictureName, colorSquare: colorSquare, path: path})		
-				return false;
+				let left = object.get("left");
+				let top = object.get("top");
+                let scaleX = object.get('scaleX')
+				let scaleY = object.get('scaleY')
+                let path = object.get('path')
+				let pictureName = object.get('name');
+				let theImage = object._originalElement.currentSrc;
+				let replacementColor = hexToRgb("#000000")
+				let x = 1
+				let y = 1
+				const img = new Image();
+				img.onload = function() {
+					const tempCanvas = document.createElement('canvas');
+					const tempCtx = tempCanvas.getContext('2d');
+
+					tempCanvas.width = img.width;
+					tempCanvas.height = img.height;
+
+					tempCtx.drawImage(img, 0, 0);
+
+					let color = GetColorPixel(tempCtx,1,1)
+
+					let hexColor = rgb2hex(color[0], color[1], color[2])
+
+					const canvas = document.createElement('canvas');
+					const ctx = canvas.getContext('2d');
+
+					canvas.width = img.width+20;
+					canvas.height = img.height+20;
+
+					ctx.fillStyle = hexColor;
+					ctx.fillRect(0,0, canvas.width,canvas.height);
+
+					ctx.drawImage(img, 10, 10);
+
+					const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+					const pixels = imageData.data;
+					const startIndex = (y * canvas.width + x) * 4;
+					const baseColor = {
+						r: pixels[startIndex],
+						g: pixels[startIndex + 1],
+						b: pixels[startIndex + 2],
+						a: pixels[startIndex + 3] // Get alpha channel value
+					};
+
+					const stack = [{ x: x, y: y }];
+
+					while (stack.length) {
+						const { x, y } = stack.pop();
+						const index = (y * canvas.width + x) * 4;
+
+						if (
+							x >= 0 && x < canvas.width &&
+							y >= 0 && y < canvas.height &&
+							isColorMatchAlpha(pixels, index, baseColor, replacementColor, fuzz)
+						) {
+							pixels[index] = replacementColor.r;
+							pixels[index + 1] = replacementColor.g;
+							pixels[index + 2] = replacementColor.b;
+							pixels[index + 3] = replacementColor.a; // Set alpha channel value
+
+							stack.push({ x: x + 1, y: y });
+							stack.push({ x: x - 1, y: y });
+							stack.push({ x: x, y: y + 1 });
+							stack.push({ x: x, y: y - 1 });
+						}
+					}
+
+					ctx.putImageData(imageData, 0, 0);
+
+					ipcRenderer.send('update-image', {imgdata: canvas.toDataURL(), x: 0, y: 0, filename: pictureName, canvas: canvasName, pLeft: left, pTop: top, pScaleX: scaleX, scaleY: scaleY, pictureName: pictureName, path: path})
+				};
+				img.src = object._originalElement.currentSrc;
+                return false;
 			}
 		}
 	})
@@ -3952,18 +4387,24 @@
 
     logoCreator.on('selection:created', function(e) {
 		var obj = e.selected[0];
-		if (obj.type == 'image') {
+		if (obj.type == 'image' || obj.type == "group") {
+            logoTippy.setContent(getStackingOrder())
+			logoTippy.show()
 			$("#fileName").html(obj.get('name'));
 			if ($("#trimImageDiv").css("display") == "none") {
 				$("#trimImageDiv").css("display","block");
 				$("#uploadImageDiv").css("display","none");
 				$("#selectedImageDiv").css("display","block");
 			}
-			$("#tipContainer").html("Use Arrow keys to move image 1 pixel.<br>Use Shift + Arrow keys to move image 10 pixels.<br>Use Delete key to remove image.");
-		}
+			$("#tipContainer").html("<table style='width:100%;'><tr><td>Use Arrow keys to move image 1 pixel.<br>Use Shift + Arrow keys to move image 10 pixels.<br>Use Delete key to remove image.</td>\
+                <td>Use plus and minus keys to raise and lower object.<br>Use shift and plus/minus keys to bring object to font or back.</td></tr></table>");
+		} else {
+            $("#tipContainer").html("")
+        }
 	})
 
     logoCreator.on('selection:cleared', function(e) {
+        logoTippy.hide()
         $("#fileName").html("");
         $("#trimImageDiv").css("display","none");
         $("#uploadImageDiv").css("display","block");
@@ -4109,7 +4550,11 @@
     })
 
     $("#localFont").on("click",function(e) {
-        ipcRenderer.send('upload-font', null)
+        ipcRenderer.send('upload-font', "name")
+    })
+
+    $("#fakeFontButton").on("click",function(e) {
+        ipcRenderer.send('upload-font', "monogram")
     })
 
     $("#uploadImage").on("click",function(e) {
@@ -4341,14 +4786,14 @@
                 // switch to the already known font
                 const topFontDropdown= document.getElementById("topFont").msDropdown;
                 const bottomFontDropdown = document.getElementById("bottomFont").msDropdown;
-                const monogramFontDropdown = document.getElementById("capTextSelect").msDropdown
-                var foo = findIndexByText(topFontDropdown, data.fontName)
+                let foo = findIndexByText(topFontDropdown, data.fontName)
                 topFontDropdown.selectedIndex = foo
                 topFontDropdown.refresh()
-                var bar = findIndexByText(bottomFontDropdown, data.fontName)
+                let bar = findIndexByText(bottomFontDropdown, data.fontName)
                 bottomFontDropdown.selectedIndex = bar
                 bottomFontDropdown.refresh()
-                var zoo = findIndexByText(monogramFontDropdown, data.fontName)
+                const monogramFontDropdown = document.getElementById("capTextSelect").msDropdown
+                let zoo = findIndexByText(monogramFontDropdown, data.fontName)
                 monogramFontDropdown.selectedIndex = zoo
                 monogramFontDropdown.refresh()
             } else {
@@ -4368,6 +4813,14 @@
                     squareTextBottom.set('fontFamily',data.familyName)
                     roundedSquareTextTop.set('fontFamily',data.familyName)
                     roundedSquareTextBottom.set('fontFamily',data.familyName)
+                    let g = logoCreator.getObjects('group').find(o => o.id == "textLogo")
+                    g.getObjects().forEach(function(o) {
+                        o.set('fontFamily',data.familyName)
+                    })
+                    let h = logoCreator.getObjects('group').find(o => o.id == "textLogo2")
+                    h.getObjects().forEach(function(o) {
+                        o.set('fontFamily',data.familyName)
+                    })
                     logoCreator.renderAll()
 
                     var tmpTxt = new fabric.IText("ABC 123",{
@@ -4504,135 +4957,10 @@
         })
     }
 
-    function capWordmarkChange(data,newFont) {
-		var tmp = (data.fontPath == undefined) ? data : data.fontPath;
-		opentype.load(tmp, (err,font) => {
-			if (err || !font) {
-				console.log(err)
-				return;
-			}
 
-			var grp = logoCreator.getObjects("group").find(o => o.id === "textLogo")
-			var grp2 = logoCreator.getObjects("group").find(o => o.id === "textLogo2")
 
-			grp.getObjects('path').forEach(function(o) {
-				grp.removeWithUpdate(o)
-			})
 
-			grp2.getObjects('path').forEach(function(o) {
-				grp2.removeWithUpdate(o)
-			})
-
-			const path = font.getPath($("#capText").val(),95,275,60)
-			const svgPath = path.toPathData(5)
-
-			capLogoText = new fabric.Path(svgPath,{
-				left: 95,
-				top: 275,
-				originX: 'center',
-				originY: 'center',
-				centeredScaling: true,
-				centeredRotation: true,
-				id: 'capLogoText',
-				fill: $("#capLogoTextColor").spectrum("get")
-			})
-			
-			capLogoTextStroke1 = new fabric.Path(svgPath,{
-				originX: 'center',
-				originY: 'center',
-				left: 95,
-				top: 275,
-				centeredScaling: true,
-				centeredRotation: true,
-				stroke: $("#capLogoStroke1Color").spectrum("get"),
-				strokeWidth: $("#capLogoStroke1Width").val(),
-				strokeLineCap: "round",
-				id: 'capLogoTextStroke1',
-				fill: $("#capLogoStroke1Color").spectrum("get")
-			})
-			
-			capLogoTextStroke2 = new fabric.Path(svgPath,{
-				originX: 'center',
-				originY: 'center',
-				left: 95,
-				top: 275,
-				centeredScaling: true,
-				centeredRotation: true,
-				stroke: $("#capLogoStroke2Color").spectrum("get"),
-				strokeWidth: $("#capLogoStroke2Width").val(),
-				strokeLineCap: "round",
-				id: 'capLogoTextStroke2',
-				fill: $("#capLogoStroke2Color").spectrum("get")
-			})
-
-			textLogo.addWithUpdate(capLogoTextStroke2)
-			textLogo.addWithUpdate(capLogoTextStroke1)
-			textLogo.addWithUpdate(capLogoText)
-
-			const path2 = font.getPath($("#capText2").val(),115,295,60)
-			const svgPath2 = path2.toPathData(5)
-
-			capLogo2Text = new fabric.Path(svgPath2,{
-				left: 115,
-				top: 295,
-				originX: 'center',
-				originY: 'center',
-				centeredScaling: true,
-				centeredRotation: true,
-				id: 'capLogo2Text',
-				fill: $("#capLogo2TextColor").spectrum("get")
-			})
-			
-			capLogo2TextStroke1 = new fabric.Path(svgPath2,{
-				originX: 'center',
-				originY: 'center',
-				left: 115,
-				top: 295,
-				centeredScaling: true,
-				centeredRotation: true,
-				stroke: $("#capLogo2Stroke1Color").spectrum("get"),
-				strokeWidth: $("#capLogo2Stroke1Width").val(),
-				strokeLineCap: "round",
-				id: 'capLogo2TextStroke1',
-				fill: $("#capLogo2Stroke1Color").spectrum("get")
-			})
-			
-			capLogo2TextStroke2 = new fabric.Path(svgPath2,{
-				originX: 'center',
-				originY: 'center',
-				left: 115,
-				top: 295,
-				centeredScaling: true,
-				centeredRotation: true,
-				stroke: $("#capLogo2Stroke2Color").spectrum("get"),
-				strokeWidth: $("#capLogo2Stroke2Width").val(),
-				strokeLineCap: "round",
-				id: 'capLogo2TextStroke2',
-				fill: $("#capLogo2Stroke2Color").spectrum("get")
-			})
-
-			textLogo2.addWithUpdate(capLogo2TextStroke2)
-			textLogo2.addWithUpdate(capLogo2TextStroke1)
-			textLogo2.addWithUpdate(capLogo2Text)
-
-			logoCreator.renderAll()
-
-			if (newFont) {
-				var thumbText = font.getPath("ABC 123", 0, 0, 96)
-				var outPath = thumbText.toPathData(5)
-
-				var foo = new fabric.Path(outPath, {
-					fill: 'black',
-					top: 0,
-					left: 0
-				})
-
-				refreshDropdowns(data,foo)
-
-				//updateDDSlick("cap",addData,addData2)
-			}
-		})
-	}
+    
 
     function getExtension(filename) {
 		var ext = (filename||'').split('.');
@@ -4705,7 +5033,6 @@
             bottomFontDropdown.selectedIndex = idx;
             monogramFontDropdown.selectedIndex = idx;
 		}
-
 		sortFontDropdowns()
 	}
 
@@ -4782,6 +5109,76 @@
 			}
 		}
 		return -1
+	}
+
+    function getStackingOrder() {
+		const items = []
+        let zIdx = "<b>Stacking Order:</b><br><hr>"
+		logoCreator.getObjects().forEach(function(o) {
+			if (o.selectable && o.visible) {
+				const item = {}
+				item.z = o.getZIndex()
+				item.id = o.id
+				item.description = (o.description != undefined) ? o.description : o.id
+				items.push(item)
+			}
+		})
+		items.sort((a, b) => b.z - a.z);
+		for (item of items) {
+			if (logoCreator.getActiveObject().id == item.id) {
+				zIdx += "<b>"+item.description+" (z-index: "+item.z+")</b><br>"
+			} else {
+				zIdx += item.description+" (z-index: "+item.z+")<br>"
+			}
+				
+		}
+		return zIdx
+	}
+    
+    function isColorWithinTolerance(pixelColor, targetColor, tolerance) {
+		const dr = Math.abs(pixelColor.r - targetColor.r);
+		const dg = Math.abs(pixelColor.g - targetColor.g);
+		const db = Math.abs(pixelColor.b - targetColor.b);
+
+		return (dr <= tolerance && dg <= tolerance && db <= tolerance);
+	}
+
+	function isColorMatch(pixels, index, baseColor, targetColor, tolerance) {
+		const dr = Math.abs(baseColor.r - pixels[index]);
+		const dg = Math.abs(baseColor.g - pixels[index + 1]);
+		const db = Math.abs(baseColor.b - pixels[index + 2]);
+
+		return (dr + dg + db) / 3 <= tolerance;
+	}
+
+	function isColorMatchAlpha(pixels, index, baseColor, targetColor, tolerance) {
+		const dr = Math.abs(baseColor.r - pixels[index]);
+		const dg = Math.abs(baseColor.g - pixels[index + 1]);
+		const db = Math.abs(baseColor.b - pixels[index + 2]);
+		const da = Math.abs(baseColor.a - pixels[index + 3]); // Include alpha channel difference
+
+		return (dr + dg + db + da) / 4 <= tolerance
+	}
+
+    function hexToRgb(hex) {
+		// Remove '#' if present
+		hex = hex.replace(/^#/, '');
+
+		// Parse hex values
+		const bigint = parseInt(hex, 16);
+
+		// Extract RGB components
+		const r = (bigint >> 16) & 255;
+		const g = (bigint >> 8) & 255;
+		const b = bigint & 255;
+
+		return { r, g, b };
+	}
+
+	function GetColorPixel(context, x, y) {
+  		const imageData = context.getImageData(x, y, 1, 1).data;
+  		const rgbColor = [imageData[0], imageData[1], imageData[2]];
+		return rgbColor;
 	}
     </script>
 </html>
