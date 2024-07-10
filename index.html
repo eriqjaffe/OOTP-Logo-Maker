@@ -4388,7 +4388,7 @@
 
     logoCreator.on('selection:created', function(e) {
 		var obj = e.selected[0];
-		if (obj.type == 'image') {
+		if (obj.type == 'image' || obj.type == "group") {
             logoTippy.setContent(getStackingOrder())
 			logoTippy.show()
 			$("#fileName").html(obj.get('name'));
