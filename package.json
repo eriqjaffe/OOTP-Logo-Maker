@@ -13,8 +13,8 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "electron": "^26.3.0",
-    "electron-builder": "^23.6.0"
+    "electron": "^31.2.0",
+    "electron-builder": "^24.13.3"
   },
   "dependencies": {
     "add-filename-increment": "^1.0.0",
