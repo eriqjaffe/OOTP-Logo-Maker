@@ -357,7 +357,8 @@
                                                     <input class="roundelSelector selector" data-group="roundel" data-canvas="logoCreator" type="text" id="roundelOuterCircle"><br>
                                                     <input class="roundelSelector selector" data-group="roundel" data-canvas="logoCreator" type="text" id="roundelCenterStroke">
                                                     <input class="roundelSelector selector" data-group="roundel" data-canvas="logoCreator" type="text" id="roundelInnerCircle">
-                                                </span>
+                                                    <!--<input type="number" id="roundelStrokeWidth" value="0" min="-6" max="6">-->
+                                                 </span>
                                                 <span id="otherSpan" style="display: none;">
                                                     <input class="objectSelector selector" data-canvas="logoCreator" type="text" id="OuterStroke">
                                                     <input class="objectSelector selector" data-canvas="logoCreator" type="text" id="CenterStroke">
@@ -1696,6 +1697,9 @@
     })
 
     $(".textActiveToggle").on("change", function(e) {
+        logoCreator.getObjects('group').forEach(function(o) {
+            console.log(o.id)
+        })
         let obj = logoCreator.getObjects('group').find(o => o.id == $(this).data("id"))
         obj.set("visible",$(this).is(":checked"))
         logoCreator.renderAll()
@@ -3067,6 +3071,14 @@
         })
     }
     
+    $("#roundelStrokeWidth").on("input",function(){
+        let g = logoCreator.getObjects('group').find(o => o.id == "roundel")
+        let o = g.getObjects().find(o => o.id == 'roundelInnerCircle')
+        o.set("radius",92+parseInt($(this).val()))
+        console.log(o.radius)
+        logoCreator.renderAll()
+    })
+
     $("#topTextCheck").on("change",function(e) {
         const checked = $(this).is(":checked")
         textVis.top = checked
