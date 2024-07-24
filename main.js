@@ -8,7 +8,6 @@ const Jimp = require('jimp')
 const Store = require("electron-store")
 const fontname = require('fontname')
 const ColorThief = require('colorthief');
-const font2base64 = require("node-font2base64")
 const chokidar = require("chokidar")
 
 const isMac = process.platform === 'darwin'
@@ -152,7 +151,7 @@ ipcMain.on('upload-font', (event, arg) => {
 					"message": err
 				}
 				event.sender.send('add-font-response', json)
-				//fs.unlinkSync(result.filePaths[0])
+				fs.unlinkSync(result.filePaths[0])
 			}
 		} else {
 			json.status = "cancelled"
@@ -195,7 +194,7 @@ ipcMain.on('drop-font', (event, arg) => {
 			"message": err
 		}
 		event.sender.send('add-font-response', json)
-		//fs.unlinkSync(req.query.file)
+		fs.unlinkSync(req.query.file)
 	}
 })
 
@@ -301,7 +300,7 @@ ipcMain.on('save-logo', (event, arg) => {
 				if (err) {
 					console.log(err);
 				} else {
-					image.autocrop().resize(300,300);
+					image.crop(100,100,300,300)
 					image.write(result.filePath);
 				}
 			})
@@ -341,7 +340,6 @@ ipcMain.on('local-font-folder', (event, arg) => {
 			try {
 				const fontMeta = fontname.parse(fs.readFileSync(filePath))[0];
 				var ext = getExtension(filePath)
-				const dataUrl = font2base64.encodeToDataUrlSync(filePath)
 				var fontPath = url.pathToFileURL(filePath)
 				var json = {
 					"status": "ok",
@@ -351,7 +349,6 @@ ipcMain.on('local-font-folder', (event, arg) => {
 					"fontFormat": ext,
 					"fontMimetype": 'font/' + ext,
 					"fontData": fontPath.href,
-					"fontBase64": dataUrl,
 					"fontPath": filePath,
 				};
 				jsonArr.push(json)
@@ -363,7 +360,7 @@ ipcMain.on('local-font-folder', (event, arg) => {
 					"message": err
 				}
 				jsonArr.push(json)
-				//fs.unlinkSync(filePath)
+				fs.unlinkSync(filePath)
 			}
 		}
 	}
