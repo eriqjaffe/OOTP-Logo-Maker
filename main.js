@@ -300,7 +300,7 @@ ipcMain.on('save-logo', (event, arg) => {
 				if (err) {
 					console.log(err);
 				} else {
-					image.autocrop().resize(300,300);
+					image.crop(100,100,300,300)
 					image.write(result.filePath);
 				}
 			})
