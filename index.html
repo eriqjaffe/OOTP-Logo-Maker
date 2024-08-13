@@ -403,6 +403,8 @@
                                                 <label>Text Rotation:</label>
                                                 <input type="range" class="range textRotationRange" id="roundelTopRotationRange" value="0" min="-180" max="180" style="margin-left:2px; margin-right:2px;" list="customrange">
                                                 <input class="textRotationAmount" id="roundelTopRotationNum" type="number" value="0" min="-180" max="180" onkeypress="return isNumberOrMinusKey(event)">
+                                                <input type="checkbox" id="linkRoundelRotation" style="display:none;" checked>
+                                                <div class="checkedLink" id="linkRoundel" style="width:20px; height:20px; display:inline-block"></div>
                                                 <input type="range" class="range textRotationRange" id="roundelBottomRotationRange" value="0" min="-180" max="180" style="margin-left:2px; margin-right:2px;" list="customrange">
                                                 <input class="textRotationAmount" id="roundelBottomRotationNum" type="number" value="0" min="-180" max="180" onkeypress="return isNumberOrMinusKey(event)">
                                             </td>
@@ -412,6 +414,8 @@
                                                 <label>Text Rotation:</label>
                                                 <input type="range" class="range textRotationRange" id="circleTopRotationRange" value="0" min="-180" max="180" style="margin-left:2px; margin-right:2px;" list="customrange">
                                                 <input class="textRotationAmount" id="circleTopRotationNum" type="number" value="0" min="-180" max="180" onkeypress="return isNumberOrMinusKey(event)">
+                                                <input type="checkbox" id="linkCircleRotation" style="display:none;" checked>
+                                                <div class="checkedLink" id="linkCircle" style="width:20px; height:20px; display:inline-block"></div>
                                                 <input type="range" class="range textRotationRange" id="circleBottomRotationRange" value="0" min="-180" max="180" style="margin-left:2px; margin-right:2px;" list="customrange">
                                                 <input class="textRotationAmount" id="circleBottomRotationNum" type="number" value="0" min="-180" max="180" onkeypress="return isNumberOrMinusKey(event)">
                                             </td>
@@ -1699,57 +1703,156 @@
         logoCreator.renderAll()
     })
 
+    $("#linkRoundel").on("click",function() {
+        if ($(this).hasClass("uncheckedLink")) {
+            $(this).removeClass("uncheckedLink").addClass("checkedLink")
+            $("#linkRoundelRotation").prop( "checked", true );
+        } else {
+            $(this).removeClass("checkedLink").addClass("uncheckedLink")
+            $("#linkRoundelRotation").prop( "checked", false );
+        }
+        $("#linkRoundelRotation").trigger("change")
+    })
+
+    $("#linkRoundelRotation").on("change",function() {
+        if ($(this).is(":checked")) {
+            const angle = parseInt($("#roundelTopRotationRange").val())
+            $("#roundelBottomRotationRange").val(angle)
+            $("#roundelBottomRotationNum").val(angle)
+            let o = logoCreator.getObjects("i-text").find(o => o.id == "roundelTextTop")
+            let p = logoCreator.getObjects("i-text").find(o => o.id == "roundelTextBottom")
+            o.set("angle", (angle + 180) % 360)
+            p.set("angle", angle)
+            logoCreator.renderAll()
+        }
+    })
+
+    $("#linkCircle").on("click",function() {
+        if ($(this).hasClass("uncheckedLink")) {
+            $(this).removeClass("uncheckedLink").addClass("checkedLink")
+            $("#linkCircleRotation").prop( "checked", true );
+        } else {
+            $(this).removeClass("checkedLink").addClass("uncheckedLink")
+            $("#linkCircleRotation").prop( "checked", false );
+        }
+        $("#linkCircleRotation").trigger("change")
+    })
+
+    $("#linkCircleRotation").on("change",function() {
+        if ($(this).is(":checked")) {
+            const angle = parseInt($("#circleTopRotationRange").val())
+            $("#circleBottomRotationRange").val(angle)
+            $("#circleBottomRotationNum").val(angle)
+            let o = logoCreator.getObjects("i-text").find(o => o.id == "circleTextTop")
+            let p = logoCreator.getObjects("i-text").find(o => o.id == "circleTextBottom")
+            o.set("angle", (angle + 180) % 360)
+            p.set("angle", angle)
+            logoCreator.renderAll()
+        }
+    })
+
     $(".textRotationAmount").on("input",function(e) {
         const angle = parseInt($(this).val())
         let o
+        let p
         switch ($(this).attr("id")) {
             case "roundelTopRotationNum":
                 o = logoCreator.getObjects("i-text").find(o => o.id == "roundelTextTop")
                 $("#roundelTopRotationRange").val(angle)
                 o.set("angle", (angle + 180) % 360)
+                if ($('#linkRoundelRotation').is(':checked')) {
+                    $("#roundelBottomRotationRange").val(angle)
+                    $("#roundelBottomRotationNum").val(angle)
+                    p = logoCreator.getObjects("i-text").find(o => o.id == "roundelTextBottom")
+                    p.set("angle", angle)
+                }
                 break;
             case "roundelBottomRotationNum":
                 o = logoCreator.getObjects("i-text").find(o => o.id == "roundelTextBottom")
                 $("#roundelBottomRotationRange").val(angle)
                 o.set("angle", angle)
+                if ($('#linkRoundelRotation').is(':checked')) {
+                    $("#roundelTopRotationRange").val(angle)
+                    $("#roundelTopRotationNum").val(angle)
+                    p = logoCreator.getObjects("i-text").find(o => o.id == "roundelTextTop")
+                    p.set("angle", (angle + 180) % 360)
+                }
                 break;
             case "circleTopRotationNum":
                 o = logoCreator.getObjects("i-text").find(o => o.id == "circleTextTop")
                 $("#circleTopRotationRange").val(angle)
                 o.set("angle", (angle + 180) % 360)
+                if ($('#linkCircleRotation').is(':checked')) {
+                    $("#circleBottomRotationRange").val(angle)
+                    $("#circleBottomRotationNum").val(angle)
+                    p = logoCreator.getObjects("i-text").find(o => o.id == "circleTextBottom")
+                    p.set("angle", (angle))
+                }
                 break;
             case "circleBottomRotationNum":
                 o = logoCreator.getObjects("i-text").find(o => o.id == "circleTextBottom")
                 $("#circleBottomRotationRange").val(angle)
                 o.set("angle", angle)
+                if ($('#linkCircleRotation').is(':checked')) {
+                    $("#circleTopRotationRange").val(angle)
+                    $("#circleTopRotationNum").val(angle)
+                    p = logoCreator.getObjects("i-text").find(o => o.id == "circleTextTop")
+                    p.set("angle", (angle + 180) % 360)
+                }
                 break;
         }
+
         logoCreator.renderAll()
     })
 
     $(".textRotationRange").on("input",function(e) {
         const angle = parseInt($(this).val())
         let o
+        let p
         switch ($(this).attr("id")) {
             case "roundelTopRotationRange":
                 o = logoCreator.getObjects("i-text").find(o => o.id == "roundelTextTop")
                 $("#roundelTopRotationNum").val(angle)
                 o.set("angle", (angle + 180) % 360)
+                if ($('#linkRoundelRotation').is(':checked')) {
+                    $("#roundelBottomRotationRange").val(angle)
+                    $("#roundelBottomRotationNum").val(angle)
+                    p = logoCreator.getObjects("i-text").find(o => o.id == "roundelTextBottom")
+                    p.set("angle", (angle))
+                }
                 break;
             case "roundelBottomRotationRange":
                 o = logoCreator.getObjects("i-text").find(o => o.id == "roundelTextBottom")
                 $("#roundelBottomRotationNum").val(angle)
                 o.set("angle", angle)
+                if ($('#linkRoundelRotation').is(':checked')) {
+                    $("#roundelTopRotationRange").val(angle)
+                    $("#roundelTopRotationNum").val(angle)
+                    p = logoCreator.getObjects("i-text").find(o => o.id == "roundelTextTop")
+                    p.set("angle", (angle + 180) % 360)
+                }
                 break;
             case "circleTopRotationRange":
                 o = logoCreator.getObjects("i-text").find(o => o.id == "circleTextTop")
                 $("#circleTopRotationNum").val(angle)
                 o.set("angle", (angle + 180) % 360)
+                if ($('#linkCircleRotation').is(':checked')) {
+                    $("#circleBottomRotationRange").val(angle)
+                    $("#circleBottomRotationNum").val(angle)
+                    p = logoCreator.getObjects("i-text").find(o => o.id == "circleTextBottom")
+                    p.set("angle", (angle))
+                }
                 break;
             case "circleBottomRotationRange":
                 o = logoCreator.getObjects("i-text").find(o => o.id == "circleTextBottom")
                 $("#circleBottomRotationNum").val(angle)
                 o.set("angle", angle)
+                if ($('#linkCircleRotation').is(':checked')) {
+                    $("#circleTopRotationRange").val(angle)
+                    $("#circleTopRotationNum").val(angle)
+                    p = logoCreator.getObjects("i-text").find(o => o.id == "circleTextTop")
+                    p.set("angle", (angle + 180) % 360)
+                }
                 break;
         }
         logoCreator.renderAll()

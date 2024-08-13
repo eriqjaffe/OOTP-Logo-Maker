@@ -1153,5 +1153,21 @@ legend {
     font-display: swap;
 }
 
+.uncheckedLink {
+    background-image: url("../images/link-unchecked.png");
+    background-repeat: no-repeat;
+}
 
+.uncheckedLink:hover {
+    cursor: pointer;
+}
+
+.checkedLink {
+    background-image: url("../images/link-checked.png");
+    background-repeat: no-repeat;
+}
+
+.checkedLink:hover {
+    cursor: pointer;
+}
   
