@@ -345,14 +345,6 @@
                                         </tr>
                                         <tr class="color_tr">
                                             <td colspan="3" style="text-align:center;">
-                                                <!--<label>Size:&nbsp;</label>
-                                                <input type="number" class="bottomTextClass" id="bottomTextSize" value="40" min="0" max="359" onkeypress="return isNumberKey(event)">
-                                                <label>&nbsp;&nbsp;&nbsp;&nbsp;Spacing:&nbsp;</label>
-                                                <input type="number" class="bottomTextClass" id="bottomTextSpacing" value="0" style="width:40px;" onkeypress="return isNumberOrMinusKey(event)">
-                                                <label>&nbsp;&nbsp;&nbsp;&nbsp;Baseline:&nbsp;</label>
-                                                <input type="number" class="bottomTextClass" id="bottomTextDeltaY" value="0" min="-100" max="100" onkeypress="return isNumberOrMinusKey(event)">
-                                                <label>&nbsp;&nbsp;&nbsp;&nbsp;Stroke Width:&nbsp;</label>
-                                                <input type="number" class="bottomTextClass" id="bottomTextStrokeWidth" value="4" min="0" max="20" onkeypress="return isNumberOrMinusKey(event)">-->
                                                 <div class="bottomFontDiv" id="roundelBottomFontDiv" style="display:inline-block;">
                                                     <label>Roundel Size:&nbsp;</label>
                                                     <input type="number" class="bottomTextClass textSize" id="roundelBottomTextSize" value="40" min="0" max="359" onkeypress="return isNumberKey(event)">
@@ -395,15 +387,33 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr class="color_tr" id="textRotationParent" style="display:table-row;">
-                                            <td class="checkcell">&nbsp;</td>
-                                            <td>
+                                        <tr class="color_tr" id="roundelRotationParent" style="display:table-row;">
+                                            <datalist id="customrange">
+                                                <option value="-180"></option> 
+                                                <option value="-135"></option> 
+                                                <option value="-90"></option> 
+                                                <option value="-45"></option> 
+                                                <option value="0"></option> 
+                                                <option value="45"></option>
+                                                <option value="90"></option> 
+                                                <option value="135"></option>
+                                                <option value="180"></option> 
+                                            </datalist>
+                                            <td colspan="3" style="text-align:center;">
                                                 <label>Text Rotation:</label>
+                                                <input type="range" class="range textRotationRange" id="roundelTopRotationRange" value="0" min="-180" max="180" style="margin-left:2px; margin-right:2px;" list="customrange">
+                                                <input class="textRotationAmount" id="roundelTopRotationNum" type="number" value="0" min="-180" max="180" onkeypress="return isNumberOrMinusKey(event)">
+                                                <input type="range" class="range textRotationRange" id="roundelBottomRotationRange" value="0" min="-180" max="180" style="margin-left:2px; margin-right:2px;" list="customrange">
+                                                <input class="textRotationAmount" id="roundelBottomRotationNum" type="number" value="0" min="-180" max="180" onkeypress="return isNumberOrMinusKey(event)">
                                             </td>
-                                            <td style="text-align:right;">
-                                                <!--<input id="textRotation" type="number" value="0" min="0" max="359" onkeypress="return isNumberKey(event)">-->
-                                                <input type="range" class="range" id="textRotation" value="0" min="-180" max="180" style="margin-left:5px; margin-right:5px;">
-                                                <input id="textRotationAmount" type="number" value="0" min="-180" max="180" onkeypress="return isNumberOrMinusKey(event)">
+                                        </tr>
+                                        <tr class="color_tr" id="circleRotationParent" style="display:none;">
+                                            <td colspan="3" style="text-align:center;">
+                                                <label>Text Rotation:</label>
+                                                <input type="range" class="range textRotationRange" id="circleTopRotationRange" value="0" min="-180" max="180" style="margin-left:2px; margin-right:2px;" list="customrange">
+                                                <input class="textRotationAmount" id="circleTopRotationNum" type="number" value="0" min="-180" max="180" onkeypress="return isNumberOrMinusKey(event)">
+                                                <input type="range" class="range textRotationRange" id="circleBottomRotationRange" value="0" min="-180" max="180" style="margin-left:2px; margin-right:2px;" list="customrange">
+                                                <input class="textRotationAmount" id="circleBottomRotationNum" type="number" value="0" min="-180" max="180" onkeypress="return isNumberOrMinusKey(event)">
                                             </td>
                                         </tr>
                                         <tr class="color_tr">
@@ -454,7 +464,7 @@
                                             <td class="checkCell">&nbsp;</td>
                                             <td>
                                                 <label>Decoration:&nbsp;</label>
-                                                <select id="decorSelect">
+                                                <select id="decorSelect" class="decorSelect">
                                                     <option value="none" selected>None</option>
                                                     <option value="diamonds">Diamonds</option>
                                                     <option value="baseballs">Baseballs</option>
@@ -464,6 +474,14 @@
                                             </td>
                                             <td style="text-align:right;">
                                                 <input class="selector" data-canvas="logoCreator" type="text" id="roundelDecorSelector">
+                                            </td>
+                                        </tr>
+                                        <tr class="color_tr" id="decorRotationParent" style="display:table-row;">
+                                            <td class="checkCell">&nbsp;</td>
+                                            <td colspan="2" style="text-align:center;">
+                                                <label>Decor Rotation:</label>
+                                                <input type="range" class="range decorSelect" id="decorRotationRange" value="0" min="-180" max="180" style="margin-left:2px; margin-right:2px;" list="customrange">
+                                                <input class="decorSelect" id="decorRotationNum" type="number" value="0" min="-180" max="180" onkeypress="return isNumberOrMinusKey(event)">
                                             </td>
                                         </tr>
                                         <tr class="color_tr">
@@ -1681,49 +1699,73 @@
         logoCreator.renderAll()
     })
 
-    $("#textRotationAmount").on("input",function(e) {
+    $(".textRotationAmount").on("input",function(e) {
         const angle = parseInt($(this).val())
-        logoCreator.getObjects('i-text').forEach(function(o) {
-            switch (o.id) {
-                case "roundelTextTop":
-                    o.set("angle", (angle + 180) % 360)
-                    break;
-                case "roundelTextBottom":
-                    o.set("angle", angle)
-                    break;
-				case "circleTextTop":
-                    o.set("angle", (angle + 180) % 360)
-                    break;
-                case "circleTextBottom":
-                    o.set("angle", angle)
-                    break;
-            }
-        })
-        $("#textRotation").val(parseInt($(this).val()))
+        let o
+        switch ($(this).attr("id")) {
+            case "roundelTopRotationNum":
+                o = logoCreator.getObjects("i-text").find(o => o.id == "roundelTextTop")
+                $("#roundelTopRotationRange").val(angle)
+                o.set("angle", (angle + 180) % 360)
+                break;
+            case "roundelBottomRotationNum":
+                o = logoCreator.getObjects("i-text").find(o => o.id == "roundelTextBottom")
+                $("#roundelBottomRotationRange").val(angle)
+                o.set("angle", angle)
+                break;
+            case "circleTopRotationNum":
+                o = logoCreator.getObjects("i-text").find(o => o.id == "circleTextTop")
+                $("#circleTopRotationRange").val(angle)
+                o.set("angle", (angle + 180) % 360)
+                break;
+            case "circleBottomRotationNum":
+                o = logoCreator.getObjects("i-text").find(o => o.id == "circleTextBottom")
+                $("#circleBottomRotationRange").val(angle)
+                o.set("angle", angle)
+                break;
+        }
+        logoCreator.renderAll()
+    })
+
+    $(".textRotationRange").on("input",function(e) {
+        const angle = parseInt($(this).val())
+        let o
+        switch ($(this).attr("id")) {
+            case "roundelTopRotationRange":
+                o = logoCreator.getObjects("i-text").find(o => o.id == "roundelTextTop")
+                $("#roundelTopRotationNum").val(angle)
+                o.set("angle", (angle + 180) % 360)
+                break;
+            case "roundelBottomRotationRange":
+                o = logoCreator.getObjects("i-text").find(o => o.id == "roundelTextBottom")
+                $("#roundelBottomRotationNum").val(angle)
+                o.set("angle", angle)
+                break;
+            case "circleTopRotationRange":
+                o = logoCreator.getObjects("i-text").find(o => o.id == "circleTextTop")
+                $("#circleTopRotationNum").val(angle)
+                o.set("angle", (angle + 180) % 360)
+                break;
+            case "circleBottomRotationRange":
+                o = logoCreator.getObjects("i-text").find(o => o.id == "circleTextBottom")
+                $("#circleBottomRotationNum").val(angle)
+                o.set("angle", angle)
+                break;
+        }
+        logoCreator.renderAll()
+    })
+
+    $("#decorRotationRange").on("input",function(e) {
+        const angle = parseInt($(this).val())
+        $("#decorRotationNum").val(angle)
         const d = logoCreator.getObjects('group').find(o => o.id == "decor")
         d.set("angle",angle)
         logoCreator.renderAll()
     })
 
-    $("#textRotation").on("input",function(e) {
+    $("#decorRotationNum").on("input",function(e) {
         const angle = parseInt($(this).val())
-        logoCreator.getObjects('i-text').forEach(function(o) {
-            switch (o.id) {
-                case "roundelTextTop":
-                    o.set("angle", (angle + 180) % 360)
-                    break;
-                case "roundelTextBottom":
-                    o.set("angle", angle)
-                    break;
-				case "circleTextTop":
-                    o.set("angle", (angle + 180) % 360)
-                    break;
-                case "circleTextBottom":
-                    o.set("angle", angle)
-                    break;
-            }
-        })
-        $("#textRotationAmount").val(parseInt($(this).val()))
+        $("#decorRotationRange").val(angle)
         const d = logoCreator.getObjects('group').find(o => o.id == "decor")
         d.set("angle",angle)
         logoCreator.renderAll()
@@ -3419,7 +3461,7 @@
                 $(this).prop( "checked", false );
                 $(this).trigger("change")
             })
-            $("#decorSelect").attr("disabled",true)
+            $(".decorSelect").attr("disabled",true)
             return false;
         }
         const s = logoCreator.getObjects('group').find(o => o.id == "stitches")
@@ -3474,7 +3516,8 @@
                 $("#roundelTopFontDiv").css("display","inline-block")
                 $("#roundelBottomFontDiv").css("display","inline-block")
                 $("#bottomFontParent").css("display","table-row")
-                $("#textRotationParent").css("display","table-row")
+                $("#circleRotationParent").css("display","none")
+                $("#roundelRotationParent").css("display","table-row")
                 s.set({
                     visible: false,
                     clipPath: circleClip,
@@ -3509,7 +3552,7 @@
                     visible: false
                 })
                 $("#roundelDecorSelector").spectrum('enable')
-                $("#decorSelect").attr("disabled",false)
+                $(".decorSelect").attr("disabled",false)
                 $("#roundelSpan").css("display","inline-block")
                 $("#otherSpan").css("display","none")
                 for (img of i) {
@@ -3530,7 +3573,9 @@
                 $("#circleTopFontDiv").css("display","inline-block")
                 $("#circleBottomFontDiv").css("display","inline-block")
                 $("#bottomFontParent").css("display","table-row")
-                $("#textRotationParent").css("display","table-row")
+                $("#circleRotationParent").css("display","table-row")
+                $("#roundelRotationParent").css("display","none")
+                console.log("hello world")
                 s.set({
                     visible: false,
                     clipPath: circleClip,
@@ -3576,7 +3621,7 @@
                     }
                 }
                 $("#roundelDecorSelector").spectrum('disable')
-                $("#decorSelect").attr("disabled",true)
+                $(".decorSelect").attr("disabled",true)
                 $("#roundelSpan").css("display","none")
                 $("#otherSpan").css("display","inline-block")
                 break;
@@ -3585,8 +3630,8 @@
                 $(".bottomFontDiv").css("display","none")
                 $("#homePlateFontDiv").css("display","inline-block")
                 $("#bottomFontParent").css("display","none")
-                $("#textRotationParent").css("display","none")
-                //$("#roundelBottomFontDiv").css("display","inline-block")
+                $("#circleRotationParent").css("display","none")
+                $("#roundelRotationParent").css("display","none")
                 s.set({
                     visible: visible,
                     clipPath: homePlateClip,
@@ -3632,7 +3677,7 @@
                     }
                 }
                 $("#roundelDecorSelector").spectrum('disable')
-                $("#decorSelect").attr("disabled",true)
+                $(".decorSelect").attr("disabled",true)
                 $("#roundelSpan").css("display","none")
                 $("#otherSpan").css("display","inline-block")
                 break;
@@ -3642,7 +3687,8 @@
                 $("#squareTopFontDiv").css("display","inline-block")
                 $("#squareBottomFontDiv").css("display","inline-block")
                 $("#bottomFontParent").css("display","table-row")
-                $("#textRotationParent").css("display","none")
+                $("#circleRotationParent").css("display","none")
+                $("#roundelRotationParent").css("display","none")
                 s.set({
                     visible: visible,
                     clipPath: squareClip,
@@ -3688,7 +3734,7 @@
                     }
                 }
                 $("#roundelDecorSelector").spectrum('disable')
-                $("#decorSelect").attr("disabled",true)
+                $(".decorSelect").attr("disabled",true)
                 $("#roundelSpan").css("display","none")
                 $("#otherSpan").css("display","inline-block")
                 break;
@@ -3698,7 +3744,8 @@
                 $("#roundedSquareTopFontDiv").css("display","inline-block")
                 $("#roundedSquareBottomFontDiv").css("display","inline-block")
                 $("#bottomFontParent").css("display","table-row")
-                $("#textRotationParent").css("display","none")
+                $("#circleRotationParent").css("display","none")
+                $("#roundelRotationParent").css("display","none")
                 s.set({
                     visible: visible,
                     clipPath: roundedSquareClip,
@@ -3744,7 +3791,7 @@
                     }
                 }
                 $("#roundelDecorSelector").spectrum('disable')
-                $("#decorSelect").attr("disabled",true)
+                $(".decorSelect").attr("disabled",true)
                 $("#roundelSpan").css("display","none")
                 $("#otherSpan").css("display","inline-block")
                 break;
