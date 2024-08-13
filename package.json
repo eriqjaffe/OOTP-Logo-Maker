@@ -10,6 +10,9 @@
     "email": "eriqjaffe@gmail.com",
     "url": "https://github.com/eriqjaffe/OOTP-Logo-Maker"
   },
+  "scripts": {
+    "start": "electron ."
+  },
   "license": "MIT",
   "private": true,
   "devDependencies": {
