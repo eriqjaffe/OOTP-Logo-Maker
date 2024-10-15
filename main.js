@@ -9,6 +9,8 @@ const Store = require("electron-store")
 const fontname = require('fontname')
 const ColorThief = require('colorthief');
 const chokidar = require("chokidar")
+const versionCheck = require('github-version-checker');
+const pkg = require('./package.json');
 
 const isMac = process.platform === 'darwin'
 const tempDir = os.tmpdir()
@@ -432,6 +434,41 @@ ipcMain.on('write-pattern-definition', (event, arg) => {
 	writeStream.end()
 })
 
+const vcOptions = {
+	repo: 'OOTP-Logo-Maker',
+	owner: 'eriqjaffe',
+	currentVersion: pkg.version
+};
+
+ipcMain.on('check-for-update', (event, arg) => {
+	versionCheck(vcOptions, function (error, update) { // callback function
+		if (error) {
+			dialog.showMessageBox(null, {
+				type: 'error',
+				message: 'An error occurred checking for updates:\r\n\r\n'+error.message
+			});	
+		}
+		if (update) { // print some update info if an update is available
+			dialog.showMessageBox(null, {
+				type: 'question',
+				message: "Current version: "+pkg.version+"\r\n\r\nVersion "+update.name+" is now availble.  Click 'OK' to go to the releases page.",
+				buttons: ['OK', 'Cancel'],
+			}).then(result => {
+				if (result.response === 0) {
+					shell.openExternal(update.url)
+				}
+			})	
+		} else {
+			if (arg.type == "manual") {
+				dialog.showMessageBox(null, {
+					type: 'info',
+					message: "Current version: "+pkg.version+"\r\n\r\nThere is no update available at this time."
+				});	
+			}
+		}
+	});
+})
+
 function createWindow () {
     const mainWindow = new BrowserWindow({
       width: 1280,
@@ -543,12 +580,17 @@ function createWindow () {
               await shell.openExternal('http://fabricjs.com/')
               }
           },
+		  { type: 'separator' },
           {
               label: 'View project on GitHub',
               click: async () => {
               await shell.openExternal('https://github.com/eriqjaffe/OOTP-Logo-Maker')
               }
-          }
+          },
+		  {
+			click: () => mainWindow.webContents.send('update','click'),
+			label: 'Check For Updates',
+		  }
           ]
       }
       ]

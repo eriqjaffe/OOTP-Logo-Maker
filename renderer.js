@@ -15,3 +15,7 @@ ipcRenderer.on('updateFonts', (event, data) => {
 ipcRenderer.on('about', (event, data) => {
     $("#aboutLogoMaker").trigger("click")
 });
+
+ipcRenderer.on('update', (event, data) => {
+    $("#checkForUpdates").trigger("click")
+});

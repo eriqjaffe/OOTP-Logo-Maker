@@ -827,6 +827,7 @@
                 </div>
             </div>
             <input type="button" class="button" id="localPatternFolder" value="Refresh User Patterns" style="display:none;">
+            <input type="button" class="button" id="checkForUpdates" value="Check For Updates" style="display:none;">
         </div>
     </body>
     <script>
@@ -864,6 +865,12 @@
                 })
                 break;
         }
+
+        
+        $("#checkForUpdates").on("click", function() {
+            ipcRenderer.send('check-for-update', {type:"manual"})
+            //alert("check for updates!")
+        })
 
         $('#upButton').tooltipster({
             content: $('<span>Move pattern up 1 pixel<br>Hold Shift key to move pattern 10 pixels</span>'),
