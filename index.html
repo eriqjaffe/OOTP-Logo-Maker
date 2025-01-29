@@ -827,6 +827,7 @@
                 </div>
             </div>
             <input type="button" class="button" id="localPatternFolder" value="Refresh User Patterns" style="display:none;">
+            <input type="button" class="button" id="checkForUpdates" value="Check For Updates" style="display:none;">
         </div>
     </body>
     <script>
@@ -864,6 +865,12 @@
                 })
                 break;
         }
+
+        
+        $("#checkForUpdates").on("click", function() {
+            ipcRenderer.send('check-for-update', {type:"manual"})
+            //alert("check for updates!")
+        })
 
         $('#upButton').tooltipster({
             content: $('<span>Move pattern up 1 pixel<br>Hold Shift key to move pattern 10 pixels</span>'),
@@ -1501,6 +1508,8 @@
 
     function changeMonogramColor(group,el,color) {
         const g = logoCreator.getObjects('group').find(o => o.id == group)
+        console.log(g)
+        console.log(el)
         const o = g.getObjects().find(o => o.id == el)
         o.set("fill", color.toHexString())
         o.set("stroke", color.toHexString())
@@ -3590,7 +3599,7 @@
                 originX: 'center',
                 originY: 'center',
                 textAlign: 'center',
-                id: 'capLogoTextColor',
+                id: 'capLogo2TextColor',
                 fill: initialColors["capLogoTextColor"],
                 selectable: false
             })
@@ -3604,7 +3613,7 @@
                 originX: 'center',
                 originY: 'center',
                 textAlign: 'center',
-                id: 'capLogoTextStroke1Color',
+                id: 'capLogo2TextStroke1Color',
                 fill: initialColors["capLogoTextStroke1Color"],
                 stroke: initialColors["capLogoTextStroke1Color"],
                 strokeWidth: $("#capLogoStroke1Width").val(),
@@ -3620,7 +3629,7 @@
                 originX: 'center',
                 originY: 'center',
                 textAlign: 'center',
-                id: 'capLogoTextStroke2Color',
+                id: 'capLogo2TextStroke2Color',
                 fill: initialColors["capLogoTextStroke2Color"],
                 stroke: initialColors["capLogoTextStroke2Color"],
                 strokeWidth: $("#capLogoStroke2Width").val(),
